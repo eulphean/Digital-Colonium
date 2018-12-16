@@ -1,6 +1,6 @@
-int boardWidth = 128; 
-int boardHeight = 64; 
-int cellWidth = 4; 
+int boardWidth = 160; 
+int boardHeight = 160; 
+int cellWidth = 8; 
 int numCols = boardWidth / cellWidth; 
 int numRows = boardHeight / cellWidth; 
 

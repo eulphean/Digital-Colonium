@@ -114,8 +114,16 @@ class Snake {
   void show() {
     // Show the array list
     for (int i = 0; i < shape.size(); i++) {
+      if (i == 0) {
+           pushStyle();
+           fill(c);
+           ellipse(shape.get(i).x + cellWidth/2, shape.get(i).y + cellWidth/2, cellWidth/2, cellWidth/2);
+           popStyle();
+      } else {
+        
       fill(c);
       rect(shape.get(i).x, shape.get(i).y, cellWidth, cellWidth);  
+      }
     }
   }
   
