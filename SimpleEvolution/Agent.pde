@@ -1,112 +1,100 @@
-class Creature {
-  int xPos; int yPos; int curScreen; int prevScreen; 
-  int creatureWidth = cellWidth * 2; 
-  int creatureHeight = cellWidth * 3; 
-  int move = 4; 
+class Agent {
+  PVector position; 
+  int radius = 4;  
+  float xoff; float yoff; // For perlin noise
+  float maxSpeed = 1; 
   
-  Creature() {
-    xPos = 0; yPos = 0; curScreen = 0; prevScreen = 0;
+  // Ecosystem traits. 
+  float health;  // Life timer
+  
+  Agent(PVector pos) {
+    position = pos;
+    xoff = random(1000);
+    yoff = random(1000);
+    health = 200; 
   }
   
-  void show() {
-    fill(0);
-    //ellipse(xPos * w, yPos * w, 16, 16);  
-    rect(xPos, yPos, creatureWidth, creatureHeight);
+  void run() {
+    update(); 
+    wraparound();
+    display();
   }
   
-  void move(int x, int y) {
-    int newXPos, newYPos; 
-    if (x != 0) {
-       // Move left or right
-       if (x > 0) {
-           newXPos = xPos + move; 
-          // Detect collision
-          if (!isColliding(newXPos, yPos)) xPos += move;
-          // Else, ignore this move. 
-       } else {
-          // Detect collision
-           newXPos = xPos - move;
-          if (!isColliding(newXPos, yPos)) xPos -= move;
-          // Else, ignore this move. 
-       }
-    }
-    
-    if (y != 0) {
-       if (y > 0) {
-         newYPos = yPos + move; 
-         if (!isColliding(xPos, newYPos)) yPos += move; 
-         // Else, ignore move
-       } else {
-         newYPos = yPos - move; 
-         if (!isColliding(xPos, newYPos)) yPos -= move; 
-         // Else, ignore this move. 
-       }
-    }
+  void update() {
+    // Simple movement based on perlin noise
+    // TODO: Make this more deterministic so the 
+    // agents are actually moving towards food. 
+    float vx = map(noise(xoff),0,1,-maxSpeed,maxSpeed);
+    float vy = map(noise(yoff),0,1,-maxSpeed,maxSpeed);
+    PVector velocity = new PVector(vx,vy);
+    xoff += 0.01;
+    yoff += 0.01;
 
-    // Move is done, find what screen did this creature land on. 
-    curScreen = getScreenNum(xPos, yPos);
+    position.add(velocity);
+    // Death always looming
+    health -= 0.2;
   }
   
-  boolean isColliding(int newXPos, int newYPos) {
-    // Calculate x boun for the creature
-    int xBound = newXPos + creatureWidth;
-    int yBound = newYPos + creatureHeight; 
-    
-    if (newXPos < 0) return true;  // Left wall
-    if (newYPos < 0) return true;  // Upper wall 
-    if (xBound > worldWidth) return true;  // Right wall
-    if (yBound > worldHeight) return true; // Down wall.  
-    
-    return false;
+  void wraparound() {
+    if (position.x < -radius) position.x = width+radius;
+    if (position.y < -radius) position.y = height+radius;
+    if (position.x > width+radius) position.x = -radius;
+    if (position.y > height+radius) position.y = -radius;
   }
   
-  // Screen style
-  //0 1
-  //2 3
-  //4 5
-  //6 7
-  //8 9
-  // Return the board the creature is on for its xPos and yPos
-  int getScreenNum(int xPos, int yPos) {
-    int currentScreen = -1;
-    if (xPos >= 0 && xPos <=7) {
-      // Screen 0
-       if (yPos >=0 && yPos <=15) currentScreen = 0; 
-       
-       // Screen 2
-       if (yPos >=16 && yPos <=31) currentScreen = 2; 
-       
-       // Screen 4
-       if (yPos >=32 && yPos <=47) currentScreen = 4; 
-       
-       // Screen 6
-       if (yPos >=48 && yPos <= 63) currentScreen = 6; 
-       
-       // Screen 8
-       if (yPos >=64 && yPos <=79) currentScreen = 8; 
+  // Agent prying on food. 
+  void eat(Food f) {
+    ArrayList<PVector> food = f.getFood();
+    // Are we touching any food objects?
+    for (int i = food.size()-1; i >= 0; i--) {
+      PVector foodCenter = new PVector(food.get(i).x, food.get(i).y);
+      
+      // Get the center of the food block. 
+      foodCenter.x += f.foodWidth/2;
+      foodCenter.y += f.foodHeight/2; 
+      // Distance between circle and food block's center
+      float d = PVector.dist(position, foodCenter);
+      // If we are, juice up our strength!
+      if (d < radius + f.foodWidth/2) {
+        health += 100; 
+        food.remove(i);
+        
+        if (random(1) < 0.005) {
+          f.grow(); 
+        }
+      }
     }
-    
-    if (xPos >= 8 && xPos <= 15) {
-      // Screen 1
-       if (yPos >=0 && yPos <=15) currentScreen = 1; 
-       
-       // Screen 3
-       if (yPos >=16 && yPos <=31) currentScreen = 3; 
-       
-       // Screen 5
-       if (yPos >=32 && yPos <=47) currentScreen = 5; 
-       
-       // Screen 7
-       if (yPos >=48 && yPos <= 63) currentScreen = 7; 
-       
-       // Screen 9
-       if (yPos >=64 && yPos <=79) currentScreen = 9; 
+  }
+
+  // At any moment there is a teeny, tiny chance a bloop will reproduce
+  Agent reproduce() {
+    // asexual reproduction
+    if (random(1) < 0.0005) {
+      // Child is exact copy of single parent
+      return new Agent(new PVector(random(width), random(height)));
+    } 
+    else {
+      return null;
     }
-    
-    //if (currentScreen == -1) {
-    //  println("-------It should never come here. There is error--------");
-    //}
-    
-    return currentScreen; 
+  }
+  
+  // Check for death
+  boolean dead() {
+    if (health < 0.0) {
+      return true;
+    } 
+    else {
+      return false;
+    }
+  }
+  
+  void display() {
+    pushStyle();
+    // See the deteriorating health
+    color c  = color(255, 0, 0, health);
+    fill(c); 
+    stroke(0, health);
+    ellipse(position.x, position.y, radius, radius); 
+    popStyle();
   }
 };
