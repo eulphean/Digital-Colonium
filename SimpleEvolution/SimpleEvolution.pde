@@ -1,6 +1,6 @@
 import controlP5.*; 
 
-int numAgents = 20; int numFood = 50; // Starting parameters for food. 
+int numAgents = 40; int numFood = 100; // Starting parameters for food. 
 
 
 // Initialize the GUI
@@ -15,7 +15,8 @@ boolean hideGui;
 World world;
 
 void setup() {
-  size(500, 500);
+  //size(500, 500);
+  fullScreen();
   
   // Initialize GUI flags. 
   hideGui = false;

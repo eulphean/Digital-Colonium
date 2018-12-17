@@ -16,8 +16,8 @@ class Agent {
     acceleration = new PVector(0, 0); 
     velocity = new PVector(0, 0);
     radius = 8; 
-    maxSpeed = 1; 
-    maxForce = 0.1;
+    maxSpeed = 2; 
+    maxForce = 0.2;
     wanderTheta = 0; 
     health = 200; 
     
@@ -155,11 +155,11 @@ class Agent {
       if (d < radius + f.foodWidth/2) {
         health += 100; 
         food.remove(i);
-        f.grow();
+        //f.grow();
         
-        //if (random(1) < 0.005) {
-        //  f.grow(); 
-        //}
+        if (random(1) <= 0.5) {
+          f.grow(); 
+        }
       }
     }
   }
@@ -167,7 +167,7 @@ class Agent {
   // At any moment there is a teeny, tiny chance a bloop will reproduce
   Agent reproduce() {
     // asexual reproduction
-    if (random(1) < 0.0005) {
+    if (random(1) < 0.001) {
       // Child is exact copy of single parent
       return new Agent(new PVector(random(width), random(height)));
     } 
