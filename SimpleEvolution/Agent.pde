@@ -6,6 +6,7 @@ class Agent {
   float maxSpeed;
   float maxForce;
   float maxVisionRadius; 
+  float wanderTheta; 
   
   // Life timer
   float health; 
@@ -15,8 +16,9 @@ class Agent {
     acceleration = new PVector(0, 0); 
     velocity = new PVector(0, 0);
     radius = 8; 
-    maxSpeed = 2; 
+    maxSpeed = 1; 
     maxForce = 0.1;
+    wanderTheta = 0; 
     health = 200; 
     
     position = pos;
@@ -29,7 +31,10 @@ class Agent {
     // Look for the closest food. 
     PVector target = seekFood(f);
     if (target != null) {
-      arrive(target); 
+      seek(target, true); 
+    } else {
+      // Wander around to look for food. 
+      wander();
     }
     update(); 
     eat(f); // Eat the food. 
@@ -37,22 +42,53 @@ class Agent {
     display();
   }
   
-  // A method that calculates a steering force towards a target
-  // STEER = DESIRED MINUS VELOCITY
-  void arrive(PVector target) {
-    PVector desired = PVector.sub(target,position);  // A vector pointing from the position to the target
-    float d = desired.mag();
-    // Scale with arbitrary damping within 100 pixels
-    if (d < 100) {
-      float m = map(d,0,100,0,maxSpeed);
-      desired.setMag(m);
-    } else {
-      desired.setMag(maxSpeed); // Maximum speed of this bot.
-    }
+  void wander() {
+    float wanderR = 25;         // Radius for our "wander circle"
+    float wanderD = 100;         // Distance for our "wander circle"
+    float change = 1.0;
+    wanderTheta += random(-change,change);     // Randomly change wander theta
 
-    // Steering Force = Desired minus Velocity
+    // Now we have to calculate the new position to steer towards on the wander circle
+    PVector circlepos = velocity.copy();    // Start with velocity
+    circlepos.normalize();            // Normalize to get heading
+    circlepos.mult(wanderD);          // Multiply by distance
+    circlepos.add(position);               // Make it relative to boid's position
+
+    float h = velocity.heading();        // We need to know the heading to offset wandertheta
+
+    PVector circleOffSet = new PVector(wanderR*cos(wanderTheta+h),wanderR*sin(wanderTheta+h));
+    PVector target = PVector.add(circlepos,circleOffSet);
+    seek(target);
+  }
+  
+  //// A method that calculates a steering force towards a target
+  //// STEER = DESIRED MINUS VELOCITY
+  void seek(PVector target) {
+     seek(target, false); 
+  }
+  
+  void seek(PVector target, boolean arrive) {
+    PVector desired = PVector.sub(target,position);  // A vector pointing from the position to the target
+    
+    // Slow down when coming towards the target
+    if (arrive) {
+       float d = desired.mag(); 
+       if (d < 50) {
+          float m = map(d, 0, 100, 0, maxSpeed);
+          desired.setMag(m);
+       } else {
+          desired.setMag(maxSpeed); 
+       }
+    } else {
+      // Normalize desired and scale to maximum speed
+      desired.normalize();
+      desired.mult(maxSpeed);
+    }
+    
+    // Steering = Desired minus Velocity
     PVector steer = PVector.sub(desired,velocity);
     steer.limit(maxForce);  // Limit to maximum steering force
+
     applyForce(steer);
   }
   
@@ -72,7 +108,7 @@ class Agent {
     acceleration.mult(0);
     
     // Death always looming
-    health -= 0.2;
+    health -= 0.5;
   }
   
   PVector seekFood(Food f) {
@@ -119,10 +155,11 @@ class Agent {
       if (d < radius + f.foodWidth/2) {
         health += 100; 
         food.remove(i);
+        f.grow();
         
-        if (random(1) < 0.005) {
-          f.grow(); 
-        }
+        //if (random(1) < 0.005) {
+        //  f.grow(); 
+        //}
       }
     }
   }
@@ -130,7 +167,7 @@ class Agent {
   // At any moment there is a teeny, tiny chance a bloop will reproduce
   Agent reproduce() {
     // asexual reproduction
-    if (random(1) < 0.0001) {
+    if (random(1) < 0.0005) {
       // Child is exact copy of single parent
       return new Agent(new PVector(random(width), random(height)));
     } 
@@ -157,9 +194,9 @@ class Agent {
     stroke(0, health);
     ellipse(position.x, position.y, radius, radius); 
     
-    c = color(0, 0, 255, 50); 
-    fill (c); 
-    ellipse(position.x, position.y, maxVisionRadius, maxVisionRadius);
+    //c = color(0, 0, 255, 50); 
+    //fill (c); 
+    //ellipse(position.x, position.y, maxVisionRadius, maxVisionRadius);
     popStyle();
   }
 };

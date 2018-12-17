@@ -36,7 +36,7 @@ void setup() {
 }
 
 void draw() {
-  background(255);
+  background(0);
   
   if (hideGui) {
     visSlider.hide();
