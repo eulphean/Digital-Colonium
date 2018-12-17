@@ -1,4 +1,4 @@
-int numAgents = 100; int numFood = numAgents; // Starting parameters for food. 
+int numAgents = 20; int numFood = numAgents; // Starting parameters for food. 
 
 // Initialize a world
 World world;
