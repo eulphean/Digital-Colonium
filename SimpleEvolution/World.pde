@@ -19,10 +19,12 @@ class World {
       // Handle agents display, eating, reproduction
       for (int i = agents.size()-1; i >= 0; i--) {
         Agent a = agents.get(i);
-        a.run();
         
-        a.eat(food); // Maybe it can eat some food. 
+        // Handle all the agent behavior. 
+        // Seeking the food, steering, updating, and display
+        a.run(food);
         
+        // Health of the agent.
         if (a.dead()) { // Is it dead? 
           agents.remove(i); 
           food.add(a.position); // Make food where the organism died.
