@@ -1,6 +1,6 @@
 class Agent {
   PVector position; 
-  int radius = 4;  
+  int radius = 8;  
   float xoff; float yoff; // For perlin noise
   float maxSpeed = 1; 
   
@@ -69,7 +69,7 @@ class Agent {
   // At any moment there is a teeny, tiny chance a bloop will reproduce
   Agent reproduce() {
     // asexual reproduction
-    if (random(1) < 0.0005) {
+    if (random(1) < 0.0001) {
       // Child is exact copy of single parent
       return new Agent(new PVector(random(width), random(height)));
     } 

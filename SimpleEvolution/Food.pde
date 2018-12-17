@@ -1,6 +1,6 @@
 class Food {
   ArrayList<PVector> food; // Array of locations
-  int foodWidth = 4; int foodHeight = foodWidth; 
+  int foodWidth = 8; int foodHeight = foodWidth; 
   
   Food(int num) {
      // Assign food position within world dimensions. 
