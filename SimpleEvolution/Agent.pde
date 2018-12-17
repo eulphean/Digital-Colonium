@@ -18,12 +18,14 @@ class Agent {
     maxSpeed = 2; 
     maxForce = 0.1;
     health = 200; 
-    maxVisionRadius = 25; // 25px
     
     position = pos;
   }
   
   void run(Food f) {
+    // Update any GUI values
+    maxVisionRadius = agentVisionRadius; 
+    
     // Look for the closest food. 
     PVector target = seekFood(f);
     if (target != null) {

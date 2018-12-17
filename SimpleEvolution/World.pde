@@ -2,11 +2,11 @@ class World {
     ArrayList<Agent> agents = new ArrayList<Agent>();
     Food food; 
 
-    World(int num) {
+    World(int numAgents, int numFood) {
         // Initialize food
-        food = new Food(num);
+        food = new Food(numFood);
          
-        for (int i = 0; i < num; i++) {
+        for (int i = 0; i < numAgents; i++) {
            PVector l = new PVector(random(width), random(height));
            agents.add(new Agent(l));
         }
