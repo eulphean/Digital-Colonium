@@ -45,7 +45,7 @@ class Agent {
   void wander() {
     float wanderR = 25;         // Radius for our "wander circle"
     float wanderD = 100;         // Distance for our "wander circle"
-    float change = 1.0;
+    float change = 5.0;
     wanderTheta += random(-change,change);     // Randomly change wander theta
 
     // Now we have to calculate the new position to steer towards on the wander circle
@@ -189,14 +189,32 @@ class Agent {
   void display() {
     pushStyle();
     // See the deteriorating health
-    color c  = color(255, 0, 0, health);
-    fill(c); 
-    stroke(0, health);
-    ellipse(position.x, position.y, radius, radius); 
+    //color c  = color(255, 0, 0, health);
+    //fill(c); 
+    //stroke(0, health);
+    //ellipse(position.x, position.y, radius, radius); 
     
-    //c = color(0, 0, 255, 50); 
-    //fill (c); 
-    //ellipse(position.x, position.y, maxVisionRadius, maxVisionRadius);
+    float theta = velocity.heading() + radians(90);
+    fill(127);
+    stroke(0);
+    pushMatrix();
+    translate(position.x,position.y);
+    rotate(theta);
+    color c = color(255, 0, 0, health);
+    fill(c);
+    stroke(0, health);
+    beginShape(TRIANGLES);
+    vertex(0, -radius*2);
+    vertex(-radius, radius*2);
+    vertex(radius, radius*2);
+    endShape();
+    popMatrix();
+    
+    if (turnOnVision) {
+      c = color(255, 255, 255, 100); 
+      fill (c); 
+      ellipse(position.x, position.y, maxVisionRadius, maxVisionRadius);
+    }
     popStyle();
   }
 };

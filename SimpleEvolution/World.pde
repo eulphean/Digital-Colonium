@@ -1,6 +1,7 @@
 class World {
     ArrayList<Agent> agents = new ArrayList<Agent>();
     Food food; 
+    int generation; 
 
     World(int numAgents, int numFood) {
         // Initialize food
@@ -10,6 +11,9 @@ class World {
            PVector l = new PVector(random(width), random(height));
            agents.add(new Agent(l));
         }
+        
+        // Keep track of iterations.
+        generation = 0; 
     }
     
     void run() {
@@ -35,5 +39,7 @@ class World {
           agents.add(child);
         }
       }
+      
+      generation++; 
     }
 }
