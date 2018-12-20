@@ -1,23 +1,28 @@
 class World {
     ArrayList<Agent> agents = new ArrayList<Agent>();
-    Food food; 
+    Food food;; 
+    DigitalFood digFood; 
     int generation; 
 
-    World(int numAgents, int numFood) {
+    World(int numAgents, int numFood, int numPixelBricks) {
         // Initialize food
         food = new Food(numFood);
          
+        // Initialize agents
         for (int i = 0; i < numAgents; i++) {
            PVector l = new PVector(random(width), random(height));
            agents.add(new Agent(l));
         }
+        
+        // Initialize media food 
+        digFood = new DigitalFood(numPixelBricks);
         
         // Keep track of iterations.
         generation = 0; 
     }
     
     void run() {
-      // Deal with food. 
+      // Deal with natural food.  
       food.run(); 
 
       // Handle agents display, eating, reproduction
@@ -39,6 +44,9 @@ class World {
           agents.add(child);
         }
       }
+      
+      // Run digital food. 
+      digFood.run(); 
       
       generation++; 
     }

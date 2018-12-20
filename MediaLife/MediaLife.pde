@@ -1,6 +1,7 @@
 import controlP5.*; 
 
 int numAgents = 50; int numFood = 100; // Starting parameters for food. 
+int numPixelBricks = 10; 
 
 // Initialize the GUI
 ControlP5 cp5; 
@@ -33,7 +34,7 @@ void setup() {
               .setColorCaptionLabel(color(255));
               
   
-  world = new World(numAgents, numFood);
+  world = new World(numAgents, numFood, numPixelBricks);
   ellipseMode(RADIUS);
   smooth();
 }
@@ -42,7 +43,7 @@ void draw() {
   background(0);
   
   if (restartWorld) {
-    world = new World(numAgents, numFood);
+    world = new World(numAgents, numFood, numPixelBricks);
     restartWorld = false;
   }
     
@@ -65,6 +66,7 @@ void draw() {
     text("Gen: " + world.generation, 5, 45);
     text("Agents: " + world.agents.size(), 5, 60);
     text("Food: " + world.food.food.size(), 5, 75);
+    text("Frame rate: " + frameRate, 5, 90);
     popStyle();
   }
 }
