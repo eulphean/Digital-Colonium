@@ -3,8 +3,8 @@ class DigitalFood {
   ArrayList<PixelBrick> digitalFood; 
   
   DigitalFood(int num) {
-    int cols = 10; int rows = 10; 
-    int pixWidth = 5; 
+    int cols = 5; int rows = 5; 
+    int pixWidth = 6; 
     
     // Initialize num of PixelBricks
     digitalFood = new ArrayList(); 

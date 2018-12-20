@@ -1,7 +1,7 @@
 import controlP5.*; 
 
 int numAgents = 50; int numFood = 100; // Starting parameters for food. 
-int numPixelBricks = 20; 
+int numPixelBricks = 25; 
 
 // Initialize the GUI
 ControlP5 cp5; 
