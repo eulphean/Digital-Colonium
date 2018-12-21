@@ -61,8 +61,8 @@ class Agent {
     seek(target);
   }
   
-  //// A method that calculates a steering force towards a target
-  //// STEER = DESIRED MINUS VELOCITY
+  // A method that calculates a steering force towards a target
+  // STEER = DESIRED MINUS VELOCITY
   void seek(PVector target) {
      seek(target, false); 
   }

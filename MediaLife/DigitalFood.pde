@@ -4,7 +4,7 @@ class DigitalFood {
   
   DigitalFood(int num) {
     int cols = 5; int rows = 5; 
-    int pixWidth = 6; 
+    int pixWidth = 6  ; 
     
     // Initialize num of PixelBricks
     digitalFood = new ArrayList(); 
