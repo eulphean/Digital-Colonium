@@ -11,7 +11,7 @@ class World {
         // Initialize agents
         for (int i = 0; i < numAgents; i++) {
            PVector l = new PVector(random(width), random(height));
-           agents.add(new Agent(l));
+           agents.add(new Agent(l, new DNA()));
         }
         
         // Initialize media food 

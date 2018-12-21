@@ -19,7 +19,6 @@ boolean restartWorld = false;
 World world;
 
 void setup() {
-  //size(500, 500);
   fullScreen();
   
   // Initialize GUI flags. 

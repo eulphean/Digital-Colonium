@@ -2,26 +2,34 @@ class Agent {
   PVector position; 
   PVector velocity;
   PVector acceleration;
-  float radius;  
-  float maxSpeed;
+  
   float maxForce;
   float maxVisionRadius; 
   float wanderTheta; 
   
+  // DNA of the agent. 
+  DNA dna; 
+  float radius; 
+  float maxSpeed;
+  
   // Life timer
   float health; 
   
-  Agent(PVector pos) {
+  // Modify the constructor to pass DNA. 
+  Agent(PVector pos, DNA _dna) {
     // Initialize the agent
     acceleration = new PVector(0, 0); 
     velocity = new PVector(0, 0);
-    radius = 8; 
-    maxSpeed = 2; 
     maxForce = 0.2;
     wanderTheta = 0; 
     health = 200; 
     
     position = pos;
+    
+    // Pass in the dna. 
+    dna = _dna; 
+    maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
+    radius = map(dna.genes[0], 0, 1, 1, 6); // Smaller the radius, more the speed. 
   }
   
   void run(Food f) {
@@ -52,7 +60,7 @@ class Agent {
     PVector circlepos = velocity.copy();    // Start with velocity
     circlepos.normalize();            // Normalize to get heading
     circlepos.mult(wanderD);          // Multiply by distance
-    circlepos.add(position);               // Make it relative to boid's position
+    circlepos.add(position);          // Make it relative to boid's position
 
     float h = velocity.heading();        // We need to know the heading to offset wandertheta
 
@@ -101,14 +109,49 @@ class Agent {
   void update() {
     // Update velocity
     velocity.add(acceleration);
+    
     // Limit speed
     velocity.limit(maxSpeed);
     position.add(velocity);
+    
     // Reset accelerationelertion to 0 each cycle
     acceleration.mult(0);
     
     // Death always looming
     health -= 0.5;
+  }
+  
+  void wraparound() {
+    if (position.x < -radius) position.x = width+radius;
+    if (position.y < -radius) position.y = height+radius;
+    if (position.x > width+radius) position.x = -radius;
+    if (position.y > height+radius) position.y = -radius;
+  }
+
+  // At any moment there is a teeny, tiny chance a bloop will reproduce
+  Agent reproduce() {
+    // asexual reproduction
+    if (random(1) < 0.001) {
+      // Child is exact copy of this single parent. 
+      DNA childDNA = dna.copy();
+      // Child DNA can mutate
+      childDNA.mutate(0.01);
+      // Child is exact copy of single parent
+      return new Agent(new PVector(random(width), random(height)), childDNA);
+    } 
+    else {
+      return null;
+    }
+  }
+  
+  // Check for death
+  boolean dead() {
+    if (health < 0.0) {
+      return true;
+    } 
+    else {
+      return false;
+    }
   }
   
   PVector seekFood(Food f) {
@@ -132,14 +175,7 @@ class Agent {
     return target; 
   }
   
-  void wraparound() {
-    if (position.x < -radius) position.x = width+radius;
-    if (position.y < -radius) position.y = height+radius;
-    if (position.x > width+radius) position.x = -radius;
-    if (position.y > height+radius) position.y = -radius;
-  }
-  
-  // Agent prying on food. 
+    // Agent prying on food. 
   void eat(Food f) {
     //ArrayList<PVector> food = f.getFood();
     //// Are we touching any food objects?
@@ -163,36 +199,9 @@ class Agent {
     //  }
     //}
   }
-
-  // At any moment there is a teeny, tiny chance a bloop will reproduce
-  Agent reproduce() {
-    // asexual reproduction
-    if (random(1) < 0.001) {
-      // Child is exact copy of single parent
-      return new Agent(new PVector(random(width), random(height)));
-    } 
-    else {
-      return null;
-    }
-  }
-  
-  // Check for death
-  boolean dead() {
-    if (health < 0.0) {
-      return true;
-    } 
-    else {
-      return false;
-    }
-  }
   
   void display() {
     pushStyle();
-    // See the deteriorating health
-    //color c  = color(255, 0, 0, health);
-    //fill(c); 
-    //stroke(0, health);
-    //ellipse(position.x, position.y, radius, radius); 
     
     float theta = velocity.heading() + radians(90);
     fill(127);
@@ -200,6 +209,7 @@ class Agent {
     pushMatrix();
     translate(position.x,position.y);
     rotate(theta);
+    
     color c = color(255, 0, 0, health);
     fill(c);
     stroke(0, health);
