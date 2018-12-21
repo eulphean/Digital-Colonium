@@ -1,4 +1,3 @@
-// Animating flower. 
 // Natural food. 
 class Flower {
   PVector position; 
@@ -23,6 +22,7 @@ class Flower {
       // Translate to location. 
       translate(position.x, position.y);
       pushStyle();
+      ellipseMode(CENTER);
       noStroke(); 
       scale(flowerScale, flowerScale);
       
@@ -54,7 +54,7 @@ class Flower {
       // Stem.
       pushStyle();
       stroke(0, 153, 0);
-      strokeWeight(4);
+      strokeWeight(10);
       line(point1.x, point1.y, point2.x, point2.y); 
       popStyle();
       
@@ -91,31 +91,4 @@ class Flower {
     PShape rect = createShape(RECT, position.x - w/2, position.y - h/2, w, h); 
     return rect; 
   }
-}
-
-Flower f; 
-
-void setup() {
-  fullScreen();
-  ellipseMode(CENTER);
-  //size(400, 400);
-  smooth();
-  f = new Flower(new PVector(width/2, height/2), 0.5);
-}
-
-void draw() {
-  background(255);
-  f.run();
-  
-  stroke(0); 
-  fill(255, 255, 255, 0);
-  // Draw flower bounding box. 
-  PShape rect = f.getBoundingBox(); 
-  shape(rect); 
-  
-  stroke(255, 0, 0); 
-  fill(255, 255, 255, 0);
-  // Draw flower face bounding box. 
-  rect = f.getFaceBoundingBox(); 
-  shape(rect);
 }

@@ -117,17 +117,17 @@ class Agent {
     float minD = 5000000; // An extremely large number
     PVector target = null;
     
-    // Find the closes food particle.
-    for (PVector p : f.food) {
-       // Calculate the minimum distance to food
-       float d = PVector.dist(position, p); 
-       if (d < maxVisionRadius) {
-         if (d < minD) {
-           minD = d;   
-           target = p; 
-         }
-       }
-    }
+    //// Find the closes food particle.
+    //for (PVector p : f.food) {
+    //   // Calculate the minimum distance to food
+    //   float d = PVector.dist(position, p); 
+    //   if (d < maxVisionRadius) {
+    //     if (d < minD) {
+    //       minD = d;   
+    //       target = p; 
+    //     }
+    //   }
+    //}
     
     return target; 
   }
@@ -141,27 +141,27 @@ class Agent {
   
   // Agent prying on food. 
   void eat(Food f) {
-    ArrayList<PVector> food = f.getFood();
-    // Are we touching any food objects?
-    for (int i = food.size()-1; i >= 0; i--) {
-      PVector foodCenter = new PVector(food.get(i).x, food.get(i).y);
+    //ArrayList<PVector> food = f.getFood();
+    //// Are we touching any food objects?
+    //for (int i = food.size()-1; i >= 0; i--) {
+    //  PVector foodCenter = new PVector(food.get(i).x, food.get(i).y);
       
-      // Get the center of the food block. 
-      foodCenter.x += f.foodWidth/2;
-      foodCenter.y += f.foodHeight/2; 
-      // Distance between circle and food block's center
-      float d = PVector.dist(position, foodCenter);
-      // If we are, juice up our strength!
-      if (d < radius + f.foodWidth/2) {
-        health += 100; 
-        food.remove(i);
-        //f.grow();
+    //  // Get the center of the food block. 
+    //  foodCenter.x += f.foodWidth/2;
+    //  foodCenter.y += f.foodHeight/2; 
+    //  // Distance between circle and food block's center
+    //  float d = PVector.dist(position, foodCenter);
+    //  // If we are, juice up our strength!
+    //  if (d < radius + f.foodWidth/2) {
+    //    health += 100; 
+    //    food.remove(i);
+    //    //f.grow();
         
-        if (random(1) <= 0.5) {
-          f.grow(); 
-        }
-      }
-    }
+    //    if (random(1) <= 0.5) {
+    //      //f.grow(); 
+    //    }
+    //  }
+    //}
   }
 
   // At any moment there is a teeny, tiny chance a bloop will reproduce

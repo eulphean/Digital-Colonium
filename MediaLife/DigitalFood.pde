@@ -4,7 +4,7 @@ class DigitalFood {
   
   DigitalFood(int num) {
     int cols = 5; int rows = 5; 
-    int pixWidth = 6  ; 
+    int pixWidth = 9; 
     
     // Initialize num of PixelBricks
     digitalFood = new ArrayList(); 
@@ -13,7 +13,7 @@ class DigitalFood {
       // Keep creating a random position till the time we get a clean position
       // that doesn't intersect with another brick. 
       do {
-        position =  new PVector(int(random(width - pixWidth*cols)), int(random((int) height - pixWidth*rows))); 
+        position = new PVector(int(random(width - pixWidth*cols)), int(random((int) height - pixWidth*rows))); 
       } while (isIntersecting(position, rows, cols, pixWidth)); 
       
       digitalFood.add(new PixelBrick(position, rows, cols, pixWidth));

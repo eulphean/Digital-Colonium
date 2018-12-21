@@ -17,7 +17,7 @@ class World {
         // Initialize media food 
         digFood = new DigitalFood(numPixelBricks);
         
-        // Keep track of iterations.
+       // Keep track of iterations.
         generation = 0; 
     }
     
