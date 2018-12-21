@@ -1,95 +1,83 @@
 // Natural food. 
 class Flower {
   PVector position; 
-  
-  // These are calculated in the setup. 
-  PVector boundingRectPos; 
-  PVector boundingBoxDimensions; 
-  PVector faceBoundingBoxDimensions; 
-  
   int rot;
-  float flowerScale; 
-  int centerDiameter; int petalDiameter;
-  int stemLength;
+  int flowerHeight; int flowerWidth; 
+  float scale; 
   
-  Flower(PVector pos, float scale) {
-    rot = 0; 
-    
-    // Flower positions. 
-    position = pos; 
-    flowerScale = scale; 
-    centerDiameter = 50; 
-    petalDiameter = 40; 
-    stemLength = 60; 
-    
-    // Bounding box
-    float w = (centerDiameter + petalDiameter + 9) * flowerScale; 
-    float h = (centerDiameter + stemLength + petalDiameter/2 + 9)*flowerScale;
-    boundingBoxDimensions = new PVector(w, h);
-    boundingRectPos = new PVector(int(position.x - w/2), int(position.y - h/3) - 3*flowerScale); 
+  // Get center flower radius and position to calculate
+  // the intersection box/radius for the circle
  
-    // Face bounding box
-    // Width is same as above. Height is same as width. 
-    h = w; 
-    faceBoundingBoxDimensions = new PVector(w, h);
+  
+  Flower(PVector pos, float s) {
+    rot = 0; 
+    scale = s; 
+    position = pos; 
+    flowerHeight = int(90*s);
+    flowerWidth = int(60*s);
   }
   
   void run() {
-    pushMatrix(); 
-      // Translate to location. 
+    pushMatrix();
       translate(position.x, position.y);
-      pushStyle();
-      ellipseMode(CENTER);
-      noStroke(); 
-      scale(flowerScale, flowerScale);
+      scale(scale, scale);
       
-      PVector point1 = new PVector(25 * cos(PI/2), 25 * sin(PI/2)); 
-      PVector point2 = new PVector(point1.x, point1.y + stemLength);
+      // Draw the bounding box
+      // Enable this for debugging. 
+      color c = color(255, 255, 255, 0); 
+      fill(c);
+      stroke(0); 
       
+      rect(0, 0, flowerWidth, flowerHeight); 
+      
+      PVector centerHead = new PVector(flowerWidth/2, flowerHeight/3); 
+      PVector base = new PVector(centerHead.x, flowerHeight);
+      
+      // Smooth flower face. 
+      noStroke();
+      
+      ellipseMode(CORNER);
       // Left leaf.
       pushMatrix(); 
-      translate(point2.x, point2.y); 
-        rotate(radians(220)); 
-        pushStyle();
-        ellipseMode(CORNERS);
+      translate(base.x, base.y); 
+        rotate(radians(200)); 
         fill(0, 255, 0);
-        ellipse(4, 0, 30, 7);
-        popStyle();
+        ellipse(0, 0, flowerWidth/2, flowerHeight/9);
       popMatrix();
       
       // Right leaf. 
       pushMatrix(); 
-      translate(point2.x, point2.y); 
-        rotate(radians(317));
-        pushStyle();
-        ellipseMode(CORNER);
+      translate(base.x, base.y); 
+        rotate(radians(-20));
         fill(0, 255, 0);
-        ellipse(4, -6, 25, 7);
-        popStyle();
+        ellipse(0, -flowerHeight/9, flowerWidth/2, flowerHeight/9);
       popMatrix();
       
       // Stem.
       pushStyle();
       stroke(0, 153, 0);
-      strokeWeight(10);
-      line(point1.x, point1.y, point2.x, point2.y); 
+      strokeWeight(6);
+      strokeCap(SQUARE);
+      line(centerHead.x, centerHead.y, base.x, base.y); 
       popStyle();
       
+      ellipseMode(CENTER); 
       // Petals.
-      pushMatrix(); 
-      rotate(radians(rot));
+      pushMatrix();
+        translate(centerHead.x, centerHead.y);
+        rotate(radians(rot));
         fill(255, 0, 0); // green
         for (int i = 0; i < 6; i++) {
-          ellipse(0, -30, petalDiameter, petalDiameter);
+          ellipse(0, -flowerWidth/4, flowerWidth/2, flowerWidth/2);
           rotate(radians(60));
         }
         rot++;
       popMatrix();
       
       // Center part. 
+      noStroke();
       fill(255, 255, 0);
-      ellipse(0, 0, centerDiameter, centerDiameter);
-      popStyle();
+      ellipse(centerHead.x, centerHead.y, flowerWidth/2.5, flowerWidth/2.5);
     popMatrix();
   } 
 }

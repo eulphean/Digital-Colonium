@@ -1,45 +1,41 @@
 class Food {
   // Natural food. 
   ArrayList<Flower> food;
-  int flowerWidth; int flowerHeight; 
   
   Food(int num) {
      food = new ArrayList();
      
-     // Create a dummy flower to get the bounding box to create multiple others. 
-     PVector position = new PVector(0, 0); 
-     Flower f = new Flower(position, 0.3); 
-    
+     float scale = 0.6; 
+     // Dummy flower to calculate the height and width. 
+     Flower f = new Flower(new PVector(0, 0), scale); 
+
+     PVector position;      
      // Create a list of non-intersecting flowers.   
-     flowerWidth = int(f.boundingBoxDimensions.x); flowerHeight = int(f.boundingBoxDimensions.y); 
      for (int i = 0; i < num; i++) {
        do {
-         position = new PVector(int(random(width-flowerWidth)), int(random(flowerHeight/2, height-flowerHeight)));
-         f = new Flower(position, 0.3); 
-       } while (isIntersecting(f.boundingRectPos, flowerWidth, flowerHeight)); 
+         position = new PVector(int(random(width-f.flowerWidth)), int(random(height-f.flowerHeight))); 
+       } while (isIntersecting(position, f.flowerWidth, f.flowerHeight)); 
        
-       food.add(f);
+       food.add(new Flower(position, scale));
      }
   }
   
   boolean isIntersecting(PVector position, int w, int h) {
     // Calculate current Flower's dimensions. 
-    PVector newFoodRect = new PVector(position.x - w/2, position.y - h/2);
-    int newFoodTopRight = int(newFoodRect.x + w); 
-    int newFoodBottom = int(newFoodRect.y + h/2);
+    int newTopRight = int(position.x + w); 
+    int newBottom = int(position.y + h);
     
     for (int i = 0; i < food.size(); i++) {
       // Existing Flower dimensions. 
       Flower f = food.get(i); 
-      PVector foodRect = new PVector(f.position.x - w/2, f.position.y - h/2);
-      int foodRectTopRight = int(foodRect.x + w/2); 
-      int foodRectBottom = int(foodRect.y + h/2); 
+      int oldTopRight = int(f.position.x + w); 
+      int oldBottom = int(f.position.y + h); 
       
       // Compare the two and check if they intensect. 
-      boolean a = (foodRectTopRight > newFoodRect.x && 
-                foodRect.x < newFoodTopRight && 
-                  foodRectBottom > newFoodRect.y && 
-                    foodRect.y < newFoodBottom); 
+      boolean a = (oldTopRight > position.x && 
+                f.position.x < newTopRight && 
+                  oldBottom > position.y && 
+                    f.position.y < newBottom); 
      
       // Break and return immediately. 
       if (a) {

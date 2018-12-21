@@ -11,7 +11,7 @@ class DigitalFood {
     PVector position;
     for (int i = 0; i < num; i++) {
       // Keep creating a random position till the time we get a clean position
-      // that doesn't intersect with another flower.
+      // that doesn't intersect with another f
       do {
         position = new PVector(int(random(width - pixWidth*cols)), int(random((int) height - pixWidth*rows))); 
       } while (isIntersecting(position, rows, cols, pixWidth)); 
