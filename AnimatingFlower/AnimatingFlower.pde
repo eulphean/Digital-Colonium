@@ -1,7 +1,12 @@
-// Animating flower. 
 // Natural food. 
 class Flower {
   PVector position; 
+  
+  // These are calculated in the setup. 
+  PVector boundingRectPos; 
+  PVector boundingBoxDimensions; 
+  PVector faceBoundingBoxDimensions; 
+  
   int rot;
   float flowerScale; 
   int centerDiameter; int petalDiameter;
@@ -16,6 +21,17 @@ class Flower {
     centerDiameter = 50; 
     petalDiameter = 40; 
     stemLength = 60; 
+    
+    // Bounding box
+    float w = (centerDiameter + petalDiameter + 9) * flowerScale; 
+    float h = (centerDiameter + stemLength + petalDiameter/2 + 9)*flowerScale;
+    boundingBoxDimensions = new PVector(w, h);
+    boundingRectPos = new PVector(int(position.x - w/2), int(position.y - h/3) - 3*scale); 
+ 
+    // Face bounding box
+    // Width is same as above. Height is same as width. 
+    h = w; 
+    faceBoundingBoxDimensions = new PVector(w, h);
   }
   
   void run() {
@@ -23,6 +39,7 @@ class Flower {
       // Translate to location. 
       translate(position.x, position.y);
       pushStyle();
+      ellipseMode(CENTER);
       noStroke(); 
       scale(flowerScale, flowerScale);
       
@@ -54,7 +71,7 @@ class Flower {
       // Stem.
       pushStyle();
       stroke(0, 153, 0);
-      strokeWeight(4);
+      strokeWeight(10);
       line(point1.x, point1.y, point2.x, point2.y); 
       popStyle();
       
@@ -75,24 +92,7 @@ class Flower {
       popStyle();
     popMatrix();
   } 
-  
-  // Use this for drawing multiple flowers on the screen. 
-  PShape getBoundingBox() {
-    float w = (centerDiameter + petalDiameter) * flowerScale; 
-    float h = (centerDiameter + stemLength + petalDiameter/2) * flowerScale;
-    PShape rect = createShape(RECT, position.x - w/2, position.y - h/3, w, h); 
-    return rect; 
-  }
-  
-  // Use this for eating the flower.  
-  PShape getFaceBoundingBox() {
-    float w = (centerDiameter + petalDiameter) * flowerScale; 
-    float h = (centerDiameter + petalDiameter) * flowerScale;
-    PShape rect = createShape(RECT, position.x - w/2, position.y - h/2, w, h); 
-    return rect; 
-  }
 }
-
 Flower f; 
 
 void setup() {
@@ -100,7 +100,7 @@ void setup() {
   ellipseMode(CENTER);
   //size(400, 400);
   smooth();
-  f = new Flower(new PVector(width/2, height/2), 0.5);
+  f = new Flower(new PVector(width/2, height/2), 3);
 }
 
 void draw() {
@@ -110,12 +110,14 @@ void draw() {
   stroke(0); 
   fill(255, 255, 255, 0);
   // Draw flower bounding box. 
-  PShape rect = f.getBoundingBox(); 
-  shape(rect); 
+  //PShape rect = f.getBoundingBox(); 
+  //shape(rect); 
+  rect(f.boundingRectPos.x, f.boundingRectPos.y, f.boundingBoxDimensions.x, f.boundingBoxDimensions.y);
   
   stroke(255, 0, 0); 
   fill(255, 255, 255, 0);
   // Draw flower face bounding box. 
-  rect = f.getFaceBoundingBox(); 
-  shape(rect);
+  //rect = f.getFaceBoundingBox(); 
+  //shape(rect);
+  rect(f.boundingRectPos.x, f.boundingRectPos.y, f.faceBoundingBoxDimensions.x, f.faceBoundingBoxDimensions.y);
 }

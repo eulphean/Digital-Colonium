@@ -4,22 +4,21 @@ class Food {
   int flowerWidth; int flowerHeight; 
   
   Food(int num) {
-     // Assign food position within world dimensions. 
-     // Create no overlapping food. 
      food = new ArrayList();
      
      // Create a dummy flower to get the bounding box to create multiple others. 
      PVector position = new PVector(0, 0); 
-     Flower f = new Flower(position, 0.2); 
+     Flower f = new Flower(position, 0.3); 
     
      // Create a list of non-intersecting flowers.   
-     flowerWidth = int(f.getBoundingBox().width); flowerHeight = int(f.getBoundingBox().height); 
+     flowerWidth = int(f.boundingBoxDimensions.x); flowerHeight = int(f.boundingBoxDimensions.y); 
      for (int i = 0; i < num; i++) {
        do {
          position = new PVector(int(random(width-flowerWidth)), int(random(flowerHeight/2, height-flowerHeight)));
-       } while (isIntersecting(position, flowerWidth, flowerHeight)); 
+         f = new Flower(position, 0.3); 
+       } while (isIntersecting(f.boundingRectPos, flowerWidth, flowerHeight)); 
        
-       food.add(new Flower(position, 0.2));
+       food.add(f);
      }
   }
   

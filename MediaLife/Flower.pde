@@ -1,6 +1,12 @@
 // Natural food. 
 class Flower {
   PVector position; 
+  
+  // These are calculated in the setup. 
+  PVector boundingRectPos; 
+  PVector boundingBoxDimensions; 
+  PVector faceBoundingBoxDimensions; 
+  
   int rot;
   float flowerScale; 
   int centerDiameter; int petalDiameter;
@@ -15,6 +21,17 @@ class Flower {
     centerDiameter = 50; 
     petalDiameter = 40; 
     stemLength = 60; 
+    
+    // Bounding box
+    float w = (centerDiameter + petalDiameter + 9) * flowerScale; 
+    float h = (centerDiameter + stemLength + petalDiameter/2 + 9)*flowerScale;
+    boundingBoxDimensions = new PVector(w, h);
+    boundingRectPos = new PVector(int(position.x - w/2), int(position.y - h/3) - 3*flowerScale); 
+ 
+    // Face bounding box
+    // Width is same as above. Height is same as width. 
+    h = w; 
+    faceBoundingBoxDimensions = new PVector(w, h);
   }
   
   void run() {
@@ -75,20 +92,4 @@ class Flower {
       popStyle();
     popMatrix();
   } 
-  
-  // Use this for drawing multiple flowers on the screen. 
-  PShape getBoundingBox() {
-    float w = (centerDiameter + petalDiameter) * flowerScale; 
-    float h = (centerDiameter + stemLength + petalDiameter/2) * flowerScale;
-    PShape rect = createShape(RECT, position.x - w/2, position.y - h/3, w, h); 
-    return rect; 
-  }
-  
-  // Use this for eating the flower.  
-  PShape getFaceBoundingBox() {
-    float w = (centerDiameter + petalDiameter) * flowerScale; 
-    float h = (centerDiameter + petalDiameter) * flowerScale;
-    PShape rect = createShape(RECT, position.x - w/2, position.y - h/2, w, h); 
-    return rect; 
-  }
 }
