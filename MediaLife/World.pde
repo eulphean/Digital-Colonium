@@ -20,6 +20,11 @@ class World {
     void run() {
       // Deal with natural food.  
       food.run(); 
+      
+      // Flock the agents. 
+      for (Agent a : agents) {
+        a.flock();  
+      }
 
       // Handle agents display, eating, reproduction
       for (int i = agents.size()-1; i >= 0; i--) {
@@ -35,6 +40,7 @@ class World {
           food.add(a.position); // Make food where the organism died.
         }
         
+        // Reproduce the agent. 
         Agent child = a.reproduce(); 
         if (child != null) {
           agents.add(child);

@@ -39,7 +39,7 @@ class Agent {
     maxMediaPerceptionRad = agentVisionRadius;
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
-    maxForce = 0.9;
+    maxForce = 0.5;
     
     bodyHealth = 200.0; 
     mediaHealth = 200.0;
@@ -49,6 +49,50 @@ class Agent {
     dna = _dna; 
     //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
     //radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
+  }
+  
+  void flock() {
+    PVector sep = separate();
+    acceleration.add(sep);
+  }
+  
+  // Separation
+  // Method checks for nearby boids and steers away
+  PVector separate () {
+    ArrayList<Agent> agents = world.agents; 
+    
+    float desiredseparation = 25.0f;
+    PVector steer = new PVector(0, 0);
+    int count = 0;
+    // For every boid in the system, check if it's too close
+    for (Agent a : agents) {
+      float d = PVector.dist(position, a.position);
+      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+      if ((d > 0) && (d < desiredseparation)) {
+        // Calculate vector pointing away from neighbor
+        PVector diff = PVector.sub(position, a.position);
+        diff.normalize();
+        diff.div(d);        // Weight by distance
+        steer.add(diff);
+        count++;            // Keep track of how many
+      }
+    }
+    
+    
+    // Average -- divide by how many
+    if (count > 0) {
+      steer.div((float)count);
+    }
+
+    // As long as the vector is greater than 0
+    if (steer.mag() > 0) {
+      // Implement Reynolds: Steering = Desired - Velocity
+      steer.normalize();
+      steer.mult(maxSpeed);
+      steer.sub(velocity);
+      steer.limit(maxForce);
+    }
+    return steer;
   }
   
   void run(Food f) {
@@ -248,7 +292,7 @@ class Agent {
       float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
       PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
       float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
-      if (d < maxRadius + flWidth/2) {
+      if (d < maxRadius) {
         bodyHealth += 100; 
         flowers.remove(i);
       }
