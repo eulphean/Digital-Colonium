@@ -4,8 +4,6 @@ class DigitalFood {
   
   DigitalFood(int num) {
     // Ignore num for now. 
-    // TODO: cleanup. 
-    
     int cols = 8; int rows = 20; 
     int pixWidth = 10; 
     
@@ -13,8 +11,7 @@ class DigitalFood {
     int newNum = width/w; // These many media bricks. But I need some space in between. 
     
     digitalFood = new ArrayList(); 
-    // Starting x position = 0 then w
-    // Start y position = height/2 - h/2
+
     float yPos = height/2 - h/2; 
     for (int i = 0; i < newNum; i++) {
      PVector position = new PVector (i*w, yPos); 

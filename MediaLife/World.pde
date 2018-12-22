@@ -5,6 +5,9 @@ class World {
     int generation; 
 
     World(int numAgents, int numFood, int numPixelBricks) {
+        // Initialize media food 
+        digFood = new DigitalFood(numPixelBricks);
+        
         // Initialize food
         food = new Food(numFood);
          
@@ -13,9 +16,6 @@ class World {
            PVector l = new PVector(random(width), random(height));
            agents.add(new Agent(l, new DNA()));
         }
-        
-        // Initialize media food 
-        digFood = new DigitalFood(numPixelBricks);
         
        // Keep track of iterations.
         generation = 0; 
