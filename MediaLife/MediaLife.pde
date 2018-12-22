@@ -21,6 +21,9 @@ World world;
 void setup() {
   fullScreen();
   
+  // Run some code when the sketch closes. 
+  prepareExitHandler();
+  
   // Initialize GUI flags. 
   hideGui = false;
   turnOnVision = false; 
@@ -97,6 +100,8 @@ void initializeGui() {
               .setValue(numPixelBricks)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
+  
+  cp5.loadProperties(("medialife"));
               
 }
 
@@ -112,4 +117,12 @@ void keyPressed() {
   if (key == 'r') {
     restartWorld = !restartWorld;  
   }
+}
+
+void prepareExitHandler () {
+  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+    public void run () {
+      cp5.saveProperties(("medialife"));
+    }
+  }));
 }

@@ -1,0 +1,22 @@
+{
+  "/numPixelBricks": {
+    "min": 0,
+    "max": 200,
+    "value": 20
+  },
+  "/numFood": {
+    "min": 0,
+    "max": 500,
+    "value": 305
+  },
+  "/numAgents": {
+    "min": 0,
+    "max": 200,
+    "value": 50
+  },
+  "/agentVisionRadius": {
+    "min": 0,
+    "max": 50,
+    "value": 40
+  }
+}
