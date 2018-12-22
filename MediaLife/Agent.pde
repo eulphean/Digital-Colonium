@@ -27,16 +27,13 @@ class Agent {
   State curState;
   
   // DNA of the agent. 
-  DNA dna;  
-  
-  // Unused. 
-  float wanderTheta; 
+  DNA dna;   
   
   // Init the agent. 
   Agent(PVector pos, DNA _dna) {
     position = pos;
     acceleration = new PVector(0, 0); 
-    velocity = new PVector(1, 1);
+    velocity = new PVector(random(-3, 3), random(-3, 3));
     
     maxFoodPerceptionRad = agentVisionRadius; 
     maxMediaPerceptionRad = agentVisionRadius;
@@ -52,7 +49,6 @@ class Agent {
     dna = _dna; 
     //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
     //radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
-    wanderTheta = 0;
   }
   
   void run(Food f) {
@@ -69,6 +65,10 @@ class Agent {
         if (target != null) {
           seek(target, true /*Arrive*/); 
         }
+        
+        // Consume food if it's intersecting with 
+        // the agent. 
+        eat(f); 
         break; 
       
       case Media:
@@ -85,9 +85,6 @@ class Agent {
 
     // Keep updating position until reaching the target.
     update(); 
-    
-    // Eat food.
-    eat(f); 
     
     wraparound();
     display();
@@ -139,7 +136,7 @@ class Agent {
     acceleration.mult(0);
     
     // Death always looming
-    bodyHealth -= 0.5;
+    bodyHealth -= 0.1;
   }
   
   void wraparound() {
@@ -160,9 +157,7 @@ class Agent {
   }
   
   PVector findFood(Food f) {
-    // Finds the nearest food particle around it within a 
-    // certain range and calculates a new velocity to go towards it.
-    float minD = 5000000; // An extremely large number
+    float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target = null;
     
     // Find the closes food particle.
@@ -181,9 +176,64 @@ class Agent {
   }
   
   PVector findMedia(Food f) {
-   PVector target = null;
-   
-   return target; 
+    float minD = 5000000; // Helpful to calculate a local minima. 
+    PVector target = null;
+    
+    for (PixelBrick brick : f.bricks) {
+       // Calculate the distance to all the points. 
+       int brickW = brick.pixWidth*brick.cols; int brickH = brick.pixWidth*brick.rows; 
+       
+       PVector brickPoint;
+       float d;
+       // Top and Bottom rows.
+       for (int i = 0; i < brickW; i+=2) {
+         // Top row.
+         brickPoint = new PVector(brick.position.x + i, brick.position.y); 
+         d = PVector.dist(position, brickPoint); 
+         if (d < maxMediaPerceptionRad) {
+           if (d < minD) {
+             minD = d;   
+             target = brickPoint; 
+           }
+         }
+         
+         // Bottom row.
+         brickPoint = new PVector(brick.position.x + i, brick.position.y + brickH); 
+         d = PVector.dist(position, brickPoint); 
+         if (d < maxMediaPerceptionRad) {
+           if (d < minD) {
+             minD = d;   
+             target = brickPoint; 
+           }
+         }
+       }
+       
+       // Left and right columns.
+       for (int i = 0; i < brickH; i+=2) {
+         // Left column.
+         brickPoint = new PVector(brick.position.x, brick.position.y + i); 
+         d = PVector.dist(position, brickPoint); 
+         if (d < maxMediaPerceptionRad) {
+           if (d < minD) {
+             minD = d;   
+             target = brickPoint; 
+           }
+         }
+         
+         // Right column.
+         brickPoint = new PVector(brick.position.x + brickW, brick.position.y + i); 
+         d = PVector.dist(position, brickPoint); 
+         if (d < maxMediaPerceptionRad) {
+           if (d < minD) {
+             minD = d;   
+             target = brickPoint; 
+           }
+         }
+       }
+      
+    }
+    
+    return target; 
   }
   
   // Agent prying on food. 
@@ -254,23 +304,4 @@ class Agent {
       return null;
     }
   }
-  
-  //void wander() {
-  //  float wanderR = 25;         // Radius for our "wander circle"
-  //  float wanderD = 100;         // Distance for our "wander circle"
-  //  float change = 5.0;
-  //  wanderTheta += random(-change,change);     // Randomly change wander theta
-
-  //  // Now we have to calculate the new position to steer towards on the wander circle
-  //  PVector circlepos = velocity.copy();    // Start with velocity
-  //  circlepos.normalize();            // Normalize to get heading
-  //  circlepos.mult(wanderD);          // Multiply by distance
-  //  circlepos.add(position);          // Make it relative to boid's position
-
-  //  float h = velocity.heading();        // We need to know the heading to offset wandertheta
-
-  //  PVector circleOffSet = new PVector(wanderR*cos(wanderTheta+h),wanderR*sin(wanderTheta+h));
-  //  PVector target = PVector.add(circlepos,circleOffSet);
-  //  seek(target);
-  //}
 };

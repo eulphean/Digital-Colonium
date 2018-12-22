@@ -9,7 +9,7 @@ class World {
          
         // Initialize agents
         for (int i = 0; i < numAgents; i++) {
-           PVector l = new PVector(random(width), random(height));
+           PVector l = new PVector(0, 0);
            agents.add(new Agent(l, new DNA()));
         }
         
