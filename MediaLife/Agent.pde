@@ -1,4 +1,4 @@
-enum State{
+enum State {
   Hungry,
   Media,
   Mating; 
@@ -7,78 +7,93 @@ enum State{
 
 class Agent {
   PVector position; 
-  PVector velocity;
-  PVector acceleration;
   
+  PVector velocity; PVector acceleration;
+  
+  // Possible Genotypes.  
+  float maxFoodPerceptionRad; 
+  float maxMediaPerceptionRad;
+  float maxSpeed;
+  float maxRadius;
   float maxForce;
-  float maxVisionRadius; 
-  float wanderTheta; 
+  
+  // Health units 
+  // Average of these determine the looming death of the agent. 
+  // These could honestly evolve as well. This could be a genotype. 
+  float bodyHealth; 
+  float mediaHealth;
+  
+  // Current agent radius. 
+  State curState;
   
   // DNA of the agent. 
-  DNA dna; 
-  float radius; 
-  float maxSpeed;
+  DNA dna;  
   
-  // Life timer
-  float health; 
+  // Unused. 
+  float wanderTheta; 
   
-  State curState = State.Hungry; 
-  
-  // Modify the constructor to pass DNA. 
+  // Init the agent. 
   Agent(PVector pos, DNA _dna) {
-    // Initialize the agent
-    acceleration = new PVector(0, 0); 
-    velocity = new PVector(0, 0);
-    maxForce = 0.2;
-    wanderTheta = 0; 
-    health = 200; 
-    
     position = pos;
+    acceleration = new PVector(0, 0); 
+    velocity = new PVector(1, 1);
     
-    // Pass in the dna. 
+    maxFoodPerceptionRad = agentVisionRadius; 
+    maxMediaPerceptionRad = agentVisionRadius;
+    maxSpeed = 5.0;
+    maxRadius = 8.0; // Size for the boid.
+    maxForce = 0.9;
+    
+    bodyHealth = 200.0; 
+    mediaHealth = 200.0;
+    
+    curState = State.Hungry; 
+    
     dna = _dna; 
-    maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
-    radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
+    //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
+    //radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
+    wanderTheta = 0;
   }
   
   void run(Food f) {
     // Update any GUI values
-    maxVisionRadius = agentVisionRadius; 
+    maxFoodPerceptionRad = agentVisionRadius; 
+    maxMediaPerceptionRad = agentVisionRadius; 
     
-    // Look for the closest food. 
-    PVector target = seekFood(f);
-    if (target != null) {
-      seek(target, true); 
-    } else {
-      // Wander around to look for food. 
-      wander();
+    PVector target;
+    // Determine the next action.
+    switch (curState) {
+      case Hungry: 
+        // Look for closest food. 
+        target = findFood(f);
+        if (target != null) {
+          seek(target, true /*Arrive*/); 
+        }
+        break; 
+      
+      case Media:
+        target = findMedia(f); 
+        if (target != null) {
+         // Do something. 
+         seek(target, true /*Arrive*/);
+        }
+        break; 
+      
+      default: 
+        break;
     }
+
+    // Keep updating position until reaching the target.
     update(); 
-    eat(f); // Eat the food. 
+    
+    // Eat food.
+    eat(f); 
+    
     wraparound();
     display();
   }
   
-  void wander() {
-    float wanderR = 25;         // Radius for our "wander circle"
-    float wanderD = 100;         // Distance for our "wander circle"
-    float change = 5.0;
-    wanderTheta += random(-change,change);     // Randomly change wander theta
-
-    // Now we have to calculate the new position to steer towards on the wander circle
-    PVector circlepos = velocity.copy();    // Start with velocity
-    circlepos.normalize();            // Normalize to get heading
-    circlepos.mult(wanderD);          // Multiply by distance
-    circlepos.add(position);          // Make it relative to boid's position
-
-    float h = velocity.heading();        // We need to know the heading to offset wandertheta
-
-    PVector circleOffSet = new PVector(wanderR*cos(wanderTheta+h),wanderR*sin(wanderTheta+h));
-    PVector target = PVector.add(circlepos,circleOffSet);
-    seek(target);
-  }
-  
-  // A method that calculates a steering force towards a target
+  // A method that calculates a steering force towards a target. 
   // STEER = DESIRED MINUS VELOCITY
   void seek(PVector target) {
      seek(target, false); 
@@ -91,7 +106,7 @@ class Agent {
     if (arrive) {
        float d = desired.mag(); 
        if (d < 50) {
-          float m = map(d, 0, 100, 0, maxSpeed);
+          float m = map(d, 0, 50, 0, maxSpeed);
           desired.setMag(m);
        } else {
           desired.setMag(maxSpeed); 
@@ -106,13 +121,10 @@ class Agent {
     PVector steer = PVector.sub(desired,velocity);
     steer.limit(maxForce);  // Limit to maximum steering force
 
-    applyForce(steer);
-  }
-  
-  void applyForce(PVector force) {
     // We could add mass here if we want A = F / M
-    acceleration.add(force);
+    acceleration.add(steer);
   }
+
   
   // Update position
   void update() {
@@ -127,35 +139,19 @@ class Agent {
     acceleration.mult(0);
     
     // Death always looming
-    health -= 0.5;
+    bodyHealth -= 0.5;
   }
   
   void wraparound() {
-    if (position.x < -radius) position.x = width+radius;
-    if (position.y < -radius) position.y = height+radius;
-    if (position.x > width+radius) position.x = -radius;
-    if (position.y > height+radius) position.y = -radius;
-  }
-
-  // At any moment there is a teeny, tiny chance a bloop will reproduce
-  Agent reproduce() {
-    // asexual reproduction
-    if (random(1) < 0.001) {
-      // Child is exact copy of this single parent. 
-      DNA childDNA = dna.copy();
-      // Child DNA can mutate
-      childDNA.mutate(0.01);
-      // Child is exact copy of single parent
-      return new Agent(new PVector(random(width), random(height)), childDNA);
-    } 
-    else {
-      return null;
-    }
+    if (position.x < -maxRadius) position.x = width+maxRadius;
+    if (position.y < -maxRadius) position.y = height+maxRadius;
+    if (position.x > width+maxRadius) position.x = -maxRadius;
+    if (position.y > height+maxRadius) position.y = -maxRadius;
   }
   
   // Check for death
   boolean dead() {
-    if (health < 0.0) {
+    if (bodyHealth < 0.0) {
       return true;
     } 
     else {
@@ -163,28 +159,34 @@ class Agent {
     }
   }
   
-  PVector seekFood(Food f) {
+  PVector findFood(Food f) {
     // Finds the nearest food particle around it within a 
     // certain range and calculates a new velocity to go towards it.
     float minD = 5000000; // An extremely large number
     PVector target = null;
     
-    //// Find the closes food particle.
-    //for (PVector p : f.food) {
-    //   // Calculate the minimum distance to food
-    //   float d = PVector.dist(position, p); 
-    //   if (d < maxVisionRadius) {
-    //     if (d < minD) {
-    //       minD = d;   
-    //       target = p; 
-    //     }
-    //   }
-    //}
+    // Find the closes food particle.
+    for (Flower fl : f.flowers) {
+       // Calculate the minimum distance to food
+       float d = PVector.dist(position, fl.position); 
+       if (d < maxFoodPerceptionRad) {
+         if (d < minD) {
+           minD = d;   
+           target = fl.position; 
+         }
+       }
+    }
     
     return target; 
   }
   
-    // Agent prying on food. 
+  PVector findMedia(Food f) {
+   PVector target = null;
+   
+   return target; 
+  }
+  
+  // Agent prying on food. 
   void eat(Food f) {
     //ArrayList<PVector> food = f.getFood();
     //// Are we touching any food objects?
@@ -213,27 +215,62 @@ class Agent {
     pushStyle();
     
     float theta = velocity.heading() + radians(90);
-    fill(127);
-    stroke(0);
+    //fill(127);
+    //stroke(0);
     pushMatrix();
     translate(position.x,position.y);
     rotate(theta);
     
-    color c = color(255, 255, 255, health);
+    color c = color(255, 255, 255);
     fill(c);
-    stroke(0, health);
+    stroke(0, bodyHealth);
     beginShape(TRIANGLES);
-    vertex(0, -radius*2);
-    vertex(-radius, radius*2);
-    vertex(radius, radius*2);
+    vertex(0, -maxRadius*2);
+    vertex(-maxRadius, maxRadius*2);
+    vertex(maxRadius, maxRadius*2);
     endShape();
     popMatrix();
     
     if (turnOnVision) {
       c = color(255, 255, 255, 100); 
       fill (c); 
-      ellipse(position.x, position.y, maxVisionRadius, maxVisionRadius);
+      ellipse(position.x, position.y, maxFoodPerceptionRad, maxFoodPerceptionRad);
     }
     popStyle();
   }
+  
+  // At any moment there is a teeny, tiny chance a bloop will reproduce
+  Agent reproduce() {
+    // asexual reproduction
+    if (random(1) < 0.001) {
+      // Child is exact copy of this single parent. 
+      DNA childDNA = dna.copy();
+      // Child DNA can mutate
+      childDNA.mutate(0.01);
+      // Child is exact copy of single parent
+      return new Agent(new PVector(random(width), random(height)), childDNA);
+    } 
+    else {
+      return null;
+    }
+  }
+  
+  //void wander() {
+  //  float wanderR = 25;         // Radius for our "wander circle"
+  //  float wanderD = 100;         // Distance for our "wander circle"
+  //  float change = 5.0;
+  //  wanderTheta += random(-change,change);     // Randomly change wander theta
+
+  //  // Now we have to calculate the new position to steer towards on the wander circle
+  //  PVector circlepos = velocity.copy();    // Start with velocity
+  //  circlepos.normalize();            // Normalize to get heading
+  //  circlepos.mult(wanderD);          // Multiply by distance
+  //  circlepos.add(position);          // Make it relative to boid's position
+
+  //  float h = velocity.heading();        // We need to know the heading to offset wandertheta
+
+  //  PVector circleOffSet = new PVector(wanderR*cos(wanderTheta+h),wanderR*sin(wanderTheta+h));
+  //  PVector target = PVector.add(circlepos,circleOffSet);
+  //  seek(target);
+  //}
 };
