@@ -6,10 +6,6 @@ class Flower {
   float scale; 
   color petalColor;
   
-  // Get center flower radius and position to calculate
-  // the intersection box/radius for the circle
- 
-  
   Flower(PVector pos, float s) {
     rot = 0; 
     scale = s; 

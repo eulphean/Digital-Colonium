@@ -1,23 +1,49 @@
 class Food {
-  // Natural food. 
-  ArrayList<Flower> food;
+  ArrayList<Flower> flowers; // Natural food
+  ArrayList<PixelBrick> bricks; // Media bricks
   
   Food(int num) {
-     food = new ArrayList();
-     
-     float scale = 0.6; 
-     // Dummy flower to calculate the height and width. 
-     Flower f = new Flower(new PVector(0, 0), scale); 
+    createBricks(); // These are static. 
+    createFlowers(num); // These are random.
+  }
+  
+  void createFlowers(int num) {
+   flowers = new ArrayList();
+   
+   // Dummy flower to calculate the height and width. 
+   float scale = flowerScale; // Get GUI value.
+   Flower f = new Flower(new PVector(0, 0), scale); 
 
-     PVector position;      
-     // Create a list of non-intersecting flowers.   
-     for (int i = 0; i < num; i++) {
-       do {
-         position = new PVector(int(random(width-f.flowerWidth)), int(random(height-f.flowerHeight))); 
-       } while (isIntersecting(position, f.flowerWidth, f.flowerHeight)); 
-       
-       food.add(new Flower(position, scale));
-     }
+   PVector position;      
+   
+   // These flowers must not intersect with Bricks as well as with themselves. 
+   for (int i = 0; i < num; i++) {
+     boolean a; 
+     do {
+       position = new PVector(int(random(width-f.flowerWidth)), int(random(height-f.flowerHeight))); 
+       // Intersecting with another flower or another brick? 
+       a = isIntersecting(position, f.flowerWidth, f.flowerHeight);
+     } while (a); 
+     
+     flowers.add(new Flower(position, scale));
+   }
+  }
+  
+  void createBricks() {
+    // Maybe I can get all these values from the GUI. 
+    int cols = 8; int rows = 20; 
+    int pixWidth = 10; 
+    int space = 48;
+    
+    int w = pixWidth * cols + space; int h = pixWidth * rows; 
+    int newNum = width/w;  
+    
+    bricks = new ArrayList(); 
+    float yPos = height/2 - h/2; 
+    for (int i = 0; i < newNum; i++) {
+     PVector position = new PVector (i*w, yPos); 
+     bricks.add(new PixelBrick(position, rows, cols, pixWidth)); 
+    }
   }
   
   boolean isIntersecting(PVector position, int w, int h) {
@@ -25,9 +51,10 @@ class Food {
     int newTopRight = int(position.x + w); 
     int newBottom = int(position.y + h);
     
-    for (int i = 0; i < food.size(); i++) {
+    // Check with all the existing flower.
+    for (int i = 0; i < flowers.size(); i++) {
       // Existing Flower dimensions. 
-      Flower f = food.get(i); 
+      Flower f = flowers.get(i); 
       int oldTopRight = int(f.position.x + w); 
       int oldBottom = int(f.position.y + h); 
       
@@ -43,6 +70,22 @@ class Food {
       }
     }
     
+    // Intersecting with another brick?
+    for (int j = 0; j < bricks.size(); j++) {
+      PixelBrick brick = bricks.get(j); 
+      int brickW = brick.pixWidth * brick.cols; int brickH = brick.pixWidth * brick.rows;  
+      int oldTopRight = int(brick.position.x + brickW); 
+      int oldBottom = int(brick.position.y + brickH);
+      
+      boolean a = (oldTopRight > position.x && 
+        brick.position.x < newTopRight && 
+          oldBottom > position.y && 
+            brick.position.y < newBottom); 
+      if (a) {
+       return a;  
+      }
+    }
+    
     return false; 
   }
   
@@ -55,14 +98,18 @@ class Food {
   }
   
   void run() {
-     // Show food. 
-   for (Flower f: food) {
-     //rect(f.x, f.y, foodWidth, foodHeight);  
+   // Show flowers.  
+   for (Flower f: flowers) { 
      f.run();
+   }
+   
+   // Show bricks
+   for (PixelBrick pb: bricks) {
+     pb.run();
    }
   }
   
   ArrayList getFood() {
-     return food;  
+     return flowers;  
   }
 }

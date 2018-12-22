@@ -1,14 +1,10 @@
 class World {
     ArrayList<Agent> agents = new ArrayList<Agent>();
     Food food;; 
-    DigitalFood digFood; 
     int generation; 
 
-    World(int numAgents, int numFood, int numPixelBricks) {
-        // Initialize media food 
-        digFood = new DigitalFood(numPixelBricks);
-        
-        // Initialize food
+    World(int numAgents, int numFood) {
+        // Initialize all the sources of energy
         food = new Food(numFood);
          
         // Initialize agents
@@ -17,7 +13,7 @@ class World {
            agents.add(new Agent(l, new DNA()));
         }
         
-       // Keep track of iterations.
+        // Keep track of iterations.
         generation = 0; 
     }
     
@@ -44,9 +40,6 @@ class World {
           agents.add(child);
         }
       }
-      
-      // Run digital food. 
-      digFood.run(); 
       
       generation++; 
     }

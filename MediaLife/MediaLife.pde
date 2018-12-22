@@ -9,6 +9,7 @@ int agentVisionRadius = 40; Slider visSlider;
 int numAgents = 50; Slider numAgentsSlider;
 int numFood = 50; Slider numFoodSlider;
 int numPixelBricks = 20; Slider numPixelBricksSlider;
+float flowerScale = 0.6; Slider flowerScaleSlider; 
 
 // Flags
 boolean hideGui;
@@ -30,7 +31,7 @@ void setup() {
   
   initializeGui();
   
-  world = new World(numAgents, numFood, numPixelBricks);
+  world = new World(numAgents, numFood);
   ellipseMode(RADIUS);
   smooth();
 }
@@ -39,7 +40,7 @@ void draw() {
   background(0);
   
   if (restartWorld) {
-    world = new World(numAgents, numFood, numPixelBricks);
+    world = new World(numAgents, numFood);
     restartWorld = false;
   }
     
@@ -57,7 +58,7 @@ void draw() {
     // Generation
     text("Gen: " + world.generation, 5, 25);
     text("Agents: " + world.agents.size(), 5, 40);
-    text("Food: " + world.food.food.size(), 5, 60);
+    text("Food: " + world.food.flowers.size(), 5, 60);
     text("Frame rate: " + frameRate, 5, 75);
     popStyle();
   }
@@ -98,6 +99,14 @@ void initializeGui() {
               .setSize(100, 20)
               .setRange(0, 200)
               .setValue(numPixelBricks)
+              .setColorCaptionLabel(color(255))
+              .setGroup(g1);
+              
+  flowerScaleSlider = cp5.addSlider("flowerScale")
+              .setPosition(0, 82)
+              .setSize(100, 20)
+              .setRange(0, 1)
+              .setValue(flowerScale)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
   
