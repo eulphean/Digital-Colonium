@@ -7,12 +7,12 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 405
+    "value": 74.99999237060547
   },
   "/flowerScale": {
     "min": 0,
     "max": 1,
-    "value": 0.6599999666213989
+    "value": 0.6699999570846558
   },
   "/numAgents": {
     "min": 0,

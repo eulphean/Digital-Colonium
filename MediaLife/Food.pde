@@ -31,9 +31,9 @@ class Food {
   
   void createBricks() {
     // Maybe I can get all these values from the GUI. 
-    int cols = 8; int rows = 20; 
+    int cols = 10; int rows = 20; 
     int pixWidth = 10; 
-    int space = 48;
+    int space = 92;
     
     int w = pixWidth * cols + space; int h = pixWidth * rows; 
     int newNum = width/w;  
