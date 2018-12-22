@@ -108,8 +108,4 @@ class Food {
      pb.run();
    }
   }
-  
-  ArrayList getFood() {
-     return flowers;  
-  }
 }

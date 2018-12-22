@@ -44,7 +44,7 @@ class Agent {
     bodyHealth = 200.0; 
     mediaHealth = 200.0;
     
-    curState = State.Media; 
+    curState = State.Hungry; 
     
     dna = _dna; 
     //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
@@ -65,10 +65,8 @@ class Agent {
         if (target != null) {
           seek(target, true /*Arrive*/); 
         }
-        
-        // Consume food if it's intersecting with 
-        // the agent. 
-        eat(f); 
+
+        consumeFood(f); 
         break; 
       
       case Media:
@@ -85,6 +83,11 @@ class Agent {
 
     // Keep updating position until reaching the target.
     update(); 
+    
+    // We don't need to run these eveytime. Depending 
+    // on the state, execute these actions. 
+    //consumeFood(); 
+    //
     
     wraparound();
     display();
@@ -122,7 +125,6 @@ class Agent {
     acceleration.add(steer);
   }
 
-  
   // Update position
   void update() {
     // Update velocity
@@ -162,12 +164,13 @@ class Agent {
     
     // Find the closes food particle.
     for (Flower fl : f.flowers) {
+       PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
        // Calculate the minimum distance to food
-       float d = PVector.dist(position, fl.position); 
+       float d = PVector.dist(position, center); 
        if (d < maxFoodPerceptionRad) {
          if (d < minD) {
            minD = d;   
-           target = fl.position; 
+           target = center; 
          }
        }
     }
@@ -236,29 +239,20 @@ class Agent {
     return target; 
   }
   
-  // Agent prying on food. 
-  void eat(Food f) {
-    //ArrayList<PVector> food = f.getFood();
-    //// Are we touching any food objects?
-    //for (int i = food.size()-1; i >= 0; i--) {
-    //  PVector foodCenter = new PVector(food.get(i).x, food.get(i).y);
-      
-    //  // Get the center of the food block. 
-    //  foodCenter.x += f.foodWidth/2;
-    //  foodCenter.y += f.foodHeight/2; 
-    //  // Distance between circle and food block's center
-    //  float d = PVector.dist(position, foodCenter);
-    //  // If we are, juice up our strength!
-    //  if (d < radius + f.foodWidth/2) {
-    //    health += 100; 
-    //    food.remove(i);
-    //    //f.grow();
-        
-    //    if (random(1) <= 0.5) {
-    //      //f.grow(); 
-    //    }
-    //  }
-    //}
+  // Did it just step on food when it was hungry? 
+  void consumeFood(Food f) {
+    ArrayList<Flower> flowers = f.flowers;
+    // Are we touching any food objects?
+    for (int i = flowers.size()-1; i >= 0; i--) {
+      Flower fl = flowers.get(i);
+      float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
+      PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
+      float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
+      if (d < maxRadius + flWidth/2) {
+        bodyHealth += 100; 
+        flowers.remove(i);
+      }
+    }
   }
   
   void display() {
