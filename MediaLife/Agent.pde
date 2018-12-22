@@ -1,3 +1,10 @@
+enum State{
+  Hungry,
+  Media,
+  Mating; 
+};
+
+
 class Agent {
   PVector position; 
   PVector velocity;
@@ -14,6 +21,8 @@ class Agent {
   
   // Life timer
   float health; 
+  
+  State curState = State.Hungry; 
   
   // Modify the constructor to pass DNA. 
   Agent(PVector pos, DNA _dna) {
