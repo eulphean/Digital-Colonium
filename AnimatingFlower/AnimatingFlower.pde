@@ -67,9 +67,9 @@ class Flower {
         translate(centerHead.x, centerHead.y);
         rotate(radians(rot));
         fill(255, 0, 0); // green
-        for (int i = 0; i < 6; i++) {
+        for (int i=1; i < 4; i++) {
           ellipse(0, -flowerWidth/4, flowerWidth/2, flowerWidth/2);
-          rotate(radians(60));
+          rotate(PI*2/3);
         }
         rot++;
       popMatrix();

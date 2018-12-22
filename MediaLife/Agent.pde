@@ -29,7 +29,7 @@ class Agent {
     // Pass in the dna. 
     dna = _dna; 
     maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
-    radius = map(dna.genes[0], 0, 1, 1, 6); // Smaller the radius, more the speed. 
+    radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
   }
   
   void run(Food f) {
@@ -210,7 +210,7 @@ class Agent {
     translate(position.x,position.y);
     rotate(theta);
     
-    color c = color(255, 0, 0, health);
+    color c = color(255, 255, 255, health);
     fill(c);
     stroke(0, health);
     beginShape(TRIANGLES);

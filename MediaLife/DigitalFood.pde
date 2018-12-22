@@ -3,22 +3,23 @@ class DigitalFood {
   ArrayList<PixelBrick> digitalFood; 
   
   DigitalFood(int num) {
-    int cols = 5; int rows = 5; 
-    int pixWidth = 9; 
+    // Ignore num for now. 
+    // TODO: cleanup. 
     
-    // Initialize num of PixelBricks
+    int cols = 8; int rows = 20; 
+    int pixWidth = 10; 
+    
+    int w = pixWidth * cols + 48; int h = pixWidth * rows; 
+    int newNum = width/w; // These many media bricks. But I need some space in between. 
+    
     digitalFood = new ArrayList(); 
-    PVector position;
-    for (int i = 0; i < num; i++) {
-      // Keep creating a random position till the time we get a clean position
-      // that doesn't intersect with another f
-      do {
-        position = new PVector(int(random(width - pixWidth*cols)), int(random((int) height - pixWidth*rows))); 
-      } while (isIntersecting(position, rows, cols, pixWidth)); 
-      
-      digitalFood.add(new PixelBrick(position, rows, cols, pixWidth));
+    // Starting x position = 0 then w
+    // Start y position = height/2 - h/2
+    float yPos = height/2 - h/2; 
+    for (int i = 0; i < newNum; i++) {
+     PVector position = new PVector (i*w, yPos); 
+     digitalFood.add(new PixelBrick(position, rows, cols, pixWidth)); 
     }
-    
   }
   
   void run() {
@@ -52,3 +53,14 @@ class DigitalFood {
     return false; 
   }
 }
+
+//PVector position;
+//for (int i = 0; i < num; i++) {
+//  // Keep creating a random position till the time we get a clean position
+//  // that doesn't intersect with another f
+//  do {
+//    position = new PVector(int(random(width - pixWidth*cols)), int(random((int) height - pixWidth*rows))); 
+//  } while (isIntersecting(position, rows, cols, pixWidth)); 
+  
+//  digitalFood.add(new PixelBrick(position, rows, cols, pixWidth));
+//}

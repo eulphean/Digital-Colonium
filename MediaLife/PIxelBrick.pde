@@ -4,6 +4,7 @@ class PixelBrick {
   int pixWidth; 
   long curTime; 
   color pixGrid[][];
+  float waitTime; 
   
   PixelBrick(PVector pos, int numRows, int numCols, int pWidth) {
     position = pos; 
@@ -11,9 +12,10 @@ class PixelBrick {
     cols = numCols;
     pixWidth = pWidth; 
     curTime = millis();
+    waitTime = random(500, 1000);
     
     // Create a new grid. 
-    pixGrid = new color[rows][cols]; 
+    pixGrid = new color[cols][rows]; 
     // Create an initial grid of colors. 
     for (int x = 0; x < cols; x++) {
       for (int y = 0; y < rows; y++) {
@@ -24,7 +26,7 @@ class PixelBrick {
   
   void run() {
     // Only change the color after that time 
-    if (millis() - curTime > 200) {
+    if (millis() - curTime > waitTime) {
       // Create a new set of colors
       for (int x = 0; x < cols; x++) {
         for (int y = 0; y < rows; y++) {

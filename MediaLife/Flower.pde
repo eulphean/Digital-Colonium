@@ -4,6 +4,7 @@ class Flower {
   int rot;
   int flowerHeight; int flowerWidth; 
   float scale; 
+  color petalColor;
   
   // Get center flower radius and position to calculate
   // the intersection box/radius for the circle
@@ -15,6 +16,7 @@ class Flower {
     position = pos; 
     flowerHeight = int(90*s);
     flowerWidth = int(60*s);
+    petalColor = color(random(255), random(255), random(255));
   }
   
   void run() {
@@ -66,17 +68,17 @@ class Flower {
       pushMatrix();
         translate(centerHead.x, centerHead.y);
         rotate(radians(rot));
-        fill(255, 0, 0); // green
+        fill(petalColor); 
         for (int i = 0; i < 6; i++) {
           ellipse(0, -flowerWidth/4, flowerWidth/2, flowerWidth/2);
-          rotate(radians(60));
+          rotate(2*PI/3);
         }
-        rot++;
+        rot+=10;
       popMatrix();
       
       // Center part. 
       noStroke();
-      fill(255, 255, 0);
+      fill(255, 255, 0); // Yellow
       ellipse(centerHead.x, centerHead.y, flowerWidth/2.5, flowerWidth/2.5);
     popMatrix();
   } 

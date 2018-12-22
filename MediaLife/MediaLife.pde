@@ -85,7 +85,7 @@ void initializeGui() {
   numFoodSlider = cp5.addSlider("numFood")
               .setPosition(0, 42)
               .setSize(100, 20)
-              .setRange(0, 200)
+              .setRange(0,500)
               .setValue(numFood)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
