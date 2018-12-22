@@ -44,7 +44,7 @@ class Agent {
     bodyHealth = 200.0; 
     mediaHealth = 200.0;
     
-    curState = State.Hungry; 
+    curState = State.Media; 
     
     dna = _dna; 
     //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
@@ -186,7 +186,7 @@ class Agent {
        PVector brickPoint;
        float d;
        // Top and Bottom rows.
-       for (int i = 0; i < brickW; i+=2) {
+       for (int i = 0; i < brickW; i+=4) {
          // Top row.
          brickPoint = new PVector(brick.position.x + i, brick.position.y); 
          d = PVector.dist(position, brickPoint); 
@@ -209,7 +209,7 @@ class Agent {
        }
        
        // Left and right columns.
-       for (int i = 0; i < brickH; i+=2) {
+       for (int i = 0; i < brickH; i+=4) {
          // Left column.
          brickPoint = new PVector(brick.position.x, brick.position.y + i); 
          d = PVector.dist(position, brickPoint); 
