@@ -23,7 +23,7 @@ class World {
       
       // Make sure the agents don't get too close to each other.  
       for (Agent a : agents) {
-        a.seperate(agents);  
+        a.seperation(agents);  
       }
 
       // Handle agents display, eating, reproduction

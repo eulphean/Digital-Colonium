@@ -10,11 +10,9 @@ class Agent {
   PVector velocity; PVector acceleration;
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; 
-  float maxMediaPerceptionRad;
-  float maxSpeed;
-  float maxRadius;
-  float maxForce; // Weights for sepeation/avoidance/other behaviors. 
+  float maxFoodPerceptionRad; float maxMediaPerceptionRad; float maxRadius;
+  float maxSpeed; float maxForce; float foodWeight; float seperationWeight; float mediaAttractionWeight; 
+  float mediaAvoidanceWeight; 
   float maxAheadDistance; 
   
   // Health units: Average of these determine the looming death of the agent. 
@@ -39,17 +37,19 @@ class Agent {
     maxMediaPerceptionRad = agentVisionRadius;
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
-    maxForce = 0.1;
+    
+    // TODO: Evolve these parameters. 
+    maxForce = 0.1; foodWeight = 1.0; seperationWeight = 0.5; mediaAttractionWeight = 1.0; 
+    mediaAvoidanceWeight = 1.5; 
+    
     maxAheadDistance = 30.0;
     
     bodyHealth = 200.0; 
     mediaHealth = 200.0;
     
-    curState = State.Hungry; 
+    curState = State.Media; 
     
     dna = _dna; 
-    //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
-    //radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
   }
   
   void run(Food f) {
@@ -57,16 +57,37 @@ class Agent {
     maxFoodPerceptionRad = agentVisionRadius; 
     maxMediaPerceptionRad = agentVisionRadius; 
     
+    // Based on the current state, take actions. 
+    behaviors(f);
+
+    // Keep updating position until reaching the target.
+    update(); 
+    
+    wraparound();
+    display();
+  }
+  
+  void behaviors(Food f) {
     PVector target;
+    PVector steer; 
+   
     // Determine the next action.
     switch (curState) {
       case Hungry: 
-        // Look for closest food. 
+        // Steer torwards closest food.
         target = findFood(f);
         if (target != null) {
-          seek(target, true /*Arrive*/); 
+          steer = seek(target, true /*Arrive*/); 
+          steer.mult(foodWeight); // Multiply by food weight. 
+          applyForce(steer);
         }
-        avoidMedia(f);
+       
+        // Avoid any media obstacles. 
+        steer = avoidMedia(f);
+        steer.mult(mediaAvoidanceWeight);
+        applyForce(steer);
+        
+        // Remove food from canvas if agent stepped on it. 
         consumeFood(f); 
         break; 
       
@@ -74,19 +95,19 @@ class Agent {
         target = findMedia(f); 
         if (target != null) {
          // Do something. 
-         seek(target, true /*Arrive*/);
+         steer = seek(target, true /*Arrive*/);
+         steer.mult(mediaAttractionWeight); 
+         applyForce(steer);
         }
         break; 
       
       default: 
         break;
     }
-
-    // Keep updating position until reaching the target.
-    update(); 
-    
-    wraparound();
-    display();
+  }
+  
+  void applyForce(PVector force) {
+    acceleration.add(force);  
   }
 
   // Update position
@@ -112,18 +133,18 @@ class Agent {
   
   // Calculates a steering force towards a target. 
   // STEER = DESIRED MINUS VELOCITY
-  void seek(PVector target) {
-     seek(target, false); 
+  PVector seek(PVector target) {
+     return seek(target, false); 
   }
   
-  void seek(PVector target, boolean arrive) {
+  PVector seek(PVector target, boolean arrive) {
     PVector desired = PVector.sub(target,position);  // A vector pointing from the position to the target
     
     // Slow down when coming towards the target
     if (arrive) {
        float d = desired.mag(); 
        if (d < 50) {
-          float m = map(d, 0, 50, 0, maxSpeed);
+          float m = map(d, 0, 100, 0, maxSpeed);
           desired.setMag(m);
        } else {
           desired.setMag(maxSpeed); 
@@ -137,35 +158,34 @@ class Agent {
     // Steering = Desired minus Velocity
     PVector steer = PVector.sub(desired,velocity);
     steer.limit(maxForce);  // Limit to maximum steering force
-
-    // We could add mass here if we want A = F / M
-    acceleration.add(steer);
+    
+    return steer; 
   }
   
   // Obstacle avoidance. 
-  void avoidMedia(Food f) {    
+  PVector avoidMedia(Food f) {
+    PVector steer = new PVector(0, 0);
     for (PixelBrick pb : f.bricks) {
       float pbWidth = pb.pixWidth * pb.cols; float pbHeight = pb.pixWidth * pb.rows; 
       PVector centerPos = new PVector(pb.position.x + pbWidth/2, pb.position.y + pbHeight/2); 
-      
       float desiredSeperation = pbWidth/2+20 + maxRadius;
+      
       if (PVector.dist(ahead, centerPos) < desiredSeperation) {
         // Obstacle ahead. Steer to avoid this obstacle. 
         PVector desired = PVector.sub(ahead, centerPos); 
-        //seek(desired);
         desired.normalize(); 
         desired.limit(maxSpeed); 
-        
-        PVector steer = PVector.sub(desired, velocity); 
-        steer.limit(maxForce*1.5); 
-        acceleration.add(steer);
+        steer = PVector.sub(desired, velocity); 
+        steer.limit(maxForce); 
       }
     }
+    return steer; 
   }
+ 
   
   // Checks for nearby boids and steers away. 
-  void seperate (ArrayList<Agent> agents) {
-    float desiredseparation = maxRadius*2;
+  void seperation(ArrayList<Agent> agents) {
+    float desiredseparation = maxRadius*3;
     PVector sum = new PVector();
     int count = 0;
     // For every boid in the system, check if it's too close
@@ -176,21 +196,18 @@ class Agent {
         // Calculate vector pointing away from neighbor
         PVector diff = PVector.sub(position, other.position);
         diff.normalize();
-        diff.div(d);        // Weight by distance
+        diff.div(d);
         sum.add(diff);
-        count++;            // Keep track of how many
+        count++;
       }
     }
     
-    // Average -- divide by how many
     if (count > 0) {
-      // Our desired vector is moving away maximum speed
       sum.setMag(maxSpeed);
-      // Implement Reynolds: Steering = Desired - Velocity
       PVector steer = PVector.sub(sum, velocity);
-      steer.limit(maxForce/5);
-      // Apply force.
-      acceleration.add(steer);
+      steer.limit(maxForce);
+      steer.mult(seperationWeight);
+      applyForce(steer);
     }
   }
   
@@ -269,7 +286,6 @@ class Agent {
            }
          }
        }
-      
     }
     
     return target; 
