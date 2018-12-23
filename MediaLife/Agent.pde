@@ -247,7 +247,7 @@ class Agent {
         flowers.remove(i);
         
         // 30% chance a new flower is created after its eaten. 
-        if (random(1) < 0.3) {
+        if (random(1) < 0.9) {
          f.createFlowers(1); 
         } 
       }
