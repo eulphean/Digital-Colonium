@@ -7,7 +7,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 175
+    "value": 65
   },
   "/flowerScale": {
     "min": 0,
@@ -17,7 +17,7 @@
   "/numAgents": {
     "min": 0,
     "max": 500,
-    "value": 145
+    "value": 44.999996185302734
   },
   "/agentVisionRadius": {
     "min": 0,
