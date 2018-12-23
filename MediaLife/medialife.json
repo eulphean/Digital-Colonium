@@ -2,12 +2,12 @@
   "/numPixelBricks": {
     "min": 0,
     "max": 200,
-    "value": 20
+    "value": 16
   },
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 315
+    "value": 105
   },
   "/flowerScale": {
     "min": 0,
@@ -16,8 +16,8 @@
   },
   "/numAgents": {
     "min": 0,
-    "max": 200,
-    "value": 19.999998092651367
+    "max": 500,
+    "value": 20
   },
   "/agentVisionRadius": {
     "min": 0,

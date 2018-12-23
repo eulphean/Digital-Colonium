@@ -33,13 +33,13 @@ class Agent {
   Agent(PVector pos, DNA _dna) {
     position = pos;
     acceleration = new PVector(0, 0); 
-    velocity = new PVector(random(-3, 3), random(-3, 3));
+    velocity = new PVector(random(-1, 1), random(-1, 1));
     
     maxFoodPerceptionRad = agentVisionRadius; 
     maxMediaPerceptionRad = agentVisionRadius;
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
-    maxForce = 0.5;
+    maxForce = 0.1;
     
     bodyHealth = 200.0; 
     mediaHealth = 200.0;
@@ -49,50 +49,6 @@ class Agent {
     dna = _dna; 
     //maxSpeed = map(dna.genes[0], 0, 1, 8, 1); 
     //radius = map(dna.genes[0], 0, 1, 5, 10); // Smaller the radius, more the speed. 
-  }
-  
-  void flock() {
-    PVector sep = separate();
-    acceleration.add(sep);
-  }
-  
-  // Separation
-  // Method checks for nearby boids and steers away
-  PVector separate () {
-    ArrayList<Agent> agents = world.agents; 
-    
-    float desiredseparation = 25.0f;
-    PVector steer = new PVector(0, 0);
-    int count = 0;
-    // For every boid in the system, check if it's too close
-    for (Agent a : agents) {
-      float d = PVector.dist(position, a.position);
-      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if ((d > 0) && (d < desiredseparation)) {
-        // Calculate vector pointing away from neighbor
-        PVector diff = PVector.sub(position, a.position);
-        diff.normalize();
-        diff.div(d);        // Weight by distance
-        steer.add(diff);
-        count++;            // Keep track of how many
-      }
-    }
-    
-    
-    // Average -- divide by how many
-    if (count > 0) {
-      steer.div((float)count);
-    }
-
-    // As long as the vector is greater than 0
-    if (steer.mag() > 0) {
-      // Implement Reynolds: Steering = Desired - Velocity
-      steer.normalize();
-      steer.mult(maxSpeed);
-      steer.sub(velocity);
-      steer.limit(maxForce);
-    }
-    return steer;
   }
   
   void run(Food f) {
@@ -128,45 +84,8 @@ class Agent {
     // Keep updating position until reaching the target.
     update(); 
     
-    // We don't need to run these eveytime. Depending 
-    // on the state, execute these actions. 
-    //consumeFood(); 
-    //
-    
     wraparound();
     display();
-  }
-  
-  // A method that calculates a steering force towards a target. 
-  // STEER = DESIRED MINUS VELOCITY
-  void seek(PVector target) {
-     seek(target, false); 
-  }
-  
-  void seek(PVector target, boolean arrive) {
-    PVector desired = PVector.sub(target,position);  // A vector pointing from the position to the target
-    
-    // Slow down when coming towards the target
-    if (arrive) {
-       float d = desired.mag(); 
-       if (d < 50) {
-          float m = map(d, 0, 50, 0, maxSpeed);
-          desired.setMag(m);
-       } else {
-          desired.setMag(maxSpeed); 
-       }
-    } else {
-      // Normalize desired and scale to maximum speed
-      desired.normalize();
-      desired.mult(maxSpeed);
-    }
-    
-    // Steering = Desired minus Velocity
-    PVector steer = PVector.sub(desired,velocity);
-    steer.limit(maxForce);  // Limit to maximum steering force
-
-    // We could add mass here if we want A = F / M
-    acceleration.add(steer);
   }
 
   // Update position
@@ -182,7 +101,7 @@ class Agent {
     acceleration.mult(0);
     
     // Death always looming
-    bodyHealth -= 0.1;
+    bodyHealth -= 0.5;
   }
   
   void wraparound() {
@@ -300,31 +219,99 @@ class Agent {
   }
   
   void display() {
-    pushStyle();
-    
-    float theta = velocity.heading() + radians(90);
-    //fill(127);
-    //stroke(0);
     pushMatrix();
-    translate(position.x,position.y);
-    rotate(theta);
-    
-    color c = color(255, 255, 255);
-    fill(c);
-    stroke(0, bodyHealth);
-    beginShape(TRIANGLES);
-    vertex(0, -maxRadius*2);
-    vertex(-maxRadius, maxRadius*2);
-    vertex(maxRadius, maxRadius*2);
-    endShape();
+     pushStyle();
+      // Triangle. 
+      float theta = velocity.heading() + radians(90);
+      translate(position.x,position.y);
+      rotate(theta);
+      color c = color(255, 255, 255);
+      fill(c);
+      stroke(0, bodyHealth);
+      beginShape(TRIANGLES);
+      vertex(0, -maxRadius*2);
+      vertex(-maxRadius, maxRadius*2);
+      vertex(maxRadius, maxRadius*2);
+      endShape();
+      
+      // Vision circle.
+      if (turnOnVision) {
+        c = color(255, 255, 255, 100); 
+        fill(c);
+        ellipse(0,0,maxFoodPerceptionRad, maxFoodPerceptionRad); 
+      }
+      
+      // Position marker. 
+      fill(0, 255, 0);
+      ellipse(0, 0, 3, 3); 
+     popStyle();
     popMatrix();
+  }
+  
+  // -------------------------------------------- Steering Behaviors -------------------------------------------
+  
+  // A method that calculates a steering force towards a target. 
+  // STEER = DESIRED MINUS VELOCITY
+  void seek(PVector target) {
+     seek(target, false); 
+  }
+  
+  void seek(PVector target, boolean arrive) {
+    PVector desired = PVector.sub(target,position);  // A vector pointing from the position to the target
     
-    if (turnOnVision) {
-      c = color(255, 255, 255, 100); 
-      fill (c); 
-      ellipse(position.x, position.y, maxFoodPerceptionRad, maxFoodPerceptionRad);
+    // Slow down when coming towards the target
+    if (arrive) {
+       float d = desired.mag(); 
+       if (d < 50) {
+          float m = map(d, 0, 50, 0, maxSpeed);
+          desired.setMag(m);
+       } else {
+          desired.setMag(maxSpeed); 
+       }
+    } else {
+      // Normalize desired and scale to maximum speed
+      desired.normalize();
+      desired.mult(maxSpeed);
     }
-    popStyle();
+    
+    // Steering = Desired minus Velocity
+    PVector steer = PVector.sub(desired,velocity);
+    steer.limit(maxForce);  // Limit to maximum steering force
+
+    // We could add mass here if we want A = F / M
+    acceleration.add(steer);
+  }
+  
+  // Separation
+  // Method checks for nearby boids and steers away
+  void seperate (ArrayList<Agent> agents) {
+    float desiredseparation = maxRadius*2;
+    PVector sum = new PVector();
+    int count = 0;
+    // For every boid in the system, check if it's too close
+    for (Agent other : agents) {
+      float d = PVector.dist(position, other.position);
+      // If the distance is greater than 0 and less than desired distance. 
+      if ((d > 0) && (d < desiredseparation)) {
+        // Calculate vector pointing away from neighbor
+        PVector diff = PVector.sub(position, other.position);
+        diff.normalize();
+        diff.div(d);        // Weight by distance
+        sum.add(diff);
+        count++;            // Keep track of how many
+      }
+    }
+    
+    // Average -- divide by how many
+    if (count > 0) {
+      // Our desired vector is moving away maximum speed
+      sum.setMag(maxSpeed);
+      // Implement Reynolds: Steering = Desired - Velocity
+      PVector steer = PVector.sub(sum, velocity);
+      steer.limit(maxForce);
+      // Apply force. 
+      acceleration.add(steer);
+    }
   }
   
   // At any moment there is a teeny, tiny chance a bloop will reproduce

@@ -23,7 +23,7 @@ class World {
       
       // Flock the agents. 
       for (Agent a : agents) {
-        a.flock();  
+        a.seperate(agents);  
       }
 
       // Handle agents display, eating, reproduction
