@@ -46,7 +46,7 @@ class Agent {
     bodyHealth = 200.0; 
     mediaHealth = 200.0;
     
-    curState = State.Media; 
+    curState = State.Hungry; 
     
     dna = _dna; 
   }
@@ -54,7 +54,6 @@ class Agent {
   void run(Food f) {
     // Update any GUI values
     maxFoodPerceptionRad = agentVisionRadius; 
-    maxMediaPerceptionRad = agentVisionRadius; 
     
     // Based on the current state, take actions. 
     behaviors(f);
@@ -248,6 +247,11 @@ class Agent {
       if (d < maxRadius) {
         bodyHealth += 100; 
         flowers.remove(i);
+        
+        // Create a new flower 
+        if (random(1) < 0.3) {
+         f.createFlowers(1); 
+        } 
       }
     }
   }

@@ -37,7 +37,6 @@ class World {
         // Health of the agent.
         if (a.dead()) { // Is it dead? 
           agents.remove(i); 
-          food.add(a.position); // Make food where the organism died.
         }
         
         // Reproduce the agent. 

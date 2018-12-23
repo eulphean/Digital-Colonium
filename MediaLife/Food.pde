@@ -1,30 +1,23 @@
 class Food {
   ArrayList<Flower> flowers; // Natural food
   ArrayList<PixelBrick> bricks; // Media bricks
+  float scale; 
   
   Food(int num) {
+    flowers = new ArrayList();
+    bricks = new ArrayList();
+    scale = flowerScale; // GUI value
+    
     createBricks(); // These are static. 
     createFlowers(num); // These are random.
   }
   
   void createFlowers(int num) {
-   flowers = new ArrayList();
-   
    // Dummy flower to calculate the height and width. 
-   float scale = flowerScale; // Get GUI value.
    Flower f = new Flower(new PVector(0, 0), scale); 
-
-   PVector position;      
    
-   // These flowers must not intersect with Bricks as well as with themselves. 
    for (int i = 0; i < num; i++) {
-     boolean a; 
-     do {
-       position = new PVector(int(random(width-f.flowerWidth)), int(random(height-f.flowerHeight))); 
-       // Intersecting with another flower or another brick? 
-       a = isIntersecting(position, f.flowerWidth, f.flowerHeight);
-     } while (a); 
-     
+     PVector position = getNewFlower(f.flowerWidth, f.flowerHeight);
      flowers.add(new Flower(position, scale));
    }
   }
@@ -38,12 +31,23 @@ class Food {
     int w = pixWidth * cols + space; int h = pixWidth * rows; 
     int newNum = width/w;  
     
-    bricks = new ArrayList(); 
     float yPos = height/2 - h/2; 
     for (int i = 0; i < newNum; i++) {
      PVector position = new PVector (i*w, yPos); 
      bricks.add(new PixelBrick(position, rows, cols, pixWidth)); 
     }
+  }
+  
+  PVector getNewFlower(int flowerWidth, int flowerHeight) {
+    PVector position; boolean a; 
+    
+    do {
+      position = new PVector(int(random(width-flowerWidth)), int(random(height-flowerHeight))); 
+      // Intersecting with another flower or another brick? 
+      a = isIntersecting(position, flowerWidth, flowerHeight);
+    } while (a); 
+    
+    return position; 
   }
   
   boolean isIntersecting(PVector position, int w, int h) {
@@ -87,14 +91,6 @@ class Food {
     }
     
     return false; 
-  }
-  
-  void grow() {
-    // food.add(new PVector(random(width - foodWidth), random(height-foodHeight))); 
-  }
-  
-  void add(PVector pos) {
-    // food.add(pos);
   }
   
   void run() {
