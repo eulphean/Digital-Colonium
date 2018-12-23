@@ -19,9 +19,9 @@ class World {
     
     void run() {
       // Deal with natural food.  
-      food.run(); 
+      food.run();
       
-      // Flock the agents. 
+      // Make sure the agents don't get too close to each other.  
       for (Agent a : agents) {
         a.seperate(agents);  
       }
@@ -41,10 +41,10 @@ class World {
         }
         
         // Reproduce the agent. 
-        Agent child = a.reproduce(); 
-        if (child != null) {
-          agents.add(child);
-        }
+        //Agent child = a.reproduce(); 
+        //if (child != null) {
+        //  agents.add(child);
+        //}
       }
       
       generation++; 

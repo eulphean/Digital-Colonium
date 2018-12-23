@@ -11,10 +11,11 @@ int numFood = 50; Slider numFoodSlider;
 int numPixelBricks = 20; Slider numPixelBricksSlider;
 float flowerScale = 0.6; Slider flowerScaleSlider; 
 
-// Flags
+// Boolean flags. 
 boolean hideGui;
-boolean turnOnVision = false; 
-boolean restartWorld = false;
+boolean turnOnVision; 
+boolean restartWorld;
+boolean debug;
 
 // Initialize a world
 World world;
@@ -26,8 +27,10 @@ void setup() {
   prepareExitHandler();
   
   // Initialize GUI flags. 
-  hideGui = false;
+  hideGui = false; 
   turnOnVision = false; 
+  restartWorld = false;
+  debug = false;
   
   initializeGui();
   
@@ -135,6 +138,10 @@ void keyPressed() {
         a.curState = State.Hungry;
       }
     }
+  }
+  
+  if (key == 'd') {
+   debug = !debug;  
   }
 }
 

@@ -31,7 +31,7 @@ class Food {
   
   void createBricks() {
     // Maybe I can get all these values from the GUI. 
-    int cols = 10; int rows = 20; 
+    int cols = 10; int rows = 10; 
     int pixWidth = 10; 
     int space = 92;
     

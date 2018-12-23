@@ -49,5 +49,20 @@ class PixelBrick {
       }
     }
     popMatrix();
+    
+    displayDebug();
+  }
+  
+  void displayDebug() {
+    if (debug) {
+      // Draw the radius around
+      pushStyle();
+      stroke(0, 255, 0); 
+      strokeWeight(3); 
+      ellipseMode(RADIUS);
+      fill(255, 255, 255, 0);
+      ellipse(position.x + pixWidth*cols/2, position.y + pixWidth*rows/2, pixWidth*cols/2+20, pixWidth*rows/2+20);
+      popStyle();
+    }
   }
 }
