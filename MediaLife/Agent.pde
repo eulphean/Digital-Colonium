@@ -30,7 +30,7 @@ class Agent {
   Agent(PVector pos, DNA _dna) {
     position = pos;
     acceleration = new PVector(0, 0); 
-    velocity = new PVector(random(-1,1), random(-1, 1));
+    velocity = new PVector(random(-2,2), random(-2, 2));
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
     maxFoodPerceptionRad = agentVisionRadius; 
@@ -39,7 +39,7 @@ class Agent {
     
     // TODO: Evolve these parameters. 
     maxForce = 0.1; foodWeight = 1.0; seperationWeight = 0.5; mediaAttractionWeight = 1.0; 
-    mediaAvoidanceWeight = 1.5; 
+    mediaAvoidanceWeight = 0.5; 
     
     maxAheadDistance = 30.0;
     
@@ -164,13 +164,11 @@ class Agent {
   PVector avoidMedia(Food f) {
     PVector steer = new PVector(0, 0);
     for (PixelBrick pb : f.bricks) {
-      float pbWidth = pb.pixWidth * pb.cols; float pbHeight = pb.pixWidth * pb.rows; 
-      PVector centerPos = new PVector(pb.position.x + pbWidth/2, pb.position.y + pbHeight/2); 
-      float desiredSeperation = pbWidth/2+20 + maxRadius;
+      float desiredSeperation = pb.getCircleRad() + maxRadius;
       
-      if (PVector.dist(ahead, centerPos) < desiredSeperation) {
+      if (PVector.dist(ahead, pb.center) < desiredSeperation) {
         // Obstacle ahead. Steer to avoid this obstacle. 
-        PVector desired = PVector.sub(ahead, centerPos); 
+        PVector desired = PVector.sub(ahead, pb.center); 
         desired.normalize(); 
         desired.limit(maxSpeed); 
         steer = PVector.sub(desired, velocity); 
@@ -248,7 +246,7 @@ class Agent {
         bodyHealth += 100; 
         flowers.remove(i);
         
-        // Create a new flower 
+        // 30% chance a new flower is created after its eaten. 
         if (random(1) < 0.3) {
          f.createFlowers(1); 
         } 
@@ -331,62 +329,3 @@ class Agent {
     }
   }
 };
-
-///*
-//for (PixelBrick brick : f.bricks) {
-//       // Calculate the distance to all the points. 
-//       int brickW = brick.pixWidth*brick.cols; int brickH = brick.pixWidth*brick.rows; 
-       
-//       PVector brickPoint;
-//       float d;
-//       // Top and Bottom rows.
-//       for (int i = 0; i < brickW; i+=4) {
-//         // Top row.
-//         brickPoint = new PVector(brick.position.x + i, brick.position.y); 
-//         d = PVector.dist(position, brickPoint); 
-//         if (d < maxMediaPerceptionRad) {
-//           if (d < minD) {
-//             minD = d;   
-//             target = brickPoint; 
-//             return target; 
-//           }
-//         }
-         
-//         // Bottom row.
-//         brickPoint = new PVector(brick.position.x + i, brick.position.y + brickH); 
-//         d = PVector.dist(position, brickPoint); 
-//         if (d < maxMediaPerceptionRad) {
-//           if (d < minD) {
-//             minD = d;   
-//             target = brickPoint; 
-//             return target; 
-//           }
-//         }
-//       }
-       
-//       // Left and right columns.
-//       for (int i = 0; i < brickH; i+=4) {
-//         // Left column.
-//         brickPoint = new PVector(brick.position.x, brick.position.y + i); 
-//         d = PVector.dist(position, brickPoint); 
-//         if (d < maxMediaPerceptionRad) {
-//           if (d < minD) {
-//             minD = d;   
-//             target = brickPoint;
-//             return target;
-//           }
-//         }
-         
-//         // Right column.
-//         brickPoint = new PVector(brick.position.x + brickW, brick.position.y + i); 
-//         d = PVector.dist(position, brickPoint); 
-//         if (d < maxMediaPerceptionRad) {
-//           if (d < minD) {
-//             minD = d;   
-//             target = brickPoint;
-//             return target; 
-//           }
-//         }
-//       }
-//    }
-//    */

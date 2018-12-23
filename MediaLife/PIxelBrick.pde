@@ -1,16 +1,17 @@
 class PixelBrick {
-  PVector position; // Position on the screen
-  int rows, cols; // Rows and colums
-  int pixWidth; 
-  long curTime; 
+  PVector position; PVector center; 
+  int brickW; int brickH; 
+  long curTime; float waitTime;
   color pixGrid[][];
-  float waitTime; 
+  int rows; int cols; int pixWidth;
   
   PixelBrick(PVector pos, int numRows, int numCols, int pWidth) {
     position = pos; 
-    rows = numRows;
-    cols = numCols;
-    pixWidth = pWidth; 
+    rows = numRows; cols = numCols; pixWidth = pWidth; 
+    brickW = pixWidth*cols; brickH = pixWidth*rows;
+    center = new PVector(position.x+brickW/2, position.y+brickH/2);
+    
+    // Time to change colors. 
     curTime = millis();
     waitTime = random(500, 1000);
     
@@ -22,6 +23,12 @@ class PixelBrick {
         pixGrid[x][y] = color(random(255), random(255), random(255));
       }
     }
+  }
+  
+  // Return the radius of a circle that inscribes this square. 
+  // Use this to steer the boids away from this brick. 
+  float getCircleRad() {
+    return sqrt(pow(brickW/2,2)+pow(brickW/2, 2));  
   }
   
   void run() {
@@ -60,8 +67,9 @@ class PixelBrick {
       stroke(0, 255, 0); 
       strokeWeight(3); 
       ellipseMode(RADIUS);
-      fill(255, 255, 255, 0);
-      ellipse(position.x + pixWidth*cols/2, position.y + pixWidth*rows/2, pixWidth*cols/2+20, pixWidth*rows/2+20);
+      fill(255, 255, 255, 0); 
+      float radius = getCircleRad();
+      ellipse(center.x, center.y, radius, radius);
       popStyle();
     }
   }
