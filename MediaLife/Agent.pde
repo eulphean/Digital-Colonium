@@ -10,10 +10,10 @@ class Agent {
   PVector velocity; PVector acceleration;
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; float maxMediaPerceptionRad; float maxRadius;
+  float maxFoodPerceptionRad; float maxRadius;
   float maxSpeed; float maxForce; float foodWeight; float seperationWeight; float mediaAttractionWeight; 
   float mediaAvoidanceWeight; 
-  float maxAheadDistance; 
+  float maxAheadDistance; // Lets us avoid media obstacles and get attracted to media bricks. 
   
   // Health units: Average of these determine the looming death of the agent. 
   // These could honestly evolve as well. This could be a genotype. 
@@ -34,7 +34,6 @@ class Agent {
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
     maxFoodPerceptionRad = agentVisionRadius; 
-    maxMediaPerceptionRad = agentVisionRadius;
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
     
@@ -233,61 +232,7 @@ class Agent {
   
   PVector findMedia(Food f) {
     float minD = 5000000; // Helpful to calculate a local minima. 
-    PVector target = null;
-    
-    for (PixelBrick brick : f.bricks) {
-       // Calculate the distance to all the points. 
-       int brickW = brick.pixWidth*brick.cols; int brickH = brick.pixWidth*brick.rows; 
-       
-       PVector brickPoint;
-       float d;
-       // Top and Bottom rows.
-       for (int i = 0; i < brickW; i+=4) {
-         // Top row.
-         brickPoint = new PVector(brick.position.x + i, brick.position.y); 
-         d = PVector.dist(position, brickPoint); 
-         if (d < maxMediaPerceptionRad) {
-           if (d < minD) {
-             minD = d;   
-             target = brickPoint; 
-           }
-         }
-         
-         // Bottom row.
-         brickPoint = new PVector(brick.position.x + i, brick.position.y + brickH); 
-         d = PVector.dist(position, brickPoint); 
-         if (d < maxMediaPerceptionRad) {
-           if (d < minD) {
-             minD = d;   
-             target = brickPoint; 
-           }
-         }
-       }
-       
-       // Left and right columns.
-       for (int i = 0; i < brickH; i+=4) {
-         // Left column.
-         brickPoint = new PVector(brick.position.x, brick.position.y + i); 
-         d = PVector.dist(position, brickPoint); 
-         if (d < maxMediaPerceptionRad) {
-           if (d < minD) {
-             minD = d;   
-             target = brickPoint; 
-           }
-         }
-         
-         // Right column.
-         brickPoint = new PVector(brick.position.x + brickW, brick.position.y + i); 
-         d = PVector.dist(position, brickPoint); 
-         if (d < maxMediaPerceptionRad) {
-           if (d < minD) {
-             minD = d;   
-             target = brickPoint; 
-           }
-         }
-       }
-    }
-    
+    PVector target=null;
     return target; 
   }
   
@@ -345,7 +290,7 @@ class Agent {
     // Vision circle.
     if (turnOnVision) {
       fill(color(255, 255, 255, 100));
-      ellipse(0,0,maxFoodPerceptionRad, maxFoodPerceptionRad); 
+      ellipse(position.x,position.y,maxFoodPerceptionRad, maxFoodPerceptionRad); 
     }
   }
   
@@ -382,3 +327,62 @@ class Agent {
     }
   }
 };
+
+///*
+//for (PixelBrick brick : f.bricks) {
+//       // Calculate the distance to all the points. 
+//       int brickW = brick.pixWidth*brick.cols; int brickH = brick.pixWidth*brick.rows; 
+       
+//       PVector brickPoint;
+//       float d;
+//       // Top and Bottom rows.
+//       for (int i = 0; i < brickW; i+=4) {
+//         // Top row.
+//         brickPoint = new PVector(brick.position.x + i, brick.position.y); 
+//         d = PVector.dist(position, brickPoint); 
+//         if (d < maxMediaPerceptionRad) {
+//           if (d < minD) {
+//             minD = d;   
+//             target = brickPoint; 
+//             return target; 
+//           }
+//         }
+         
+//         // Bottom row.
+//         brickPoint = new PVector(brick.position.x + i, brick.position.y + brickH); 
+//         d = PVector.dist(position, brickPoint); 
+//         if (d < maxMediaPerceptionRad) {
+//           if (d < minD) {
+//             minD = d;   
+//             target = brickPoint; 
+//             return target; 
+//           }
+//         }
+//       }
+       
+//       // Left and right columns.
+//       for (int i = 0; i < brickH; i+=4) {
+//         // Left column.
+//         brickPoint = new PVector(brick.position.x, brick.position.y + i); 
+//         d = PVector.dist(position, brickPoint); 
+//         if (d < maxMediaPerceptionRad) {
+//           if (d < minD) {
+//             minD = d;   
+//             target = brickPoint;
+//             return target;
+//           }
+//         }
+         
+//         // Right column.
+//         brickPoint = new PVector(brick.position.x + brickW, brick.position.y + i); 
+//         d = PVector.dist(position, brickPoint); 
+//         if (d < maxMediaPerceptionRad) {
+//           if (d < minD) {
+//             minD = d;   
+//             target = brickPoint;
+//             return target; 
+//           }
+//         }
+//       }
+//    }
+//    */

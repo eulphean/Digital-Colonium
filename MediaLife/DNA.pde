@@ -1,6 +1,3 @@
-// Class to describe DNA
-// Has more features for two parent mating (not used in this example)
-
 class DNA {
 
   // The genetic sequence
