@@ -10,7 +10,7 @@ class Agent {
   PVector velocity; PVector acceleration;
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius;
+  float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; float maxMediaPerceptionRad; 
   float maxSpeed; float maxForce; float foodWeight; float seperationWeight; float mediaAttractionWeight; 
   float mediaAvoidanceWeight;
   float maxAheadDistance; // Lets us avoid media obstacles and get attracted to media bricks. 
@@ -34,6 +34,7 @@ class Agent {
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
     maxFoodPerceptionRad = agentVisionRadius; 
+    maxMediaPerceptionRad = 100; 
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
     maxSeperationRad = maxRadius*5;
@@ -93,10 +94,12 @@ class Agent {
       case Media:
         target = findMedia(f); 
         if (target != null) {
-         // Do something. 
-         steer = seek(target, true /*Arrive*/);
+         steer = seek(target, true);
          steer.mult(mediaAttractionWeight); 
          applyForce(steer);
+        } else {
+         // Wander around.  
+         
         }
         break; 
       
@@ -142,7 +145,7 @@ class Agent {
     // Slow down when coming towards the target
     if (arrive) {
        float d = desired.mag(); 
-       if (d < 50) {
+       if (d < 100) {
           float m = map(d, 0, 100, 0, maxSpeed);
           desired.setMag(m);
        } else {
@@ -211,7 +214,7 @@ class Agent {
     float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target = null;
     
-    // Find the closes food particle.
+    // Find the closest food particle.
     for (Flower fl : f.flowers) {
        PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
        // Calculate the minimum distance to food
@@ -230,6 +233,19 @@ class Agent {
   PVector findMedia(Food f) {
     float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target=null;
+    
+    for (PixelBrick pb : f.bricks) {
+     // Find the closest food particle.
+     // Calculate the minimum distance to food
+     float d = PVector.dist(position, pb.center); 
+     if (d < maxMediaPerceptionRad) {
+       if (d < minD) {
+         minD = d;   
+         target = pb.center; 
+       }
+     }
+    }
+    
     return target; 
   }
   
@@ -291,11 +307,17 @@ class Agent {
     
     // Vision circle.
     if (turnOnVision) {
-      fill(color(255, 255, 255, 100));
+      // Food perception radius.
+      fill(color(0, 255, 0, 50));
       ellipse(position.x,position.y,maxFoodPerceptionRad, maxFoodPerceptionRad); 
       
+      // Seperation radius
       fill(color(255, 0, 0, 50));
       ellipse(position.x,position.y,maxSeperationRad,maxSeperationRad); 
+      
+      // Media perception radius. 
+      fill(color(255, 255, 0, 50)); 
+      ellipse(position.x, position.y, maxMediaPerceptionRad, maxMediaPerceptionRad);
     }
   }
   
