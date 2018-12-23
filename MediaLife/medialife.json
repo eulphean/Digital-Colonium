@@ -17,7 +17,7 @@
   "/numAgents": {
     "min": 0,
     "max": 500,
-    "value": 15
+    "value": 30
   },
   "/agentVisionRadius": {
     "min": 0,

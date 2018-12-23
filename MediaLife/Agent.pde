@@ -10,9 +10,9 @@ class Agent {
   PVector velocity; PVector acceleration;
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; float maxRadius;
+  float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius;
   float maxSpeed; float maxForce; float foodWeight; float seperationWeight; float mediaAttractionWeight; 
-  float mediaAvoidanceWeight; 
+  float mediaAvoidanceWeight;
   float maxAheadDistance; // Lets us avoid media obstacles and get attracted to media bricks. 
   
   // Health units: Average of these determine the looming death of the agent. 
@@ -36,6 +36,7 @@ class Agent {
     maxFoodPerceptionRad = agentVisionRadius; 
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
+    maxSeperationRad = maxRadius*5;
     
     // TODO: Evolve these parameters. 
     maxForce = 0.1; foodWeight = 1.0; seperationWeight = 0.5; mediaAttractionWeight = 1.0; 
@@ -181,14 +182,13 @@ class Agent {
   
   // Checks for nearby boids and steers away. 
   void seperation(ArrayList<Agent> agents) {
-    float desiredseparation = maxRadius*3;
     PVector sum = new PVector();
     int count = 0;
     // For every boid in the system, check if it's too close
     for (Agent other : agents) {
       float d = PVector.dist(position, other.position);
       // If the distance is greater than 0 and less than desired distance. 
-      if ((d > 0) && (d < desiredseparation)) {
+      if ((d > 0) && (d < maxSeperationRad)) {
         // Calculate vector pointing away from neighbor
         PVector diff = PVector.sub(position, other.position);
         diff.normalize();
@@ -293,6 +293,9 @@ class Agent {
     if (turnOnVision) {
       fill(color(255, 255, 255, 100));
       ellipse(position.x,position.y,maxFoodPerceptionRad, maxFoodPerceptionRad); 
+      
+      fill(color(255, 0, 0, 50));
+      ellipse(position.x,position.y,maxSeperationRad,maxSeperationRad); 
     }
   }
   
