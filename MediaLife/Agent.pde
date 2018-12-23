@@ -6,8 +6,10 @@ enum State {
 };
 
 class Agent {
+  // Not evolving traits. 
   PVector position; PVector ahead; 
   PVector velocity; PVector acceleration;
+  float wandertheta; 
   
   // Possible Genotypes.  
   float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; float maxMediaPerceptionRad; 
@@ -31,6 +33,7 @@ class Agent {
     position = pos;
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-2,2), random(-2, 2));
+    wandertheta = 0; 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
     maxFoodPerceptionRad = agentVisionRadius; 
@@ -98,8 +101,13 @@ class Agent {
          steer.mult(mediaAttractionWeight); 
          applyForce(steer);
         } else {
-         // Wander around.  
-         
+         // Wander around (Reset maxSpeed to get desired results)
+         float oldMaxSpeed = maxSpeed; 
+         maxSpeed = 2.0;
+         steer = wander(); 
+         steer.mult(0.1); // Wandering weight (can be constant) 
+         applyForce(steer);
+         maxSpeed = oldMaxSpeed; 
         }
         break; 
       
@@ -133,6 +141,27 @@ class Agent {
   
   // -------------------------------------------- Steering Behaviors -------------------------------------------
   
+  PVector wander() {
+    float wanderR = 20;         // Radius for our "wander circle"
+    float wanderD = 60;         // Distance for our "wander circle"
+    float change = 0.1;
+    wandertheta += random(-change,change);     // Randomly change wander theta
+
+    // Now we have to calculate the new position to steer towards on the wander circle
+    PVector circlepos = velocity.get();    // Start with velocity
+    circlepos.normalize();            // Normalize to get heading
+    circlepos.mult(wanderD);          // Multiply by distance
+    circlepos.add(position);               // Make it relative to boid's position
+
+    float h = velocity.heading2D();        // We need to know the heading to offset wandertheta
+
+    PVector circleOffSet = new PVector(wanderR*cos(wandertheta+h),wanderR*sin(wandertheta+h));
+    PVector target = PVector.add(circlepos,circleOffSet);
+    
+    // Render wandering circle, etc.
+    //drawWanderStuff(position,circlepos,target,wanderR);
+    return seek(target);
+  }
   // Calculates a steering force towards a target. 
   // STEER = DESIRED MINUS VELOCITY
   PVector seek(PVector target) {
@@ -319,6 +348,17 @@ class Agent {
       fill(color(255, 255, 0, 50)); 
       ellipse(position.x, position.y, maxMediaPerceptionRad, maxMediaPerceptionRad);
     }
+  }
+  
+  // A method just to draw the circle associated with wandering
+  void drawWanderStuff(PVector position, PVector circle, PVector target, float rad) {
+    stroke(255);
+    noFill();
+    ellipseMode(CENTER);
+    ellipse(circle.x,circle.y,rad*2,rad*2);
+    ellipse(target.x,target.y,4,4);
+    line(position.x,position.y,circle.x,circle.y);
+    line(circle.x,circle.y,target.x,target.y);
   }
   
   // At any moment there is a teeny, tiny chance a bloop will reproduce
