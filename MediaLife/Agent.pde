@@ -28,32 +28,26 @@ class Agent {
     position = pos;
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-1,1), random(-1, 1));
-    wandertheta = 0; 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
-    
-    maxFoodPerceptionRad = foodPerceptionRad; 
-    maxMediaPerceptionRad = 100; 
+    wandertheta = 0; 
+
     maxSpeed = 2.0;
     maxRadius = 8.0; // Size for the boid.
-    maxSeperationRad = maxRadius*5;
+ 
     
     // TODO: Evolve these parameters. 
     maxForce = 0.1; 
-    maxAheadDistance = 30.0;
-    
-    // Weights for the forces acting on the agent.  
-    setWeight();
-    
+
     // Health units. Initial units. 
-    maxBodyHealth = 200.0; curBodyHealth = 200.0;
+    maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
     maxMediaHealth = 100.0; curMediaHealth = 0.0; 
     
     dna = _dna; 
   }
   
   void run(Food f, ArrayList<Agent> agents) {
-    // Update any GUI values.
-    maxFoodPerceptionRad = foodPerceptionRad; 
+    println("Run");
+    updateGuiParameters(); 
     
     // Evaluate all the forces acting on the agents.
     behaviors(f, agents);
@@ -74,14 +68,25 @@ class Agent {
     // Show the agent. 
     display();
   }
+ 
   
-  void setWeight() {
-    // Definitely evolve these weights. 
-    foodWeight = 2.0; 
-    seperationWeight = 0.5; 
-    mediaAttractionWeight = 0.5; 
-    mediaAvoidanceWeight = 0.3;
-    wanderingWeight = 0.5;
+  void updateGuiParameters() {
+    // Weights Rad
+    foodWeight = foodW; 
+    seperationWeight = seperationW; 
+    mediaAttractionWeight = mediaAttractionW; 
+    mediaAvoidanceWeight = mediaAvoidanceW;
+    wanderingWeight = wanderingW;
+    
+    println("New weights: " + foodWeight + ", " + seperationWeight + ", " + mediaAttractionWeight + ", " + mediaAvoidanceWeight + ", " + wanderingWeight);
+    
+    // Perception Rad
+    maxFoodPerceptionRad = foodPerceptionRad;
+    maxMediaPerceptionRad = mediaPerceptionRad;
+    maxSeperationRad = seperationPerceptionRad;
+    
+    // Ahead distance
+    maxAheadDistance = aheadDistance; 
   }
   
   void behaviors(Food f, ArrayList<Agent> agents) {
@@ -233,7 +238,7 @@ class Agent {
       float theta = velocity.heading() + radians(90);
       translate(position.x,position.y);
       rotate(theta);
-      bodyColor = isConsumingMedia ? color(255, 0, 0) : color(255);
+      bodyColor = isConsumingMedia ? color(255, 0, 0, 175) : color(255);
       fill(bodyColor);
       beginShape(TRIANGLES);
       vertex(0, -maxRadius*2);
