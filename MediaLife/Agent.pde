@@ -234,6 +234,16 @@ class Agent {
       vertex(maxRadius, maxRadius*2);
       endShape();
      popStyle();
+     
+     // Show health stats. 
+     if (healthStats) {
+       pushStyle(); 
+        textSize(15); 
+        fill(255); 
+        text("Body:" + nf(curBodyHealth, 0, 2), -10, 30); 
+        text("Media:" + nf(curMediaHealth, 0, 2), -10, 45);
+       popStyle();
+     }
     popMatrix();
     
     // Debug content. 

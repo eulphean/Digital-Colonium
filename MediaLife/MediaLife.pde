@@ -16,6 +16,7 @@ boolean hideGui;
 boolean turnOnVision; 
 boolean restartWorld;
 boolean debug;
+boolean healthStats;
 
 // Initialize a world
 World world;
@@ -31,6 +32,7 @@ void setup() {
   turnOnVision = false; 
   restartWorld = false;
   debug = false;
+  healthStats = false; 
   
   initializeGui();
   
@@ -117,7 +119,7 @@ void initializeGui() {
 }
 
 void keyPressed() {
-  if (key == 'h') {
+  if (key == 'g') {
     hideGui = !hideGui;
   }
   
@@ -131,6 +133,10 @@ void keyPressed() {
   
   if (key == 'd') {
    debug = !debug;  
+  }
+  
+  if (key == 'h') {
+   healthStats = !healthStats;  
   }
 }
 
