@@ -191,7 +191,7 @@ void initializeGui() {
               .setGroup(g1);
               
 
-  //cp5.loadProperties(("medialife"));           
+  cp5.loadProperties(("medialife"));           
 }
 
 void keyPressed() {

@@ -2,27 +2,27 @@
   "/mediaAvoidanceW": {
     "min": 0,
     "max": 1,
-    "value": 0.2800000011920929
+    "value": 0.19999998807907104
   },
   "/wanderingW": {
     "min": 0,
     "max": 1,
-    "value": 0.25999999046325684
+    "value": 0.32999998331069946
   },
   "/seperationPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 53.999996185302734
+    "value": 48
   },
   "/seperationW": {
     "min": 0,
     "max": 1,
-    "value": 0.29999998211860657
+    "value": 0.5099999904632568
   },
   "/foodPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 100.49999237060547
+    "value": 85.5
   },
   "/mediaAttractionW": {
     "min": 0,
@@ -32,7 +32,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 105
+    "value": 110
   },
   "/aheadDistance": {
     "min": 0,
@@ -42,7 +42,7 @@
   "/mediaPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 70.5
+    "value": 67.5
   },
   "/flowerScale": {
     "min": 0,
@@ -52,7 +52,7 @@
   "/foodW": {
     "min": 0,
     "max": 2,
-    "value": 2
+    "value": 1.5
   },
   "/numAgents": {
     "min": 0,
