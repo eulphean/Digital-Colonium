@@ -5,7 +5,7 @@ ControlP5 cp5;
 
 // Sliders.
 Group g1; 
-int agentVisionRadius = 40; Slider visSlider; 
+int foodPerceptionRad = 40; Slider foodRadSlider; 
 int numAgents = 50; Slider numAgentsSlider;
 int numFood = 50; Slider numFoodSlider;
 int numPixelBricks = 20; Slider numPixelBricksSlider;
@@ -73,11 +73,11 @@ void initializeGui() {
   g1 = cp5.addGroup("g1")
                 .setPosition(5, 95);
                 
-  visSlider = cp5.addSlider("agentVisionRadius")
+  foodRadSlider = cp5.addSlider("foodPerceptionRadius")
               .setPosition(0, 0)
               .setSize(100, 22)
-              .setRange(0, 50)
-              .setValue(agentVisionRadius)
+              .setRange(0, 150)
+              .setValue(foodPerceptionRad)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
               
@@ -113,8 +113,7 @@ void initializeGui() {
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
   
-  cp5.loadProperties(("medialife"));
-              
+  //cp5.loadProperties(("medialife"));           
 }
 
 void keyPressed() {

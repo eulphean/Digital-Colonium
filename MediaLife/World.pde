@@ -20,19 +20,14 @@ class World {
     void run() {
       // Deal with natural food.  
       food.run();
-      
-      // Make sure the agents don't get too close to each other.  
-      for (Agent a : agents) {
-        a.seperation(agents);  
-      }
 
       // Handle agents display, eating, reproduction
       for (int i = agents.size()-1; i >= 0; i--) {
         Agent a = agents.get(i);
         
         // Handle all the agent behavior. 
-        // Seeking the food, steering, updating, and display
-        a.run(food);
+        // Seperation, seeking food, seeking media, avoiding media
+        a.run(food, agents);
         
         // Health of the agent.
         if (a.dead()) { // Is it dead? 

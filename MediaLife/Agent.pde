@@ -19,8 +19,8 @@ class Agent {
   
   // Health units: Average of these determine the looming death of the agent. 
   // These could honestly evolve as well. This could be a genotype. 
-  float bodyHealth; 
-  float mediaHealth;
+  float maxBodyHealth; float curBodyHealth; 
+  float maxMediaHealth; float curMediaHealth;
   
   // Current agent radius. 
   State curState;
@@ -36,7 +36,7 @@ class Agent {
     wandertheta = 0; 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
-    maxFoodPerceptionRad = agentVisionRadius; 
+    maxFoodPerceptionRad = foodPerceptionRad; 
     maxMediaPerceptionRad = 100; 
     maxSpeed = 5.0;
     maxRadius = 8.0; // Size for the boid.
@@ -48,20 +48,23 @@ class Agent {
     
     maxAheadDistance = 30.0;
     
-    bodyHealth = 200.0; 
-    mediaHealth = 200.0;
+    maxBodyHealth = 200.0; curBodyHealth = 50; 
+    maxBodyHealth = 100.0; curMediaHealth = .0; 
     
+    // Need food.
     curState = State.Hungry; 
     
     dna = _dna; 
   }
   
-  void run(Food f) {
+  void run(Food f, ArrayList<Agent> agents) {
     // Update any GUI values
-    maxFoodPerceptionRad = agentVisionRadius; 
+    maxFoodPerceptionRad = foodPerceptionRad; 
+    
+    //evaluateState();
     
     // Based on the current state, take actions. 
-    behaviors(f);
+    behaviors(f, agents);
 
     // Keep updating position until reaching the target.
     update(); 
@@ -70,9 +73,41 @@ class Agent {
     display();
   }
   
-  void behaviors(Food f) {
+  void evaluateState() {
+    // If health is 100%, then I can change state to media. 
+    // If health is 1/4 of maxHealth, then change state. 
+    if (curBodyHealth <= 0.25*maxBodyHealth) {
+     curState = State.Hungry;  
+    }
+    
+    if (curBodyHealth >= maxBodyHealth) {
+     curState = State.Media; 
+    }
+    
+    if (curMediaHealth >= maxMediaHealth) {
+     curState = State.Hungry; 
+    }
+    
+    if (curMediaHealth <= 0.5*maxMediaHealth) {
+     curState = State.Media; 
+    }
+   
+  }
+  
+  void behaviors(Food f, ArrayList<Agent> agents) {
     PVector target;
     PVector steer; 
+    
+    // Seperation 
+    steer = seperation(agents); 
+    steer.mult(seperationWeight); 
+    applyForce(steer);
+    
+    // Look for food
+    
+    // Media attraction
+    
+    // Media resistance
    
     // Determine the next action.
     switch (curState) {
@@ -135,8 +170,8 @@ class Agent {
     // Update ahead vector position. 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
-    // Death always looming
-    bodyHealth -= 0.1;
+    curBodyHealth -= 0.5; // Decays slowly
+    curMediaHealth -= 0.6; // Decays quickly
   }
   
   // -------------------------------------------- Steering Behaviors -------------------------------------------
@@ -213,8 +248,9 @@ class Agent {
  
   
   // Checks for nearby boids and steers away. 
-  void seperation(ArrayList<Agent> agents) {
-    PVector sum = new PVector();
+  PVector seperation(ArrayList<Agent> agents) {
+    PVector sum, steer; 
+    sum = steer = new PVector();
     int count = 0;
     // For every boid in the system, check if it's too close
     for (Agent other : agents) {
@@ -232,11 +268,11 @@ class Agent {
     
     if (count > 0) {
       sum.setMag(maxSpeed);
-      PVector steer = PVector.sub(sum, velocity);
+      steer = PVector.sub(sum, velocity);
       steer.limit(maxForce);
-      steer.mult(seperationWeight);
-      applyForce(steer);
     }
+    
+    return steer;
   }
   
   PVector findFood(Food f) {
@@ -288,7 +324,7 @@ class Agent {
       PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
       float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
       if (d < maxRadius) {
-        bodyHealth += 100; 
+        curBodyHealth += 100; 
         flowers.remove(i);
         
         // 30% chance a new flower is created after its eaten. 
@@ -307,7 +343,7 @@ class Agent {
       translate(position.x,position.y);
       rotate(theta);
       fill(255);
-      stroke(0, bodyHealth);
+      stroke(0, curBodyHealth);
       beginShape(TRIANGLES);
       vertex(0, -maxRadius*2);
       vertex(-maxRadius, maxRadius*2);
@@ -386,11 +422,12 @@ class Agent {
   
   // Check for death
   boolean dead() {
-    if (bodyHealth < 0.0) {
-      return true;
-    } 
-    else {
-      return false;
-    }
+    return false;
+    //if (curBodyHealth < 0.0) {
+    //  return true;
+    //} 
+    //else {
+    //  return false;
+    //}
   }
 };
