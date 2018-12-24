@@ -32,7 +32,7 @@ class Agent {
   Agent(PVector pos, DNA _dna) {
     position = pos;
     acceleration = new PVector(0, 0); 
-    velocity = new PVector(random(-2,2), random(-2, 2));
+    velocity = new PVector(random(-1,1), random(-1, 1));
     wandertheta = 0; 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
@@ -43,13 +43,13 @@ class Agent {
     maxSeperationRad = maxRadius*5;
     
     // TODO: Evolve these parameters. 
-    maxForce = 0.1; foodWeight = 1.0; seperationWeight = 0.5; mediaAttractionWeight = 1.0; 
+    maxForce = 0.1; foodWeight = 1.0; seperationWeight = 0.5; mediaAttractionWeight = 0.2; 
     mediaAvoidanceWeight = 0.5; 
     
     maxAheadDistance = 30.0;
     
-    maxBodyHealth = 200.0; curBodyHealth = 50; 
-    maxBodyHealth = 100.0; curMediaHealth = .0; 
+    maxBodyHealth = 200.0; curBodyHealth = 50.0; 
+    maxBodyHealth = 50.0; curMediaHealth = 50.0; 
     
     // Need food.
     curState = State.Hungry; 
@@ -140,7 +140,7 @@ class Agent {
          float oldMaxSpeed = maxSpeed; 
          maxSpeed = 2.0;
          steer = wander(); 
-         steer.mult(0.1); // Wandering weight (can be constant) 
+         steer.mult(0.2); // Wandering weight (can be constant) 
          applyForce(steer);
          maxSpeed = oldMaxSpeed; 
         }
@@ -177,9 +177,9 @@ class Agent {
   // -------------------------------------------- Steering Behaviors -------------------------------------------
   
   PVector wander() {
-    float wanderR = 20;         // Radius for our "wander circle"
+    float wanderR = 30;         // Radius for our "wander circle"
     float wanderD = 60;         // Distance for our "wander circle"
-    float change = 0.1;
+    float change = 0.3;
     wandertheta += random(-change,change);     // Randomly change wander theta
 
     // Now we have to calculate the new position to steer towards on the wander circle

@@ -12,7 +12,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 50
+    "value": 105
   },
   "/flowerScale": {
     "min": 0,

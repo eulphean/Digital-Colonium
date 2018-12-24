@@ -113,7 +113,7 @@ void initializeGui() {
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
   
-  //cp5.loadProperties(("medialife"));           
+  cp5.loadProperties(("medialife"));           
 }
 
 void keyPressed() {
