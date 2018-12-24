@@ -8,7 +8,6 @@ Group g1;
 int foodPerceptionRad = 40; Slider foodRadSlider; 
 int numAgents = 50; Slider numAgentsSlider;
 int numFood = 50; Slider numFoodSlider;
-int numPixelBricks = 20; Slider numPixelBricksSlider;
 float flowerScale = 0.6; Slider flowerScaleSlider; 
 
 // Boolean flags. 
@@ -75,7 +74,7 @@ void initializeGui() {
   g1 = cp5.addGroup("g1")
                 .setPosition(5, 95);
                 
-  foodRadSlider = cp5.addSlider("foodPerceptionRadius")
+  foodRadSlider = cp5.addSlider("foodPerceptionRad")
               .setPosition(0, 0)
               .setSize(100, 22)
               .setRange(0, 150)
@@ -98,15 +97,7 @@ void initializeGui() {
               .setValue(numFood)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
-  
-  numPixelBricksSlider = cp5.addSlider("numPixelBricks")
-              .setPosition(0, 62)
-              .setSize(100, 20)
-              .setRange(0, 200)
-              .setValue(numPixelBricks)
-              .setColorCaptionLabel(color(255))
-              .setGroup(g1);
-              
+
   flowerScaleSlider = cp5.addSlider("flowerScale")
               .setPosition(0, 82)
               .setSize(100, 20)

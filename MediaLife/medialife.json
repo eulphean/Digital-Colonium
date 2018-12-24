@@ -1,18 +1,13 @@
 {
-  "/numPixelBricks": {
-    "min": 0,
-    "max": 200,
-    "value": 20
-  },
-  "/foodPerceptionRadius": {
+  "/foodPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 40.000003814697266
+    "value": 89.99999237060547
   },
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 105
+    "value": 125
   },
   "/flowerScale": {
     "min": 0,

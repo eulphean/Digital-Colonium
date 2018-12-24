@@ -33,7 +33,7 @@ class Agent {
     
     maxFoodPerceptionRad = foodPerceptionRad; 
     maxMediaPerceptionRad = 100; 
-    maxSpeed = 5.0;
+    maxSpeed = 2.0;
     maxRadius = 8.0; // Size for the boid.
     maxSeperationRad = maxRadius*5;
     
@@ -76,19 +76,17 @@ class Agent {
   }
   
   void setWeight() {
-    foodWeight = 1.0; 
-    seperationWeight = 0.4; 
-    mediaAttractionWeight = 0.1; 
-    mediaAvoidanceWeight = 0.1;
-    wanderingWeight = 0.3;
+    // Definitely evolve these weights. 
+    foodWeight = 2.0; 
+    seperationWeight = 0.5; 
+    mediaAttractionWeight = 0.5; 
+    mediaAvoidanceWeight = 0.3;
+    wanderingWeight = 0.5;
   }
   
   void behaviors(Food f, ArrayList<Agent> agents) {
     PVector target;
     PVector steer; 
-    
-    // Based on the media and body health, the local
-    // weights can evolve. Use map functions.  
     
     // Seperation between agents. 
     steer = seperation(agents); 
@@ -98,34 +96,32 @@ class Agent {
     // Food. 
     target = findFood(f);
     if (target != null) {
-      steer = seek(target, true /*Arrive*/); 
-      steer.mult(foodWeight); 
-      applyForce(steer);
+     float newFoodWeight = map(curBodyHealth, -maxBodyHealth, maxBodyHealth, foodWeight, 0.5); 
+     steer = seek(target, true /*Arrive*/); 
+     steer.mult(newFoodWeight); 
+     applyForce(steer);
     }
-    
+
     // Media attraction.
+    // TODO: This is acting really funny right now. 
     target = findMedia(f); 
     if (target != null) {
+     float newMediaWeight = map(curMediaHealth, -maxMediaHealth, maxMediaHealth, mediaAttractionWeight, -mediaAvoidanceWeight);
      steer = seek(target, true);
-     steer.mult(mediaAttractionWeight); 
+     steer.mult(newMediaWeight); 
      applyForce(steer);
     }
     
     // Wander if nothing is found. g 
-    if (target == null) {
-     // Wander around (Reset maxSpeed to get desired results)
-     float oldMaxSpeed = maxSpeed; 
-     maxSpeed = 2.0;
-     steer = wander(); 
-     steer.mult(wanderingWeight);
-     applyForce(steer);
-     maxSpeed = oldMaxSpeed; 
+    // Wander around (Reset maxSpeed to get desired results)
+    if (target == null || curMediaHealth >= maxMediaHealth || curBodyHealth >= maxBodyHealth) {
+      float oldMaxSpeed = maxSpeed; 
+      //maxSpeed = 1.0;
+      steer = wander(); 
+      steer.mult(wanderingWeight);
+      applyForce(steer);
+      //maxSpeed = oldMaxSpeed; 
     }
-   
-    // Avoid any media obstacles. 
-    steer = avoidMedia(f);
-    steer.mult(mediaAvoidanceWeight);
-    applyForce(steer);
   }
   
   void applyForce(PVector force) {
@@ -147,8 +143,13 @@ class Agent {
     // Update ahead vector position. 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
-    curBodyHealth -= 0.1;
-    curMediaHealth -= 0.1;
+    if (curBodyHealth >= -maxBodyHealth) {
+      curBodyHealth -= 0.1;   
+    }
+    
+    if (curMediaHealth >= -maxMediaHealth) {
+      curMediaHealth -= 0.1;  
+    }
   }
   
   // Is it in the vicinity of the media brick that it's actually 
@@ -160,7 +161,9 @@ class Agent {
       float d = PVector.dist(pb.center, position); 
       if (d < pb.getCircleRad()) {
         isConsumingMedia = true; 
-        curMediaHealth += 1; // 1 unit. 
+        if (curMediaHealth <= maxMediaHealth) {
+          curMediaHealth += 0.5; // Half-unit/frame 
+        }
         return; 
       }
     }
@@ -170,6 +173,11 @@ class Agent {
   
   // Did it just step on food when it was hungry? 
   void consumeFood(Food f) {
+    // Feeling pretty health. Nothing to consume. 
+    if (curBodyHealth >= maxBodyHealth) {
+      return;   
+    }
+    
     ArrayList<Flower> flowers = f.flowers;
     // Are we touching any food objects?
     for (int i = flowers.size()-1; i >= 0; i--) {
@@ -177,10 +185,9 @@ class Agent {
       float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
       PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
       float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
-      if (d < maxRadius) {
-        curBodyHealth += 20; 
+      if (d < flWidth/2) {
+        curBodyHealth += 20; // 20 units/flower 
         flowers.remove(i);
-        
         // Chance to create a new flower when one is created. 
         if (random(1) < 0.90) {
          f.createFlowers(1); 
@@ -294,9 +301,9 @@ class Agent {
   // -------------------------------------------- Steering Behaviors -------------------------------------------
   
   PVector wander() {
-    float wanderR = 30;         // Radius for our "wander circle"
+    float wanderR = 50;         // Radius for our "wander circle"
     float wanderD = 60;         // Distance for our "wander circle"
-    float change = 0.3;
+    float change = 0.5;
     wandertheta += random(-change,change);     // Randomly change wander theta
 
     // Now we have to calculate the new position to steer towards on the wander circle
@@ -395,6 +402,10 @@ class Agent {
   PVector findFood(Food f) {
     float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target = null;
+    
+    if (curBodyHealth >= maxBodyHealth) {
+     return null; 
+    }
     
     // Find the closest food particle.
     for (Flower fl : f.flowers) {
