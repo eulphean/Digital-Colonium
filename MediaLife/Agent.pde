@@ -13,12 +13,16 @@ class Agent {
   
   // Possible Genotypes.  
   float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; float maxMediaPerceptionRad; 
-  float maxSpeed; float maxForce; float foodWeight; float seperationWeight; float mediaAttractionWeight; 
-  float mediaAvoidanceWeight;
+  float maxSpeed; float maxForce; 
+  
+  // Weights for acccumulating forces on the agent.  
+  float foodWeight; float seperationWeight; float mediaAttractionWeight; float mediaAvoidanceWeight; float wanderingWeight;
+  
+  
   float maxAheadDistance; // Lets us avoid media obstacles and get attracted to media bricks. 
   
   // Health units: Average of these determine the looming death of the agent. 
-  // These could honestly evolve as well. This could be a genotype. 
+  // These could honestly evolve as well. This could be a genotype (maxBodyHealth and maxMediaHealth)
   float maxBodyHealth; float curBodyHealth; 
   float maxMediaHealth; float curMediaHealth;
   
@@ -43,8 +47,10 @@ class Agent {
     maxSeperationRad = maxRadius*5;
     
     // TODO: Evolve these parameters. 
-    maxForce = 0.1; foodWeight = 1.0; seperationWeight = 0.5; mediaAttractionWeight = 0.2; 
-    mediaAvoidanceWeight = 0.5; 
+    maxForce = 0.1; 
+    
+    // Weights. 
+    setWeight();
     
     maxAheadDistance = 30.0;
     
@@ -65,6 +71,9 @@ class Agent {
     
     // Based on the current state, take actions. 
     behaviors(f, agents);
+    
+    // Remove food from canvas if agent stepped on it. 
+    consumeFood(f); 
 
     // Keep updating position until reaching the target.
     update(); 
@@ -94,61 +103,57 @@ class Agent {
    
   }
   
+  void setWeight() {
+    foodWeight = 1.0; 
+    seperationWeight = 0.4; 
+    mediaAttractionWeight = 0.1; 
+    mediaAvoidanceWeight = 0.1;
+    wanderingWeight = 0.3;
+  }
+  
   void behaviors(Food f, ArrayList<Agent> agents) {
     PVector target;
     PVector steer; 
     
-    // Seperation 
+    // Based on the media and body health, the local
+    // weights can evolve. Use map functions.  
+    
+    // Seperation between agents. 
     steer = seperation(agents); 
     steer.mult(seperationWeight); 
     applyForce(steer);
     
-    // Look for food
-    
-    // Media attraction
-    
-    // Media resistance
-   
-    // Determine the next action.
-    switch (curState) {
-      case Hungry: 
-        // Steer torwards closest food.
-        target = findFood(f);
-        if (target != null) {
-          steer = seek(target, true /*Arrive*/); 
-          steer.mult(foodWeight); // Multiply by food weight. 
-          applyForce(steer);
-        }
-       
-        // Avoid any media obstacles. 
-        steer = avoidMedia(f);
-        steer.mult(mediaAvoidanceWeight);
-        applyForce(steer);
-        
-        // Remove food from canvas if agent stepped on it. 
-        consumeFood(f); 
-        break; 
-      
-      case Media:
-        target = findMedia(f); 
-        if (target != null) {
-         steer = seek(target, true);
-         steer.mult(mediaAttractionWeight); 
-         applyForce(steer);
-        } else {
-         // Wander around (Reset maxSpeed to get desired results)
-         float oldMaxSpeed = maxSpeed; 
-         maxSpeed = 2.0;
-         steer = wander(); 
-         steer.mult(0.2); // Wandering weight (can be constant) 
-         applyForce(steer);
-         maxSpeed = oldMaxSpeed; 
-        }
-        break; 
-      
-      default: 
-        break;
+    // Food. 
+    target = findFood(f);
+    if (target != null) {
+      steer = seek(target, true /*Arrive*/); 
+      steer.mult(foodWeight); 
+      applyForce(steer);
     }
+    
+    // Media attraction.
+    target = findMedia(f); 
+    if (target != null) {
+     steer = seek(target, true);
+     steer.mult(mediaAttractionWeight); 
+     applyForce(steer);
+    }
+    
+    // Wander if nothing is found.  
+    if (target == null) {
+     // Wander around (Reset maxSpeed to get desired results)
+     float oldMaxSpeed = maxSpeed; 
+     maxSpeed = 2.0;
+     steer = wander(); 
+     steer.mult(wanderingWeight);
+     applyForce(steer);
+     maxSpeed = oldMaxSpeed; 
+    }
+   
+    // Avoid any media obstacles. 
+    steer = avoidMedia(f);
+    steer.mult(mediaAvoidanceWeight);
+    applyForce(steer);
   }
   
   void applyForce(PVector force) {
@@ -431,3 +436,43 @@ class Agent {
     //}
   }
 };
+
+//switch (curState) {
+//  case Hungry: 
+//    // Steer torwards closest food.
+//    target = findFood(f);
+//    if (target != null) {
+//      steer = seek(target, true /*Arrive*/); 
+//      steer.mult(foodWeight); // Multiply by food weight. 
+//      applyForce(steer);
+//    }
+   
+//    // Avoid any media obstacles. 
+//    steer = avoidMedia(f);
+//    steer.mult(mediaAvoidanceWeight);
+//    applyForce(steer);
+    
+//    // Remove food from canvas if agent stepped on it. 
+//    consumeFood(f); 
+//    break; 
+  
+//  case Media:
+//    target = findMedia(f); 
+//    if (target != null) {
+//     steer = seek(target, true);
+//     steer.mult(mediaAttractionWeight); 
+//     applyForce(steer);
+//    } else {
+//     // Wander around (Reset maxSpeed to get desired results)
+//     float oldMaxSpeed = maxSpeed; 
+//     maxSpeed = 2.0;
+//     steer = wander(); 
+//     steer.mult(0.2); // Wandering weight (can be constant) 
+//     applyForce(steer);
+//     maxSpeed = oldMaxSpeed; 
+//    }
+//    break; 
+  
+//  default: 
+//    break;
+//}
