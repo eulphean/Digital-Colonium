@@ -29,6 +29,7 @@ class Food {
     int space = 92;
     
     int w = pixWidth * cols + space; int h = pixWidth * rows; 
+    println(width); println(w);
     int newNum = width/w;  
     
     float yPos = height/2 - h/2; 

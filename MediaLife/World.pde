@@ -4,17 +4,17 @@ class World {
     int generation; 
 
     World(int numAgents, int numFood) {
-        // Initialize all the sources of energy
-        food = new Food(numFood);
-         
-        // Initialize agents
-        for (int i = 0; i < numAgents; i++) {
-           PVector l = new PVector(0, 0);
-           agents.add(new Agent(l, new DNA()));
-        }
-        
-        // Keep track of iterations.
-        generation = 0; 
+      // Initialize all the sources of energy
+      food = new Food(numFood);
+       
+      // Initialize agents
+      for (int i = 0; i < numAgents; i++) {
+         PVector l = new PVector(0, 0);
+         agents.add(new Agent(l, new DNA()));
+      }
+      
+      // Keep track of iterations.
+      generation = 0; 
     }
     
     void run() {

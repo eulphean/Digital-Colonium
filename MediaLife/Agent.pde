@@ -1,10 +1,3 @@
-// Mental state of the agent. 
-enum State {
-  Hungry,
-  Media,
-  Mating; 
-};
-
 class Agent {
   // Not evolving traits. 
   PVector position; PVector ahead; 
@@ -13,21 +6,19 @@ class Agent {
   
   // Possible Genotypes.  
   float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; float maxMediaPerceptionRad; 
-  float maxSpeed; float maxForce; 
+  float maxSpeed; float maxForce; float maxAheadDistance;
   
   // Weights for acccumulating forces on the agent.  
   float foodWeight; float seperationWeight; float mediaAttractionWeight; float mediaAvoidanceWeight; float wanderingWeight;
-  
-  
-  float maxAheadDistance; // Lets us avoid media obstacles and get attracted to media bricks. 
   
   // Health units: Average of these determine the looming death of the agent. 
   // These could honestly evolve as well. This could be a genotype (maxBodyHealth and maxMediaHealth)
   float maxBodyHealth; float curBodyHealth; 
   float maxMediaHealth; float curMediaHealth;
   
-  // Current agent radius. 
-  State curState;
+  // Local flags.
+  boolean isConsumingMedia = false; 
+  color bodyColor; 
   
   // DNA of the agent. 
   DNA dna;   
@@ -48,59 +39,40 @@ class Agent {
     
     // TODO: Evolve these parameters. 
     maxForce = 0.1; 
-    
-    // Weights. 
-    setWeight();
-    
     maxAheadDistance = 30.0;
     
-    maxBodyHealth = 200.0; curBodyHealth = 50.0; 
-    maxBodyHealth = 50.0; curMediaHealth = 50.0; 
+    // Weights for the forces acting on the agent.  
+    setWeight();
     
-    // Need food.
-    curState = State.Hungry; 
+    // Health units. Initial units. 
+    maxBodyHealth = 200.0; curBodyHealth = 200.0;
+    maxMediaHealth = 100.0; curMediaHealth = 0.0; 
     
     dna = _dna; 
   }
   
   void run(Food f, ArrayList<Agent> agents) {
-    // Update any GUI values
+    // Update any GUI values.
     maxFoodPerceptionRad = foodPerceptionRad; 
     
-    //evaluateState();
-    
-    // Based on the current state, take actions. 
+    // Evaluate all the forces acting on the agents.
     behaviors(f, agents);
     
     // Remove food from canvas if agent stepped on it. 
     consumeFood(f); 
+    
+    // Check if the agent is inside a media brick. 
+    consumeMedia(f);
 
     // Keep updating position until reaching the target.
     update(); 
     
+    // Wraparound the screen if the agent leaves.
+    // TODO: Use boundaries and contain the system or maybe not. 
     wraparound();
+    
+    // Show the agent. 
     display();
-  }
-  
-  void evaluateState() {
-    // If health is 100%, then I can change state to media. 
-    // If health is 1/4 of maxHealth, then change state. 
-    if (curBodyHealth <= 0.25*maxBodyHealth) {
-     curState = State.Hungry;  
-    }
-    
-    if (curBodyHealth >= maxBodyHealth) {
-     curState = State.Media; 
-    }
-    
-    if (curMediaHealth >= maxMediaHealth) {
-     curState = State.Hungry; 
-    }
-    
-    if (curMediaHealth <= 0.5*maxMediaHealth) {
-     curState = State.Media; 
-    }
-   
   }
   
   void setWeight() {
@@ -139,7 +111,7 @@ class Agent {
      applyForce(steer);
     }
     
-    // Wander if nothing is found.  
+    // Wander if nothing is found. g 
     if (target == null) {
      // Wander around (Reset maxSpeed to get desired results)
      float oldMaxSpeed = maxSpeed; 
@@ -175,8 +147,138 @@ class Agent {
     // Update ahead vector position. 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
-    curBodyHealth -= 0.5; // Decays slowly
-    curMediaHealth -= 0.6; // Decays quickly
+    curBodyHealth -= 0.1;
+    curMediaHealth -= 0.1;
+  }
+  
+  // Is it in the vicinity of the media brick that it's actually 
+  // consuming media. 
+  void consumeMedia(Food f) {
+    ArrayList<PixelBrick> bricks = f.bricks;  
+    
+    for (PixelBrick pb: bricks) {
+      float d = PVector.dist(pb.center, position); 
+      if (d < pb.getCircleRad()) {
+        isConsumingMedia = true; 
+        curMediaHealth += 1; // 1 unit. 
+        return; 
+      }
+    }
+    
+    isConsumingMedia = false;
+  }
+  
+  // Did it just step on food when it was hungry? 
+  void consumeFood(Food f) {
+    ArrayList<Flower> flowers = f.flowers;
+    // Are we touching any food objects?
+    for (int i = flowers.size()-1; i >= 0; i--) {
+      Flower fl = flowers.get(i);
+      float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
+      PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
+      float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
+      if (d < maxRadius) {
+        curBodyHealth += 20; 
+        flowers.remove(i);
+        
+        // Chance to create a new flower when one is created. 
+        if (random(1) < 0.90) {
+         f.createFlowers(1); 
+        } 
+      }
+    }
+  }
+  
+    // At any moment there is a teeny, tiny chance a bloop will reproduce
+  Agent reproduce() {
+    // asexual reproduction
+    if (random(1) < 0.001) {
+      // Child is exact copy of this single parent. 
+      DNA childDNA = dna.copy();
+      // Child DNA can mutate
+      childDNA.mutate(0.01);
+      // Child is exact copy of single parent
+      return new Agent(new PVector(random(width), random(height)), childDNA);
+    } 
+    else {
+      return null;
+    }
+  }
+  
+  void wraparound() {
+    if (position.x < -maxRadius) position.x = width+maxRadius;
+    if (position.y < -maxRadius) position.y = height+maxRadius;
+    if (position.x > width+maxRadius) position.x = -maxRadius;
+    if (position.y > height+maxRadius) position.y = -maxRadius;
+  }
+  
+  // Check for death
+  boolean dead() {
+   float netHealth = curBodyHealth + curMediaHealth; 
+   return netHealth < 0.0; 
+  }
+  
+  void display() {
+    pushMatrix();
+     pushStyle();
+      stroke(0);
+      // Draw a boid.  
+      float theta = velocity.heading() + radians(90);
+      translate(position.x,position.y);
+      rotate(theta);
+      bodyColor = isConsumingMedia ? color(255, 0, 0) : color(255);
+      fill(bodyColor);
+      beginShape(TRIANGLES);
+      vertex(0, -maxRadius*2);
+      vertex(-maxRadius, maxRadius*2);
+      vertex(maxRadius, maxRadius*2);
+      endShape();
+     popStyle();
+    popMatrix();
+    
+    // Debug content. 
+    displayDebug();
+  }
+  
+  void displayDebug() {
+    // Debug content
+    if (debug) {
+      pushStyle();
+      stroke(255);
+      strokeWeight(3);
+      line(position.x, position.y, ahead.x, ahead.y);
+      popStyle();
+     
+      // Position marker. 
+      fill(0, 255, 0);
+      ellipse(position.x, position.y, 3, 3);
+    }
+    
+    // Vision circle.
+    if (turnOnVision) {
+      // Food perception radius.
+      fill(color(0, 255, 0, 50));
+      ellipse(position.x,position.y,maxFoodPerceptionRad, maxFoodPerceptionRad); 
+      
+      // Seperation radius
+      fill(color(255, 0, 0, 50));
+      ellipse(position.x,position.y,maxSeperationRad,maxSeperationRad); 
+      
+      // Media perception radius. 
+      fill(color(255, 255, 0, 50)); 
+      ellipse(position.x, position.y, maxMediaPerceptionRad, maxMediaPerceptionRad);
+    }
+  }
+  
+  // A method just to draw the circle associated with wandering
+  void drawWanderStuff(PVector position, PVector circle, PVector target, float rad) {
+    stroke(255);
+    noFill();
+    ellipseMode(CENTER);
+    ellipse(circle.x,circle.y,rad*2,rad*2);
+    ellipse(target.x,target.y,4,4);
+    line(position.x,position.y,circle.x,circle.y);
+    line(circle.x,circle.y,target.x,target.y);
   }
   
   // -------------------------------------------- Steering Behaviors -------------------------------------------
@@ -318,161 +420,4 @@ class Agent {
     
     return target; 
   }
-  
-  // Did it just step on food when it was hungry? 
-  void consumeFood(Food f) {
-    ArrayList<Flower> flowers = f.flowers;
-    // Are we touching any food objects?
-    for (int i = flowers.size()-1; i >= 0; i--) {
-      Flower fl = flowers.get(i);
-      float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
-      PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
-      float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
-      if (d < maxRadius) {
-        curBodyHealth += 100; 
-        flowers.remove(i);
-        
-        // 30% chance a new flower is created after its eaten. 
-        if (random(1) < 0.95) {
-         f.createFlowers(1); 
-        } 
-      }
-    }
-  }
-  
-  void display() {
-    pushMatrix();
-     pushStyle();
-      // Draw a boid.  
-      float theta = velocity.heading() + radians(90);
-      translate(position.x,position.y);
-      rotate(theta);
-      fill(255);
-      stroke(0, curBodyHealth);
-      beginShape(TRIANGLES);
-      vertex(0, -maxRadius*2);
-      vertex(-maxRadius, maxRadius*2);
-      vertex(maxRadius, maxRadius*2);
-      endShape();
-     popStyle();
-    popMatrix();
-    
-    // Debug content. 
-    displayDebug();
-  }
-  
-  void displayDebug() {
-    // Debug content
-    if (debug) {
-      pushStyle();
-      stroke(255);
-      strokeWeight(3);
-      line(position.x, position.y, ahead.x, ahead.y);
-      popStyle();
-     
-      // Position marker. 
-      fill(0, 255, 0);
-      ellipse(position.x, position.y, 3, 3);
-    }
-    
-    // Vision circle.
-    if (turnOnVision) {
-      // Food perception radius.
-      fill(color(0, 255, 0, 50));
-      ellipse(position.x,position.y,maxFoodPerceptionRad, maxFoodPerceptionRad); 
-      
-      // Seperation radius
-      fill(color(255, 0, 0, 50));
-      ellipse(position.x,position.y,maxSeperationRad,maxSeperationRad); 
-      
-      // Media perception radius. 
-      fill(color(255, 255, 0, 50)); 
-      ellipse(position.x, position.y, maxMediaPerceptionRad, maxMediaPerceptionRad);
-    }
-  }
-  
-  // A method just to draw the circle associated with wandering
-  void drawWanderStuff(PVector position, PVector circle, PVector target, float rad) {
-    stroke(255);
-    noFill();
-    ellipseMode(CENTER);
-    ellipse(circle.x,circle.y,rad*2,rad*2);
-    ellipse(target.x,target.y,4,4);
-    line(position.x,position.y,circle.x,circle.y);
-    line(circle.x,circle.y,target.x,target.y);
-  }
-  
-  // At any moment there is a teeny, tiny chance a bloop will reproduce
-  Agent reproduce() {
-    // asexual reproduction
-    if (random(1) < 0.001) {
-      // Child is exact copy of this single parent. 
-      DNA childDNA = dna.copy();
-      // Child DNA can mutate
-      childDNA.mutate(0.01);
-      // Child is exact copy of single parent
-      return new Agent(new PVector(random(width), random(height)), childDNA);
-    } 
-    else {
-      return null;
-    }
-  }
-  
-  void wraparound() {
-    if (position.x < -maxRadius) position.x = width+maxRadius;
-    if (position.y < -maxRadius) position.y = height+maxRadius;
-    if (position.x > width+maxRadius) position.x = -maxRadius;
-    if (position.y > height+maxRadius) position.y = -maxRadius;
-  }
-  
-  // Check for death
-  boolean dead() {
-    return false;
-    //if (curBodyHealth < 0.0) {
-    //  return true;
-    //} 
-    //else {
-    //  return false;
-    //}
-  }
 };
-
-//switch (curState) {
-//  case Hungry: 
-//    // Steer torwards closest food.
-//    target = findFood(f);
-//    if (target != null) {
-//      steer = seek(target, true /*Arrive*/); 
-//      steer.mult(foodWeight); // Multiply by food weight. 
-//      applyForce(steer);
-//    }
-   
-//    // Avoid any media obstacles. 
-//    steer = avoidMedia(f);
-//    steer.mult(mediaAvoidanceWeight);
-//    applyForce(steer);
-    
-//    // Remove food from canvas if agent stepped on it. 
-//    consumeFood(f); 
-//    break; 
-  
-//  case Media:
-//    target = findMedia(f); 
-//    if (target != null) {
-//     steer = seek(target, true);
-//     steer.mult(mediaAttractionWeight); 
-//     applyForce(steer);
-//    } else {
-//     // Wander around (Reset maxSpeed to get desired results)
-//     float oldMaxSpeed = maxSpeed; 
-//     maxSpeed = 2.0;
-//     steer = wander(); 
-//     steer.mult(0.2); // Wandering weight (can be constant) 
-//     applyForce(steer);
-//     maxSpeed = oldMaxSpeed; 
-//    }
-//    break; 
-  
-//  default: 
-//    break;
-//}

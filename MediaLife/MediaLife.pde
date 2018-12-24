@@ -129,16 +129,6 @@ void keyPressed() {
     restartWorld = !restartWorld;  
   }
   
-  if (key == 's') {
-    for (Agent a : world.agents) {
-      if (a.curState == State.Hungry) {
-        a.curState = State.Media; 
-      } else if (a.curState == State.Media) {
-        a.curState = State.Hungry;
-      }
-    }
-  }
-  
   if (key == 'd') {
    debug = !debug;  
   }
