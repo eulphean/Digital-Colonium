@@ -11,7 +11,7 @@ TriOsc triOsc; SinOsc sinOsc; SawOsc sawOsc; SqrOsc sqrOsc; Pulse pulseOsc;
 Oscillator curOsc;
 Env env; 
 
-BrownNoise noise;
+PinkNoise noise;
 Reverb reverb; 
 HighPass lowPass;
 Delay delay; 
@@ -49,14 +49,14 @@ void setup() {
   sqrOsc = new SqrOsc(this);
   
   // Noise
-  noise = new BrownNoise(this); 
+  noise = new PinkNoise(this); 
   
   // Effects
   reverb = new Reverb(this); 
   delay = new Delay(this);
   
   // Filters
-  lowPass = new LowPass(this);
+  lowPass = new HighPass(this);
   
   initGui();
   
@@ -112,10 +112,10 @@ void draw() {
   
   if (shouldNoise) {
     noise.play();
-    noise.amp(0.1); 
+    noise.amp(0.05); 
     reverb.process(noise); 
-    reverb.wet(0.5); 
-    reverb.damp(0.5);
+    reverb.wet(0.1); 
+    reverb.damp(2.0);
     lowPass.process(noise);
     shouldNoise = false;
   }
@@ -153,7 +153,7 @@ void draw() {
   background(125, 255, 125);
   noStroke();
   fill(255, 0, 150);
-  ellipse(width, height, 2*(width - mouseX), 2*(width - mouseX));
+  ellipse(width/2, height/2, 2*(width/2 - mouseX), 2*(width/2 - mouseX));
 } 
 
 // This helper function calculates the respective frequency of a MIDI note

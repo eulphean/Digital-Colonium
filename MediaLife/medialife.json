@@ -1,9 +1,4 @@
 {
-  "/mediaAvoidanceW": {
-    "min": 0,
-    "max": 1,
-    "value": 0.19999998807907104
-  },
   "/wanderingW": {
     "min": 0,
     "max": 1,
@@ -18,6 +13,26 @@
     "min": 0,
     "max": 1,
     "value": 0.5099999904632568
+  },
+  "/volume": {
+    "min": 0,
+    "max": 1,
+    "value": 0.8199999928474426
+  },
+  "/flowerScale": {
+    "min": 0,
+    "max": 1,
+    "value": 0.6000000238418579
+  },
+  "/foodW": {
+    "min": 0,
+    "max": 2,
+    "value": 1.5
+  },
+  "/mediaAvoidanceW": {
+    "min": 0,
+    "max": 1,
+    "value": 0.19999998807907104
   },
   "/foodPerceptionRad": {
     "min": 0,
@@ -43,16 +58,6 @@
     "min": 0,
     "max": 150,
     "value": 67.5
-  },
-  "/flowerScale": {
-    "min": 0,
-    "max": 1,
-    "value": 0.6000000238418579
-  },
-  "/foodW": {
-    "min": 0,
-    "max": 2,
-    "value": 1.5
   },
   "/numAgents": {
     "min": 0,

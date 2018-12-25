@@ -27,15 +27,15 @@ class Food {
     int cols = 10; int rows = 10; 
     int pixWidth = 10; 
     int space = 92;
-    
-    int w = pixWidth * cols + space; int h = pixWidth * rows; 
-    println(width); println(w);
-    int newNum = width/w;  
-    
+    int w = pixWidth * cols + space; int h = pixWidth * rows;   
     float yPos = height/2 - h/2; 
-    for (int i = 0; i < newNum; i++) {
+    int numBricks = width/w;
+    
+
+    for (int i = 0; i < numBricks; i++) {
      PVector position = new PVector (i*w, yPos); 
-     bricks.add(new PixelBrick(position, rows, cols, pixWidth)); 
+     float amp = (1.0 / numBricks);
+     bricks.add(new PixelBrick(position, rows, cols, pixWidth, amp)); 
     }
   }
   
@@ -94,15 +94,15 @@ class Food {
     return false; 
   }
   
-  void run() {
+  void run(ArrayList<Agent> agents) {
    // Show flowers.  
    for (Flower f: flowers) { 
      f.run();
    }
    
-   // Show bricks
-   for (PixelBrick pb: bricks) {
-     pb.run();
+   // Show bricks.
+   for (int i = 0; i < bricks.size(); i++) {
+     bricks.get(i).run(agents);
    }
   }
 }

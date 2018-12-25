@@ -49,11 +49,14 @@ class Agent {
     dna = _dna; 
     
     // Flower & Media sound. 
-    osc = getRandomOscillator(); midi = getRandomMidi(); amp = 0.0; // Will update from world
-    env = new Env(sketchPointer); envVals = getADSRValues();
+    osc = getRandomOscillator(); midi = getRandomMidi(false); amp = 0.0; // Will update from world
+    env = new Env(sketchPointer); envVals = getADSRValues(false);
   }
   
-  void run(Food f, ArrayList<Agent> agents) {
+  void run(Food f, ArrayList<Agent> agents, float a) {
+    // Newly calculated oscillator amplitude.
+    amp = a; 
+    
     updateGuiParameters(); 
     
     // Evaluate all the forces acting on the agents.

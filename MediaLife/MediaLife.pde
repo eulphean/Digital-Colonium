@@ -27,6 +27,7 @@ float seperationW = 0.5; Slider seperationWeightSlider;
 float mediaAttractionW = 0.5; Slider mediaAttractSlider; 
 float mediaAvoidanceW = 0.3; Slider mediaAvoidSlider; 
 float wanderingW = 0.5; Slider wanderSlider;
+float volume = 0.5; Slider volumeSlider; 
 
 // Lookead
 float aheadDistance = 30.0; Slider aheadDistanceSlider; 
@@ -37,6 +38,9 @@ boolean turnOnVision;
 boolean restartWorld;
 boolean debug;
 boolean healthStats;
+
+// Sound
+Sound sound; 
 
 // Initialize a world
 World world;
@@ -62,10 +66,17 @@ void setup() {
   world = new World(numAgents, numFood);
   ellipseMode(RADIUS);
   smooth();
+  
+  // Setup sound. 
+  sound = new Sound(this); 
+  sound.sampleRate(60000);
 }
 
 void draw() {
   background(0);
+  
+  // Update volume.
+  sound.volume(volume);
   
   if (restartWorld) {
     world = new World(numAgents, numFood);
@@ -191,6 +202,14 @@ void initializeGui() {
               .setSize(100,20)
               .setRange(0, 100)
               .setValue(aheadDistance)
+              .setColorCaptionLabel(color(255))
+              .setGroup(g1);
+
+  volumeSlider = cp5.addSlider("volume")
+              .setPosition(0,240)
+              .setSize(100,20)
+              .setRange(0, 1.0)
+              .setValue(volume)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
               

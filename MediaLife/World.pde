@@ -18,19 +18,18 @@ class World {
   
   void run() {
     // Deal with natural food.  
-    food.run();
+    food.run(agents);
 
     // Handle agents display, eating, reproduction
     for (int i = agents.size()-1; i >= 0; i--) {
       Agent a = agents.get(i);
       
       // Update sound amplitudes (as a cluster) 
-      float amp = (1.0 / agents.size()) / (i + 1);
-      a.amp = amp;
+      float amp = (1.0 / agents.size());
       
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
-      a.run(food, agents);
+      a.run(food, agents, amp);
       
       // Health of the agent.
       if (a.dead()) { // Is it dead? 
