@@ -20,6 +20,9 @@ class Agent {
   boolean isConsumingMedia = false; 
   color bodyColor; 
   
+  // Sound
+  Oscillator osc; Env env; float envVals[]; int midi; float amp;
+  
   // DNA of the agent. 
   DNA dna;   
   
@@ -42,11 +45,15 @@ class Agent {
     maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
     maxMediaHealth = 100.0; curMediaHealth = 0.0; 
     
+    // DNA
     dna = _dna; 
+    
+    // Sound
+    osc = getRandomOscillator(); midi = getRandomMidi(); 
+    env = new Env(sketchPointer); envVals = getADSRValues();
   }
   
   void run(Food f, ArrayList<Agent> agents) {
-    println("Run");
     updateGuiParameters(); 
     
     // Evaluate all the forces acting on the agents.
@@ -77,8 +84,6 @@ class Agent {
     mediaAttractionWeight = mediaAttractionW; 
     mediaAvoidanceWeight = mediaAvoidanceW;
     wanderingWeight = wanderingW;
-    
-    println("New weights: " + foodWeight + ", " + seperationWeight + ", " + mediaAttractionWeight + ", " + mediaAvoidanceWeight + ", " + wanderingWeight);
     
     // Perception Rad
     maxFoodPerceptionRad = foodPerceptionRad;
@@ -120,12 +125,9 @@ class Agent {
     // Wander if nothing is found. g 
     // Wander around (Reset maxSpeed to get desired results)
     if (target == null || curMediaHealth >= maxMediaHealth || curBodyHealth >= maxBodyHealth) {
-      float oldMaxSpeed = maxSpeed; 
-      //maxSpeed = 1.0;
       steer = wander(); 
       steer.mult(wanderingWeight);
       applyForce(steer);
-      //maxSpeed = oldMaxSpeed; 
     }
   }
   
@@ -193,6 +195,11 @@ class Agent {
       if (d < flWidth/2) {
         curBodyHealth += 20; // 20 units/flower 
         flowers.remove(i);
+        
+        // Ring & pass it through an envelope 
+        osc.play(midiToFreq(midi), amp);
+        env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
+        
         // Chance to create a new flower when one is created. 
         if (random(1) < 0.90) {
          f.createFlowers(1); 

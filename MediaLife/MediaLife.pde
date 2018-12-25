@@ -1,4 +1,5 @@
 import controlP5.*; 
+import processing.sound.*;
 
 // Initialize the GUI
 ControlP5 cp5; 
@@ -39,6 +40,9 @@ boolean healthStats;
 
 // Initialize a world
 World world;
+
+// Sketch applet pointer
+PApplet sketchPointer = this; 
 
 void setup() {
   fullScreen();
