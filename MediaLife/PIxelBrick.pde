@@ -61,7 +61,7 @@ class PixelBrick {
     if (isOccupied && !hasPlayed) {
      noise.amp(amp/10); lowPass.process(noise); noise.play(); 
      osc.play(midiToFreq(midi), amp);
-     lowPass.process(osc, amp); lowPass.freq(700); 
+     lowPass.process(osc, amp); lowPass.freq(750); 
      env.play(osc, evals[0], evals[1], evals[2], evals[3]); 
      hasPlayed = true; 
     }
