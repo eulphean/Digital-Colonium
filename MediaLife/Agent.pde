@@ -48,8 +48,8 @@ class Agent {
     // DNA
     dna = _dna; 
     
-    // Sound
-    osc = getRandomOscillator(); midi = getRandomMidi(); 
+    // Flower & Media sound. 
+    osc = getRandomOscillator(); midi = getRandomMidi(); amp = 0.0; // Will update from world
     env = new Env(sketchPointer); envVals = getADSRValues();
   }
   
@@ -68,8 +68,7 @@ class Agent {
     // Keep updating position until reaching the target.
     update(); 
     
-    // Wraparound the screen if the agent leaves.
-    // TODO: Use boundaries and contain the system or maybe not. 
+    // Wraparound the screen if the agent leaves. 
     wraparound();
     
     // Show the agent. 
@@ -113,7 +112,6 @@ class Agent {
     }
 
     // Media attraction.
-    // TODO: This is acting really funny right now. 
     target = findMedia(f); 
     if (target != null) {
      float newMediaWeight = map(curMediaHealth, -maxMediaHealth, maxMediaHealth, mediaAttractionWeight, -mediaAvoidanceWeight);
@@ -122,8 +120,7 @@ class Agent {
      applyForce(steer);
     }
     
-    // Wander if nothing is found. g 
-    // Wander around (Reset maxSpeed to get desired results)
+    // Wander if nothing is found or I'm way too healthy or media saturated. 
     if (target == null || curMediaHealth >= maxMediaHealth || curBodyHealth >= maxBodyHealth) {
       steer = wander(); 
       steer.mult(wanderingWeight);
@@ -155,7 +152,7 @@ class Agent {
     }
     
     if (curMediaHealth >= -maxMediaHealth) {
-      curMediaHealth -= 0.1;  
+      curMediaHealth -= 0.2;  
     }
   }
   
