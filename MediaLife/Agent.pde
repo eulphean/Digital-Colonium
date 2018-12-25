@@ -319,18 +319,16 @@ class Agent {
     wandertheta += random(-change,change);     // Randomly change wander theta
 
     // Now we have to calculate the new position to steer towards on the wander circle
-    PVector circlepos = velocity.get();    // Start with velocity
+    PVector circlepos = velocity.copy();    // Start with velocity
     circlepos.normalize();            // Normalize to get heading
     circlepos.mult(wanderD);          // Multiply by distance
     circlepos.add(position);               // Make it relative to boid's position
 
-    float h = velocity.heading2D();        // We need to know the heading to offset wandertheta
+    float h = velocity.heading();        // We need to know the heading to offset wandertheta
 
     PVector circleOffSet = new PVector(wanderR*cos(wandertheta+h),wanderR*sin(wandertheta+h));
     PVector target = PVector.add(circlepos,circleOffSet);
     
-    // Render wandering circle, etc.
-    //drawWanderStuff(position,circlepos,target,wanderR);
     return seek(target);
   }
   // Calculates a steering force towards a target. 
