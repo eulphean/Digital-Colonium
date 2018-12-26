@@ -7,7 +7,7 @@ class PixelBrick {
   
   // Sound stuff. 
   BrownNoise noise; float amp; 
-  Oscillator osc; Env env; float [] evals; int midi; LowPass lowPass;
+  Oscillator osc; Env env; float [] evals; int midi; LowPass lowPass; BandPass bandPass; 
   boolean hasPlayed = false;
  
   PixelBrick(PVector pos, int numRows, int numCols, int pWidth, float a) {
@@ -30,7 +30,7 @@ class PixelBrick {
     }
     
     // Brick's sound. 
-    noise = new BrownNoise(sketchPointer); amp = a;
+    noise = new BrownNoise(sketchPointer); bandPass = new BandPass(sketchPointer); amp = a;
     osc = getRandomOscillator(); osc.amp(a); midi = getRandomMidi(true); env = new Env(sketchPointer);
     evals = getADSRValues(true); lowPass = new LowPass(sketchPointer); noise = new BrownNoise(sketchPointer);
   }
@@ -59,10 +59,19 @@ class PixelBrick {
     
     // Play the sound. 
     if (isOccupied && !hasPlayed) {
-     noise.amp(amp/10); lowPass.process(noise); noise.play(); 
+     // Noise
+     noise.amp(amp/10); noise.play();
+     if (!bandPass.isProcessing()) {
+      bandPass.process(noise, amp); bandPass.freq(750); 
+     }
+
+     // Oscillator.
      osc.play(midiToFreq(midi), amp);
-     lowPass.process(osc, amp); lowPass.freq(750); 
+     if (!lowPass.isProcessing()) {
+       lowPass.process(osc, amp); lowPass.freq(750);
+     } 
      env.play(osc, evals[0], evals[1], evals[2], evals[3]); 
+     
      hasPlayed = true; 
     }
     

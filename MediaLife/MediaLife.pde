@@ -92,13 +92,13 @@ void draw() {
     g1.show(); 
     pushStyle();
     color c = color(255);
-    fill(c);
-    textSize(15);
+    //fill(c);
+    //textSize(15);
     // Generation
-    text("Gen: " + world.generation, 5, 25);
-    text("Agents: " + world.agents.size(), 5, 40);
-    text("Food: " + world.food.flowers.size(), 5, 60);
-    text("Frame rate: " + frameRate, 5, 75);
+    //text("Gen: " + world.generation, 5, 25);
+    //text("Agents: " + world.agents.size(), 5, 40);
+    //text("Food: " + world.food.flowers.size(), 5, 60);
+    //text("Frame rate: " + frameRate, 5, 75);
     popStyle();
   }
 }
@@ -107,7 +107,7 @@ void initializeGui() {
   cp5 = new ControlP5(this); 
     
   g1 = cp5.addGroup("g1")
-                .setPosition(5, 95);
+                .setPosition(5, 20);
                 
   foodRadSlider = cp5.addSlider("foodPerceptionRad")
               .setPosition(0, 0)

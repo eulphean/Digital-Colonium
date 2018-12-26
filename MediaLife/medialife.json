@@ -17,7 +17,7 @@
   "/volume": {
     "min": 0,
     "max": 1,
-    "value": 0.8199999928474426
+    "value": 1
   },
   "/flowerScale": {
     "min": 0,
@@ -62,6 +62,6 @@
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 34
+    "value": 70
   }
 }
