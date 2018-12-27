@@ -23,7 +23,7 @@ class Organism {
     // Antenna head properties. 
     antIndices = new IntList(); 
     antEdges = new ArrayList();
-    minAngle = 160; maxAngle = 390; 
+    minAngle = 200; maxAngle = 340; 
     antennaOffset = 10; 
     maxAntennas = (maxAngle-minAngle)/antennaOffset; 
     minLength = 5; maxLength = 30;
@@ -118,8 +118,7 @@ class Organism {
       fill(255, 0, 0); 
       noStroke();
       ellipse(0, bodyHeight/2, bodyWidth, bodyHeight);
-      
-      // Draw the spots. 
+      // Line
       fill(0); 
       stroke(0); strokeWeight(1);
       line(0, 0, 0, bodyHeight);
