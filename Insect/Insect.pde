@@ -4,7 +4,7 @@ void setup() {
   size(350, 350);
   ellipseMode(CENTER);
   
-  o = new Organism(new PVector(width/2, height/2), 0.5, 10); 
+  o = new Organism(new PVector(width/2, height/2), random(0, 1.0), floor(random(0, 44))); 
 }
 
 void draw() {
@@ -13,7 +13,7 @@ void draw() {
 }
 
 void keyPressed() {
- o = new Organism(new PVector(width/2, height/2), 0.5, 10); 
+ o = new Organism(new PVector(width/2, height/2), random(0, 1.0), floor(random(0, 44))); 
 }
 
 // Draw the normals of a circle
