@@ -1,65 +1,104 @@
 class Organism {
+  // Organism. 
   PVector headCenter;
-  ArrayList<PVector> antennas; // Start, End. 
   float radius; 
   float scale;
   
-  // TODO: I need to determine max number of antennas and locations where they can be 
-  // drawn from on the head's surface. 
-  Organism(PVector pos, float s) {
-    headCenter = pos; 
-    scale = s; 
+  // Antenna properties. 
+  // [NOTE] Could evolve certainly. 
+  IntList antIndices; 
+  ArrayList<PVector> antEdges; 
+  int maxAngle; int minAngle; 
+  int antennaOffset; 
+  int maxAntennas; 
+  int minLength; int maxLength;
+  
+  Organism(PVector pos, float s, int numAntennas) {
+    // Antenna head properties. 
+    antIndices = new IntList(); 
+    antEdges = new ArrayList();
+    minAngle = 160; maxAngle = 380; 
+    antennaOffset = 5; 
+    maxAntennas = (maxAngle-minAngle)/antennaOffset; 
+    minLength = 5; maxLength = 100;
     
-    // Constants
+    // Head properties. 
+    headCenter = pos; 
+    scale = s;
     radius = 50.0; 
     
-    antennas = new ArrayList();
+    // Populate antIndices. 
+    calcRandomIndices(numAntennas, maxAntennas); 
     
-    // Calculate normal points on the head's surface to draw later
-    for (int theta = 180; theta < 360; theta+=6) {
-      float rad = radians(theta);
-      PVector edge = new PVector(headCenter.x + radius*cos(rad), headCenter.y + radius*sin(rad));
-      PVector normalDir = PVector.sub(edge, headCenter); 
-      normalDir.normalize();
-      normalDir.mult(random(5, 100)); // Random length of the antenna. 
-      antennas.add(PVector.add(edge, normalDir)); // Stores the edges of the antennas. 
+    for (int i = 0; i < antIndices.size(); i++) {
+     // Theta at that index. 
+     int theta = antennaOffset * antIndices.get(i) + minAngle; 
+     
+     // Location on the head's surface. 
+     float rad = radians(theta);
+     PVector headEdge = new PVector(headCenter.x + radius*cos(rad), headCenter.x + radius*sin(rad));
+    
+     // Antenna edge vector. 
+     PVector normalDir = PVector.sub(headEdge, headCenter);
+     normalDir.normalize();
+     normalDir.mult(random(minLength, maxLength));
+     antEdges.add(PVector.add(headEdge, normalDir)); 
     }
   }
   
   void run() {
-   antennas();
-   head();
+   pushMatrix();
+     antennas();
+     head();
+   popMatrix();
   }
   
   void head() {
-    pushMatrix(); 
-      translate(headCenter.x, headCenter.y);
-      pushStyle();
-      noStroke();
-      fill(255); 
-      ellipse(0, 0, radius*2, radius*2);
-      stroke(255, 0, 0);
-      line(-radius, 0, radius, 0);
-      popStyle();
-    popMatrix();
+    pushStyle();
+    noStroke();
+    fill(255); 
+    ellipse(headCenter.x, headCenter.y, radius*2, radius*2);
+    stroke(255, 0, 0);
+    popStyle();
   }
 
   void antennas() {
-    // Go through all the antennas and draw them. 
-    for (int theta = 180, i = 0; theta < 360; theta+=6, i++) {
-      float rad = radians(theta);
-      PVector edge = new PVector(headCenter.x + radius*cos(rad), headCenter.y + radius*sin(rad));
-      PVector antenna = antennas.get(i); 
-      pushStyle(); 
-        stroke(255, 0, 0); 
-        strokeWeight(3); 
-        line(edge.x, edge.y, antenna.x, antenna.y); 
-        fill(255, 0, 0); 
-        ellipse(antenna.x, antenna.y, 5, 5);
-      popStyle();
+    // Calculate antenna locations on the head's surface for random
+    // index where an antenna needs to be there.    
+    for (int i = 0; i < antIndices.size(); i++) {
+     // Theta at that index. 
+     int theta = antennaOffset * antIndices.get(i) + minAngle; 
+     
+     // Location on the head's surface. 
+     float rad = radians(theta);
+     PVector headEdge = new PVector(headCenter.x + radius*cos(rad), headCenter.y + radius*sin(rad));
+     
+     // Antenna's edge. 
+     PVector antEdge = antEdges.get(i);
+     pushStyle(); 
+      stroke(255, 0, 0); 
+      strokeWeight(3); 
+      line(headEdge.x, headEdge.y, antEdge.x, antEdge.y); 
+      fill(255, 0, 0); 
+      ellipse(antEdge.x, antEdge.y, 4, 4);
+     popStyle();
+    }
+  }
+  
+  void calcRandomIndices(int numAntennas, int maxAntennas) {
+    for (int i = 0; i < numAntennas; i++) {
+      int idx; 
+      do {
+       idx = floor(random(maxAntennas));
+      } while(antIndices.hasValue(idx)); // Keep checking until I find a random number that's not in the list. 
+      antIndices.append(idx); 
     }
   }
 }
+
+// Create numAntennas random indices to find where to create the antenna. 
+// There can be total of 44 antennas that an organism can have between 
+// 160-380 degrees circle surface. 
 // Head
   //fill(0);
   //ellipseMode(CENTER);
