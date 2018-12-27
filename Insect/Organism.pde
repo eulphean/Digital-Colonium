@@ -18,9 +18,9 @@ class Organism {
     antIndices = new IntList(); 
     antEdges = new ArrayList();
     minAngle = 160; maxAngle = 380; 
-    antennaOffset = 5; 
+    antennaOffset = 10; 
     maxAntennas = (maxAngle-minAngle)/antennaOffset; 
-    minLength = 5; maxLength = 100;
+    minLength = 20; maxLength = 100;
     
     // Head properties. 
     headCenter = pos; 
@@ -93,11 +93,12 @@ class Organism {
      // Antenna's edge. 
      PVector antEdge = antEdges.get(i);
      pushStyle(); 
-      stroke(0); 
       strokeWeight(3); 
+      stroke(0);
       line(headEdge.x, headEdge.y, antEdge.x, antEdge.y); 
-      fill(255, 0, 0); 
-      ellipse(antEdge.x, antEdge.y, 4, 4);
+      noStroke(); 
+      fill(random(255), random(255), 0);
+      ellipse(antEdge.x, antEdge.y, 14, 15);
      popStyle();
     }
   }
