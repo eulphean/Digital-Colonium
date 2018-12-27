@@ -3,9 +3,10 @@ class Antenna {
   PVector headEdge; 
   int minLength; int maxLength; 
   int idx; // For debugging
+  float angle; float incrementer;
   
   Antenna(PVector start, int i) {
-    minLength = 5; maxLength = 30; 
+    minLength = 10; maxLength = 20; 
     headEdge = start; idx = i; 
     
     // Antenna edge vector (assume we have already transposed). We always scale the creature's body. 
@@ -14,18 +15,24 @@ class Antenna {
     normalDir.normalize();
     normalDir.mult(random(minLength, maxLength));
     antEdge = PVector.add(headEdge, normalDir); 
+    
+    // Initialize animation.
+    angle = 0; incrementer = random(-0.015, 0.015);
   }
   
   // Show antenna
   void run() {
+    angle+=incrementer; 
+    
     // Update for animation.
     pushStyle(); 
      strokeWeight(1); 
      stroke(0);
-     line(headEdge.x, headEdge.y, antEdge.x, antEdge.y); 
+     float endX = antEdge.x + sin(angle)*2;  
+     line(headEdge.x, headEdge.y, endX, antEdge.y); 
      noStroke(); 
      fill(255, 0, 0);
-     ellipse(antEdge.x, antEdge.y, 3, 3);
+     ellipse(endX, antEdge.y, 3, 3);
     popStyle();
   }  
 }

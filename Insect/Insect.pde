@@ -4,7 +4,7 @@ void setup() {
   size(500, 500);
   ellipseMode(CENTER);
   // Organism(PVector headCenter, float scale, int numAntennas, int headRadius, int bodyHeight)
-  o = new Organism(new PVector(width/2, height/2), 5.0, 10, 4, 30); 
+  o = new Organism(new PVector(width/2, height/2), 2.0, 10, 4, 30); 
 }
 
 void draw() {
@@ -13,5 +13,5 @@ void draw() {
 }
 
 void keyPressed() {
- //o = new Organism(new PVector(width/2, height/2), random(0, 1.0), floor(random(23))); 
+  o = new Organism(new PVector(width/2, height/2), 2.0, floor(random(15)), 4, 30); 
 }
