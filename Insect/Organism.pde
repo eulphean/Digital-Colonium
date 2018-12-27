@@ -73,10 +73,9 @@ class Organism {
   
   void head() {
     pushStyle();
-    noStroke();
-    fill(255); 
+    stroke(0); strokeWeight(1);
+    fill(255);
     ellipse(0, 0, radius*2, radius*2);
-    stroke(255, 0, 0);
     popStyle();
   }
 
@@ -94,7 +93,7 @@ class Organism {
      // Antenna's edge. 
      PVector antEdge = antEdges.get(i);
      pushStyle(); 
-      stroke(255, 0, 0); 
+      stroke(0); 
       strokeWeight(3); 
       line(headEdge.x, headEdge.y, antEdge.x, antEdge.y); 
       fill(255, 0, 0); 

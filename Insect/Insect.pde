@@ -8,12 +8,10 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(255);
   o.run();
 }
 
 void keyPressed() {
  o = new Organism(new PVector(width/2, height/2), random(0, 1.0), floor(random(0, 44))); 
 }
-
-// Draw the normals of a circle
