@@ -1,7 +1,7 @@
 Organism o;
 
 void setup() {
-  size(300, 300);
+  size(350, 350);
   ellipseMode(CENTER);
   
   o = new Organism(new PVector(width/2, height/2), 1.0); 

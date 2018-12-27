@@ -16,12 +16,12 @@ class Organism {
     antennas = new ArrayList();
     
     // Calculate normal points on the head's surface to draw later
-    for (int theta = 0; theta < 360; theta+= 36) {
+    for (int theta = 180; theta < 360; theta+=6) {
       float rad = radians(theta);
       PVector edge = new PVector(headCenter.x + radius*cos(rad), headCenter.y + radius*sin(rad));
       PVector normalDir = PVector.sub(edge, headCenter); 
       normalDir.normalize();
-      normalDir.mult(random(5, 50)); // Random length of the antenna. 
+      normalDir.mult(random(5, 100)); // Random length of the antenna. 
       antennas.add(PVector.add(edge, normalDir)); // Stores the edges of the antennas. 
     }
   }
@@ -38,13 +38,15 @@ class Organism {
       noStroke();
       fill(255); 
       ellipse(0, 0, radius*2, radius*2);
+      stroke(255, 0, 0);
+      line(-radius, 0, radius, 0);
       popStyle();
     popMatrix();
   }
 
   void antennas() {
     // Go through all the antennas and draw them. 
-    for (int theta = 0, i = 0; theta < 360; theta+=36, i++) {
+    for (int theta = 180, i = 0; theta < 360; theta+=6, i++) {
       float rad = radians(theta);
       PVector edge = new PVector(headCenter.x + radius*cos(rad), headCenter.y + radius*sin(rad));
       PVector antenna = antennas.get(i); 
@@ -52,6 +54,8 @@ class Organism {
         stroke(255, 0, 0); 
         strokeWeight(3); 
         line(edge.x, edge.y, antenna.x, antenna.y); 
+        fill(255, 0, 0); 
+        ellipse(antenna.x, antenna.y, 5, 5);
       popStyle();
     }
   }
