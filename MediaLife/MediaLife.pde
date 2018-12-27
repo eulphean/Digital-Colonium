@@ -40,6 +40,7 @@ boolean restartWorld;
 boolean debug;
 boolean healthStats;
 boolean turnOnVision;
+boolean releaseAgents; 
 
 // Sound
 Sound sound; 
@@ -63,6 +64,7 @@ void setup() {
   debug = false;
   healthStats = false; 
   turnOnVision = false;
+  releaseAgents = false;
   
   initializeGui();
   
@@ -251,6 +253,10 @@ void keyPressed() {
   
   if (key == 'h') {
    healthStats = !healthStats;  
+  }
+  
+  if (key == ' ') {
+   releaseAgents = !releaseAgents; 
   }
 }
 

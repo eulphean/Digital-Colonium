@@ -24,19 +24,26 @@ class Food {
   
   void createBricks() {
     // Maybe I can get all these values from the GUI. 
-    int cols = 25; int rows = 25; 
+    int cols = 30; int rows = 30; 
     int pixWidth = 5; 
-    int space = 92;
+    int space = 120;
     int w = pixWidth * cols + space; int h = pixWidth * rows;   
-    float yPos = height/2 - h/2; 
-    int numBricks = width/w;
-    
-
+    int numBricks = 6;
+   
+    // Top row
     for (int i = 0; i < numBricks; i++) {
-     PVector position = new PVector (i*w, yPos); 
+     PVector position = new PVector (190 + i*w, 200); 
      float amp = (1.0 / numBricks);
      bricks.add(new PixelBrick(position, rows, cols, pixWidth, amp)); 
     }
+    
+    // Bottom row
+    for (int i = 0; i < numBricks; i++) {
+     PVector position = new PVector (190 + i*w, height-400); 
+     float amp = (1.0 / numBricks);
+     bricks.add(new PixelBrick(position, rows, cols, pixWidth, amp)); 
+    }
+
   }
   
   PVector getNewFlower(int flowerWidth, int flowerHeight) {

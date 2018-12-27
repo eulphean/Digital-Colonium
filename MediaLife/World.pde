@@ -44,6 +44,13 @@ class World {
       //}
     }
     
+    if (releaseAgents) {
+      for (int i = 0; i < 20; i++) {
+        PVector l = new PVector(0, 0);
+        agents.add(new Insect(l, new DNA(), agentScale));
+      }
+      releaseAgents = false; 
+    }
     generation++; 
   }
 }
