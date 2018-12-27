@@ -16,8 +16,8 @@ class Organism {
   int minLength; int maxLength;
   
   // Body
-  int bodyHeight; 
-  
+  float bodyHeight; float bodyWidth;
+  ArrayList<PVector> spots; int numSpots;
   
   Organism(PVector pos, float s, int numAntennas, int radius, int bh) {
     // Antenna head properties. 
@@ -26,45 +26,23 @@ class Organism {
     minAngle = 160; maxAngle = 390; 
     antennaOffset = 10; 
     maxAntennas = (maxAngle-minAngle)/antennaOffset; 
-    minLength = 10; maxLength = 50;
+    minLength = 5; maxLength = 30;
     
     // Head properties. 
     headCenter = pos; 
     scale = s;
     headRadius = radius; 
     bodyHeight = bh;
+    bodyWidth = bodyHeight/2;
     
-    // Populate antIndices. 
+    // Spots
+    spots = new ArrayList(); 
+    numSpots = 50; 
+    
+    // Create antennas and spot collections. 
     calcRandomIndices(numAntennas, maxAntennas); 
-    
-    // Assume that we have already transposed. So, all the calculations are done
-    // as if the headCenter is at 0,0. This is important to save the length of the
-    // organism's antennas. 
-    for (int i = 0; i < antIndices.size(); i++) {
-     // Theta at that index. 
-     int theta = antennaOffset * antIndices.get(i) + minAngle; 
-     
-     // Location on the head's surface. 
-     float rad = radians(theta);
-     PVector headEdge = new PVector(radius*cos(rad), radius*sin(rad));
-    
-     // Antenna edge vector (assume we have already transposed). We always scale the creature's body. 
-     // That's why vector is calculated with respect to the origin. 
-     PVector normalDir = PVector.sub(headEdge, new PVector(0, 0));
-     normalDir.normalize();
-     normalDir.mult(random(minLength, maxLength));
-     antEdges.add(PVector.add(headEdge, normalDir)); 
-    }
-  }
-  
-  void calcRandomIndices(int numAntennas, int maxAntennas) {
-    for (int i = 0; i < numAntennas; i++) {
-      int idx; 
-      do {
-       idx = floor(random(maxAntennas));
-      } while(antIndices.hasValue(idx)); // Keep checking until I find a random number that's not in the list. 
-      antIndices.append(idx); 
-    }
+    createAntennaVectors();
+    createSpots();
   }
   
   void run() {
@@ -75,6 +53,7 @@ class Organism {
      scale(scale);
      antennas();
      head();
+     legs();
      body();
    popMatrix();
   }
@@ -106,18 +85,86 @@ class Organism {
       stroke(0);
       line(headEdge.x, headEdge.y, antEdge.x, antEdge.y); 
       noStroke(); 
-      fill(random(255), 0, random(255));
-      ellipse(antEdge.x, antEdge.y, 8, 8);
+      fill(255, 0, 0);
+      ellipse(antEdge.x, antEdge.y, 3, 3);
      popStyle();
+    }
+  }
+  
+  void legs() {
+    // Create tiny little legs around the body. 
+    PVector bodyCenter = new PVector(0, bodyHeight/2);
+    
+    // Entire body with tentacles.
+    for (int theta = 0; theta < 360; theta+=18) {
+      float rad = radians(theta);
+      PVector edge = new PVector(bodyCenter.x + bodyWidth/2*cos(rad), bodyCenter.y + bodyHeight/2*sin(rad)); 
+      PVector normalDir = PVector.sub(edge, bodyCenter);
+      normalDir.normalize();
+      normalDir.mult(random(2, 5));
+      PVector legEdge = PVector.add(edge, normalDir); 
+      //Draw line from edge to ledEdge
+      pushStyle(); 
+      stroke(0); 
+      strokeWeight(1); 
+      line(edge.x, edge.y, legEdge.x, legEdge.y);
+      popStyle();
     }
   }
   
   void body() {
     pushStyle(); 
       ellipseMode(CENTER); 
-      fill(255, 0, 0); //stroke(0); //strokeWeight(1); 
+      fill(255, 0, 0); 
       noStroke();
-      ellipse(0, bodyHeight/2, bodyHeight/2, bodyHeight);
+      ellipse(0, bodyHeight/2, bodyWidth, bodyHeight);
+      
+      // Draw the spots. 
+      fill(0); 
+      stroke(0); strokeWeight(1);
+      line(0, 0, 0, bodyHeight);
     popStyle();
+  }
+  
+  void calcRandomIndices(int numAntennas, int maxAntennas) {
+    for (int i = 0; i < numAntennas; i++) {
+      int idx; 
+      do {
+       idx = floor(random(maxAntennas));
+      } while(antIndices.hasValue(idx)); // Keep checking until I find a random number that's not in the list. 
+      antIndices.append(idx); 
+    }
+  }
+  
+  void createAntennaVectors() {
+    // Assume that we have already transposed. So, all the calculations are done
+    // as if the headCenter is at 0,0. This is important to save the length of the
+    // organism's antennas. 
+    for (int i = 0; i < antIndices.size(); i++) {
+     // Theta at that index. 
+     int theta = antennaOffset * antIndices.get(i) + minAngle; 
+     
+     // Location on the head's surface. 
+     float rad = radians(theta);
+     PVector headEdge = new PVector(headRadius*cos(rad), headRadius*sin(rad));
+    
+     // Antenna edge vector (assume we have already transposed). We always scale the creature's body. 
+     // That's why vector is calculated with respect to the origin. 
+     PVector normalDir = PVector.sub(headEdge, new PVector(0, 0));
+     normalDir.normalize();
+     normalDir.mult(random(minLength, maxLength));
+     antEdges.add(PVector.add(headEdge, normalDir)); 
+    }
+  }
+  
+  void createSpots() {
+    //// Num spots
+    //PVector bodyCenter = new PVector(0, bodyHeight/2);
+    //for (int i = 0; i < numSpots; i++) {
+    //  float angle = random(360); 
+    //  float randX = bodyCenter.x + random(bodyWidth/2) * cos(angle); 
+    //  float randY = bodyCenter.y + random(bodyHeight/2) * sin(angle);
+    //  spots.add(new PVector(randX, randY));
+    //}
   }
 }

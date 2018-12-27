@@ -3,8 +3,8 @@ Organism o;
 void setup() {
   size(500, 500);
   ellipseMode(CENTER);
-  // Organism(PVector headCenter, float scale, int numAntennas, int headRadius, int bodyWidth, int bodyHeight)
-  o = new Organism(new PVector(width/2, height/2), 2.0, 10, 10, 40); 
+  // Organism(PVector headCenter, float scale, int numAntennas, int headRadius, int bodyHeight)
+  o = new Organism(new PVector(width/2, height/2), 1.0, 10, 10, 50); 
 }
 
 void draw() {
