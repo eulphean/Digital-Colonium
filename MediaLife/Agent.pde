@@ -24,26 +24,27 @@ class Agent {
   Oscillator osc; Env env; float envVals[]; int midi; float amp;
   
   // DNA of the agent. 
-  DNA dna;   
-  
+  DNA dna; 
+ 
   // Init the agent. 
-  Agent(PVector pos, DNA _dna) {
+  Agent(PVector pos, DNA _dna, float radius) {
     position = pos;
     acceleration = new PVector(0, 0); 
-    velocity = new PVector(random(-1,1), random(-1, 1));
+    velocity = new PVector(random(-5,5), random(-5, 5));
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     wandertheta = 0; 
 
-    maxSpeed = 2.0;
-    maxRadius = 8.0; // Size for the boid.
+    maxSpeed = 3.0;
+    maxRadius = radius; // Size for the boid.
  
     
     // TODO: Evolve these parameters. 
-    maxForce = 0.1; 
+    maxForce = 0.2; 
 
     // Health units. Initial units. 
     maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
     maxMediaHealth = 100.0; curMediaHealth = 0.0; 
+    bodyColor = color(255, 0, 0);
     
     // DNA
     dna = _dna; 
@@ -53,7 +54,7 @@ class Agent {
     env = new Env(sketchPointer); envVals = getADSRValues(false);
   }
   
-  void run(Food f, ArrayList<Agent> agents, float a) {
+  void run(Food f, ArrayList<Insect> agents, float a) {
     // Newly calculated oscillator amplitude.
     amp = a; 
     
@@ -74,8 +75,10 @@ class Agent {
     // Wraparound the screen if the agent leaves. 
     wraparound();
     
-    // Show the agent. 
-    display();
+    // Show the agent.
+    if (displayAgent) {
+     displayAgent();
+    }
   }
  
   
@@ -96,7 +99,7 @@ class Agent {
     maxAheadDistance = aheadDistance; 
   }
   
-  void behaviors(Food f, ArrayList<Agent> agents) {
+  void behaviors(Food f, ArrayList<Insect> agents) {
     PVector target;
     PVector steer; 
     
@@ -194,6 +197,7 @@ class Agent {
       float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
       if (d < flWidth/2) {
         curBodyHealth += 20; // 20 units/flower 
+        bodyColor = fl.petalColor; // Color transfer from flower to insect
         flowers.remove(i);
         
         // Ring & pass it through an envelope 
@@ -217,7 +221,7 @@ class Agent {
       // Child DNA can mutate
       childDNA.mutate(0.01);
       // Child is exact copy of single parent
-      return new Agent(new PVector(random(width), random(height)), childDNA);
+      return new Agent(new PVector(random(width), random(height)), childDNA, 4);
     } 
     else {
       return null;
@@ -237,7 +241,7 @@ class Agent {
    return netHealth < 0.0; 
   }
   
-  void display() {
+  void displayAgent() {
     pushMatrix();
      pushStyle();
       stroke(0);
@@ -245,8 +249,7 @@ class Agent {
       float theta = velocity.heading() + radians(90);
       translate(position.x,position.y);
       rotate(theta);
-      bodyColor = isConsumingMedia ? color(255, 0, 0, 175) : color(255);
-      fill(bodyColor);
+      fill(isConsumingMedia ? color(255, 0, 0, 175) : color(255));
       beginShape(TRIANGLES);
       vertex(0, -maxRadius*2);
       vertex(-maxRadius, maxRadius*2);
@@ -382,7 +385,7 @@ class Agent {
  
   
   // Checks for nearby boids and steers away. 
-  PVector seperation(ArrayList<Agent> agents) {
+  PVector seperation(ArrayList<Insect> agents) {
     PVector sum, steer; 
     sum = steer = new PVector();
     int count = 0;

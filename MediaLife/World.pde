@@ -1,5 +1,5 @@
 class World {
-  ArrayList<Agent> agents = new ArrayList<Agent>();
+  ArrayList<Insect> agents = new ArrayList<Insect>();
   Food food;; 
   int generation; 
 
@@ -9,7 +9,7 @@ class World {
      
     for (int i = 0; i < numAgents; i++) {
        PVector l = new PVector(0, 0);
-       agents.add(new Agent(l, new DNA()));
+       agents.add(new Insect(l, new DNA(), agentScale));
     }
     
     // Keep track of iterations.
@@ -22,7 +22,7 @@ class World {
 
     // Handle agents display, eating, reproduction
     for (int i = agents.size()-1; i >= 0; i--) {
-      Agent a = agents.get(i);
+      Insect a = agents.get(i);
       
       // Update sound amplitudes (as a cluster) 
       float amp = (1.0 / agents.size());
@@ -30,6 +30,7 @@ class World {
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
       a.run(food, agents, amp);
+      a.display();
       
       // Health of the agent.
       if (a.dead()) { // Is it dead? 

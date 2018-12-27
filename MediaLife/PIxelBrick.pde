@@ -41,13 +41,13 @@ class PixelBrick {
     return sqrt(pow(brickW/2,2)+pow(brickW/2, 2));  
   }
   
-  void run(ArrayList<Agent> agents) {
+  void run(ArrayList<Insect> agents) {
     updateSound(agents);
     display();
     displayDebug();
   }
   
-  void updateSound(ArrayList<Agent> agents) {
+  void updateSound(ArrayList<Insect> agents) {
     // Is any agent inside the PixelBrick? 
     boolean isOccupied = false;
     for (Agent a: agents) {

@@ -94,7 +94,7 @@ class Food {
     return false; 
   }
   
-  void run(ArrayList<Agent> agents) {
+  void run(ArrayList<Insect> agents) {
    // Show flowers.  
    for (Flower f: flowers) { 
      f.run();

@@ -15,6 +15,7 @@ float flowerScale = 0.6; Slider flowerScaleSlider;
 int numAgents = 50; Slider numAgentsSlider;
 float bodyHealth = 200.0; Slider bodyHealthSlider; 
 float mediaHealth = 100.0; Slider mediaHealthSlider; 
+float agentScale = 1.0; Slider agentScaleSlider; 
 
 // Perceptions
 int foodPerceptionRad = 40; Slider foodRadSlider; 
@@ -34,10 +35,11 @@ float aheadDistance = 30.0; Slider aheadDistanceSlider;
 
 // Boolean flags. 
 boolean hideGui;
-boolean turnOnVision; 
+boolean displayAgent; 
 boolean restartWorld;
 boolean debug;
 boolean healthStats;
+boolean turnOnVision;
 
 // Sound
 Sound sound; 
@@ -56,10 +58,11 @@ void setup() {
   
   // Initialize GUI flags. 
   hideGui = false; 
-  turnOnVision = false; 
+  displayAgent = false; 
   restartWorld = false;
   debug = false;
   healthStats = false; 
+  turnOnVision = false;
   
   initializeGui();
   
@@ -212,6 +215,14 @@ void initializeGui() {
               .setValue(volume)
               .setColorCaptionLabel(color(255))
               .setGroup(g1);
+  
+  agentScaleSlider = cp5.addSlider("agentScale")
+              .setPosition(0,260)
+              .setSize(100,20)
+              .setRange(0, 3.0)
+              .setValue(agentScale)
+              .setColorCaptionLabel(color(255))
+              .setGroup(g1);
               
 
   cp5.loadProperties(("medialife"));           
@@ -222,8 +233,12 @@ void keyPressed() {
     hideGui = !hideGui;
   }
   
+  if (key == 'a') {
+    displayAgent = !displayAgent; 
+  }
+  
   if (key == 't') {
-    turnOnVision = !turnOnVision; 
+   turnOnVision = !turnOnVision; 
   }
   
   if (key == 'r') {

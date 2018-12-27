@@ -7,12 +7,12 @@
   "/seperationPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 48
+    "value": 84
   },
   "/seperationW": {
     "min": 0,
     "max": 1,
-    "value": 0.7099999785423279
+    "value": 0.6800000071525574
   },
   "/volume": {
     "min": 0,
@@ -27,7 +27,7 @@
   "/foodW": {
     "min": 0,
     "max": 2,
-    "value": 1.5
+    "value": 1.4800000190734863
   },
   "/mediaAvoidanceW": {
     "min": 0,
@@ -47,12 +47,17 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 130
+    "value": 155
   },
   "/aheadDistance": {
     "min": 0,
     "max": 100,
     "value": 30.000001907348633
+  },
+  "/agentScale": {
+    "min": 0,
+    "max": 3,
+    "value": 1.5
   },
   "/mediaPerceptionRad": {
     "min": 0,
@@ -62,6 +67,6 @@
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 70
+    "value": 52
   }
 }
