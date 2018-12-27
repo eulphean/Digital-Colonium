@@ -22,6 +22,8 @@ class Antenna {
   
   // Show antenna
   void run() {
+    // [NOTE] Temporary animation for the tentacles. This 
+    // can definitely be improved in the next iteration, 
     angle+=incrementer; 
     
     // Update for animation.
