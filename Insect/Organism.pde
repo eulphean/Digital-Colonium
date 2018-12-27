@@ -8,26 +8,17 @@ class Organism {
   
   // Antenna properties. 
   // [NOTE] Could evolve certainly. 
+  ArrayList<Antenna> antennas; 
   IntList antIndices; 
-  ArrayList<PVector> antEdges; 
+  int maxAntennas; 
   int maxAngle; int minAngle; 
   int antennaOffset; 
-  int maxAntennas; 
-  int minLength; int maxLength;
   
   // Body
   float bodyHeight; float bodyWidth;
   ArrayList<PVector> spots; int numSpots;
   
-  Organism(PVector pos, float s, int numAntennas, int radius, int bh) {
-    // Antenna head properties. 
-    antIndices = new IntList(); 
-    antEdges = new ArrayList();
-    minAngle = 200; maxAngle = 340; 
-    antennaOffset = 10; 
-    maxAntennas = (maxAngle-minAngle)/antennaOffset; 
-    minLength = 5; maxLength = 30;
-    
+  Organism(PVector pos, float s, int numAntennas, int radius, int bh) {    
     // Head properties. 
     headCenter = pos; 
     scale = s;
@@ -35,13 +26,20 @@ class Organism {
     bodyHeight = bh;
     bodyWidth = bodyHeight/2;
     
+    // List of antennas. 
+    antennas = new ArrayList(); 
+    antIndices = new IntList(); 
+    minAngle = 200; maxAngle = 340; 
+    antennaOffset = 10;
+    maxAntennas = (maxAngle-minAngle)/antennaOffset;
+    calcRandomIndices(numAntennas, maxAntennas);
+    initAntennas();
+    
     // Spots
     spots = new ArrayList(); 
     numSpots = 50; 
     
     // Create antennas and spot collections. 
-    calcRandomIndices(numAntennas, maxAntennas); 
-    createAntennaVectors();
     createSpots();
   }
   
@@ -66,29 +64,11 @@ class Organism {
     ellipse(0, 0, headRadius*2, headRadius*2);
     popStyle();
   }
-
+  
   void antennas() {
-    // Calculate antenna locations on the head's surface for random
-    // index where an antenna needs to be there.    
-    for (int i = 0; i < antIndices.size(); i++) {
-     // Theta at that index. 
-     int theta = antennaOffset * antIndices.get(i) + minAngle; 
-     
-     // Location on the head's surface. 
-     float rad = radians(theta);
-     PVector headEdge = new PVector(headRadius*cos(rad), headRadius*sin(rad));
-     
-     // Antenna's edge. 
-     PVector antEdge = antEdges.get(i);
-     pushStyle(); 
-      strokeWeight(1); 
-      stroke(0);
-      line(headEdge.x, headEdge.y, antEdge.x, antEdge.y); 
-      noStroke(); 
-      fill(255, 0, 0);
-      ellipse(antEdge.x, antEdge.y, 3, 3);
-     popStyle();
-    }
+   for (Antenna a: antennas) {
+    a.run(); 
+   }
   }
   
   void legs() {
@@ -135,26 +115,17 @@ class Organism {
     }
   }
   
-  void createAntennaVectors() {
-    // Assume that we have already transposed. So, all the calculations are done
-    // as if the headCenter is at 0,0. This is important to save the length of the
-    // organism's antennas. 
+  void initAntennas() {
     for (int i = 0; i < antIndices.size(); i++) {
      // Theta at that index. 
      int theta = antennaOffset * antIndices.get(i) + minAngle; 
-     
      // Location on the head's surface. 
      float rad = radians(theta);
      PVector headEdge = new PVector(headRadius*cos(rad), headRadius*sin(rad));
-    
-     // Antenna edge vector (assume we have already transposed). We always scale the creature's body. 
-     // That's why vector is calculated with respect to the origin. 
-     PVector normalDir = PVector.sub(headEdge, new PVector(0, 0));
-     normalDir.normalize();
-     normalDir.mult(random(minLength, maxLength));
-     antEdges.add(PVector.add(headEdge, normalDir)); 
+     antennas.add(new Antenna(headEdge, i)); 
     }
   }
+
   
   void createSpots() {
     //// Num spots
