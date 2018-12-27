@@ -13,7 +13,7 @@ class Antenna {
     // That's why vector is calculated with respect to the origin. 
     PVector normalDir = PVector.sub(headEdge, new PVector(0, 0));
     normalDir.normalize();
-    normalDir.mult(random(minLength, maxLength));
+    normalDir.mult(20);
     antEdge = PVector.add(headEdge, normalDir); 
     
     // Initialize animation.
@@ -23,7 +23,7 @@ class Antenna {
   // Show antenna
   void run() {
     // [NOTE] Temporary animation for the tentacles. This 
-    // can definitely be improved in the next iteration, 
+    // can definitely be improved in the next iteration, g
     angle+=incrementer; 
     
     // Update for animation.

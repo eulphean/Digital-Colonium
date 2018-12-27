@@ -49,7 +49,7 @@ class Organism {
      // Always scale!! Everything is relative to the 
      // organism's head's center. 
      scale(scale);
-     antennas();
+     //antennas();
      head();
      legs();
      body();
@@ -81,7 +81,7 @@ class Organism {
       PVector edge = new PVector(bodyCenter.x + bodyWidth/2*cos(rad), bodyCenter.y + bodyHeight/2*sin(rad)); 
       PVector normalDir = PVector.sub(edge, bodyCenter);
       normalDir.normalize();
-      normalDir.mult(random(2, 5));
+      normalDir.mult(random(2, 4));
       PVector legEdge = PVector.add(edge, normalDir); 
       //Draw line from edge to ledEdge
       pushStyle(); 
@@ -101,7 +101,7 @@ class Organism {
       // Line
       fill(0); 
       stroke(0); strokeWeight(1);
-      line(0, 0, 0, bodyHeight);
+      //line(0, 0, 0, bodyHeight);
     popStyle();
   }
   
