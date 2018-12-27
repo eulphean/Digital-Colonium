@@ -22,7 +22,7 @@
   "/flowerScale": {
     "min": 0,
     "max": 1,
-    "value": 0.6000000238418579
+    "value": 0.6800000071525574
   },
   "/foodW": {
     "min": 0,
@@ -47,7 +47,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 155
+    "value": 205
   },
   "/aheadDistance": {
     "min": 0,
@@ -57,7 +57,7 @@
   "/agentScale": {
     "min": 0,
     "max": 3,
-    "value": 1.5
+    "value": 1.8300000429153442
   },
   "/mediaPerceptionRad": {
     "min": 0,
@@ -67,6 +67,6 @@
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 52
+    "value": 68
   }
 }

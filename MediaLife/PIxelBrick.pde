@@ -8,13 +8,16 @@ class PixelBrick {
   // Sound stuff. 
   BrownNoise noise; float amp; 
   Oscillator osc; Env env; float [] evals; int midi; LowPass lowPass; BandPass bandPass; 
-  boolean hasPlayed = false;
+  boolean hasPlayed; boolean isOccupied; float alpha; color outerColor;
  
   PixelBrick(PVector pos, int numRows, int numCols, int pWidth, float a) {
     position = pos; 
     rows = numRows; cols = numCols; pixWidth = pWidth; 
     brickW = pixWidth*cols; brickH = pixWidth*rows;
     center = new PVector(position.x+brickW/2, position.y+brickH/2);
+    
+    // State variables
+    hasPlayed = isOccupied = false; 
     
     // Time to change colors. 
     curTime = millis();
@@ -28,6 +31,8 @@ class PixelBrick {
         pixGrid[x][y] = color(random(255), random(255), random(255));
       }
     }
+    
+    outerColor = color(255); alpha = 255; // Outer color gets updated based on the color of the creature that enters. 
     
     // Brick's sound. 
     noise = new BrownNoise(sketchPointer); bandPass = new BandPass(sketchPointer); amp = a;
@@ -48,13 +53,19 @@ class PixelBrick {
   }
   
   void updateSound(ArrayList<Insect> agents) {
+    isOccupied = false;
     // Is any agent inside the PixelBrick? 
-    boolean isOccupied = false;
     for (Agent a: agents) {
      float d = PVector.dist(center, a.position);  
      if (d < getCircleRad()) {
       isOccupied = true; 
+      outerColor = a.bodyColor;
      }
+    }
+    
+    if (isOccupied) {
+     waitTime -= 5; 
+     if (alpha >=1 ) { alpha -= 1.0; outerColor = (outerColor & 0xffffff) | (floor(alpha) << 24); }
     }
     
     // Play the sound. 
@@ -79,6 +90,11 @@ class PixelBrick {
     if (!isOccupied) {
      noise.stop();
      hasPlayed = false;
+     
+     // Reset wait time
+     waitTime = random(500, 1000);
+     
+     alpha = 255;
     }
   }
   
@@ -98,14 +114,19 @@ class PixelBrick {
     
     // Draw the color grid. 
     pushMatrix();
-    translate(position.x, position.y);
-    for (int x = 0; x < cols; x++) {
-      for (int y = 0; y < rows; y++) {
-        stroke(0);
-        fill(pixGrid[x][y]);
-        rect(pixWidth*x, pixWidth*y, pixWidth, pixWidth);  
+      translate(position.x, position.y);
+      if (isOccupied) {
+       fill(outerColor);
+       rect(-5, -5, pixWidth*cols+10, pixWidth*rows+10);
       }
-    }
+      
+      for (int x = 0; x < cols; x++) {
+        for (int y = 0; y < rows; y++) {
+          stroke(0);
+          fill(pixGrid[x][y]);
+          rect(pixWidth*x, pixWidth*y, pixWidth, pixWidth);  
+        }
+      }
     popMatrix();
   }
   

@@ -18,7 +18,7 @@ class Agent {
   
   // Local flags.
   boolean isConsumingMedia = false; 
-  color bodyColor; 
+  color bodyColor; int alpha;
   
   // Sound
   Oscillator osc; Env env; float envVals[]; int midi; float amp;
@@ -44,7 +44,7 @@ class Agent {
     // Health units. Initial units. 
     maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
     maxMediaHealth = 100.0; curMediaHealth = 0.0; 
-    bodyColor = color(255, 0, 0);
+    alpha = 255; bodyColor = color(255, 0, 0, alpha); 
     
     // DNA
     dna = _dna; 
@@ -173,11 +173,14 @@ class Agent {
         isConsumingMedia = true; 
         if (curMediaHealth <= maxMediaHealth) {
           curMediaHealth += 0.5; // Half-unit/frame 
+          alpha-=0.1;
+          bodyColor = (bodyColor & 0xffffff) | (alpha << 24); 
         }
         return; 
       }
     }
     
+    //alpha = 255; bodyColor = (bodyColor & 0xffffff) | (alpha << 24); 
     isConsumingMedia = false;
   }
   
