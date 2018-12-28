@@ -65,7 +65,6 @@ class PixelBrick {
     
     if (isOccupied) {
      waitTime -= 5;
-     print(alpha);
      if (alpha >=1 ) { alpha -= 1.0; outerColor = (outerColor & 0xffffff) | (floor(alpha) << 24); }
     }
     

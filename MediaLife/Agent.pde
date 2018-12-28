@@ -216,15 +216,15 @@ class Agent {
   }
   
     // At any moment there is a teeny, tiny chance a bloop will reproduce
-  Agent reproduce() {
+  Insect reproduce() {
     // asexual reproduction
-    if (random(1) < 0.001) {
+    if (random(1) < 0.0005) {
       // Child is exact copy of this single parent. 
       DNA childDNA = dna.copy();
       // Child DNA can mutate
-      childDNA.mutate(0.01);
+      // childDNA.mutate(0.01);
       // Child is exact copy of single parent
-      return new Agent(new PVector(random(width), random(height)), childDNA, 4);
+      return new Insect(new PVector(0, 0), childDNA, random(1, 3.0));
     } 
     else {
       return null;

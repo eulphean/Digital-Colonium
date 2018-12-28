@@ -37,7 +37,7 @@
   "/foodPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 85.5
+    "value": 87
   },
   "/mediaAttractionW": {
     "min": 0,
@@ -57,12 +57,12 @@
   "/agentScale": {
     "min": 0,
     "max": 3,
-    "value": 1.8300000429153442
+    "value": 1.5299999713897705
   },
   "/mediaPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 67.5
+    "value": 73.5
   },
   "/numAgents": {
     "min": 0,

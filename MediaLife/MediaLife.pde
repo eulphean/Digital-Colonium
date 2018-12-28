@@ -95,8 +95,9 @@ void draw() {
     g1.hide();
   } else {
     g1.show(); 
-    pushStyle();
-    color c = color(255);
+   //pushStyle();
+    //color c = color(255);
+    println("Frame rate: " + frameRate);
     //fill(c);
     //textSize(15);
     // Generation
@@ -104,7 +105,7 @@ void draw() {
     //text("Agents: " + world.agents.size(), 5, 40);
     //text("Food: " + world.food.flowers.size(), 5, 60);
     //text("Frame rate: " + frameRate, 5, 75);
-    popStyle();
+   // popStyle();
   }
 }
 

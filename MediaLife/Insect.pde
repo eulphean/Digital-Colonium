@@ -20,7 +20,7 @@ class Insect extends Agent {
   
   Insect(PVector pos, DNA _dna, float s) {
     // Initialize its base class. 
-    super(pos, _dna, 4); 
+    super(pos, _dna, 4*s); 
    
     // Head properties. 
     headCenter = pos; 

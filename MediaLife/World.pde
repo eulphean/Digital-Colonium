@@ -25,7 +25,7 @@ class World {
       Insect a = agents.get(i);
       
       // Update sound amplitudes (as a cluster) 
-      float amp = (1.0 / agents.size());
+      float amp = (2.0 / agents.size());
       
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
@@ -37,11 +37,11 @@ class World {
         agents.remove(i); 
       }
       
-      // Reproduce the agent. 
-      //Agent child = a.reproduce(); 
-      //if (child != null) {
-      //  agents.add(child);
-      //}
+      
+      Insect child = a.reproduce(); 
+      if (child != null) {
+        agents.add(child);
+      }
     }
     
     if (releaseAgents) {
