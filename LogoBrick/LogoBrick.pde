@@ -1,3 +1,5 @@
+import java.util.Collections; 
+
 // Brick stuff. 
 ArrayList<PShape> logos; 
 PGraphics logoWall; 
@@ -21,13 +23,13 @@ void setup() {
   idxShader = 0; 
   shade = loadShader(shaders[idxShader]);
   
-  // Logo brick dimensions. 
+  // Logo brick dimensions.
   wallWidth = numCols*svgSize; wallHeight = numRows*svgSize; 
+  logoWall = createGraphics(svgSize*numCols, svgSize*numRows);
+  logos = new ArrayList(); 
+  loadLogos();
   createMask();
-  createLogoWall(); 
-    
-  // Do an alpha mask. 
-  logoWall.mask(ellipse);
+  drawLogoWall(); 
   
   smooth();
 }
@@ -50,6 +52,10 @@ void keyPressed() {
   
   if (keyCode == RIGHT) {
     idxShader = (idxShader + 1) % shaders.length;
+  }
+  
+  if (key == ' ') {
+   swapLogos(); 
   }
   
   // Load the correct shader based on the index. 
@@ -159,18 +165,17 @@ void createMask() {
   ellipse.endDraw(); 
 }
 
-void createLogoWall() {
-  logoWall = createGraphics(svgSize*numCols, svgSize*numRows);
-  logos = new ArrayList(); 
-  
-  loadLogos();
+void drawLogoWall() {
   drawLogos();
+  // Do an alpha mask. 
+  logoWall.mask(ellipse);
 }
 void loadLogos() {
-  String path = dataPath(""); 
-  File [] files = listFiles(path); 
+  String path = dataPath("SVG"); 
+  File [] files = listFiles(path);
   for (File f : files) {
-    String fileName = f.getName(); 
+    // Only load SVG files. 
+    String fileName = f.getAbsolutePath(); 
     logos.add(loadShape(fileName)); 
   }
 }
@@ -180,10 +185,19 @@ void drawLogos() {
   logoWall.fill(0); // Clear
   for (int x = 0; x < numCols; x++) {
    for (int y = 0; y < numRows; y++) {
-     int idx = x + numCols * y; 
+     int idx = x + numCols * y;
      PShape img = logos.get(idx); 
      logoWall.shape(img, x*svgSize, y*svgSize, svgSize, svgSize); 
    }
   }
   logoWall.endDraw(); 
+}
+
+void swapLogos() {
+  println(logos);
+  Collections.shuffle(logos);
+  println("SWAPPPPPPPPPP");
+  println(logos.size()); 
+  println(logos);
+  drawLogoWall();
 }
