@@ -56,7 +56,7 @@ class Insect extends Agent {
       translate(headCenter.x, headCenter.y); 
       rotate(theta);
       scale(scale); 
-      //antennas(); 
+      // antennas(); 
       head(); 
       legs(); 
       body();

@@ -12,7 +12,7 @@
   "/seperationW": {
     "min": 0,
     "max": 1,
-    "value": 0.6800000071525574
+    "value": 1
   },
   "/volume": {
     "min": 0,
@@ -47,7 +47,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 205
+    "value": 179.99998474121094
   },
   "/aheadDistance": {
     "min": 0,
@@ -57,7 +57,7 @@
   "/agentScale": {
     "min": 0,
     "max": 3,
-    "value": 1.5299999713897705
+    "value": 2.7599997520446777
   },
   "/mediaPerceptionRad": {
     "min": 0,
@@ -67,6 +67,6 @@
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 68
+    "value": 22
   }
 }
