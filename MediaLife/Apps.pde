@@ -33,7 +33,7 @@ class Apps {
     updateShaderParams(); 
   
     // Should shuffle the apps? 
-    if (millis() - shuffleTime > 1000) {
+    if (millis() - shuffleTime > 500) {
      shuffleApps(); 
      shuffleTime = millis(); 
     }
@@ -93,7 +93,7 @@ class Apps {
       }
     logoWall.endDraw();
     // Do an alpha mask. 
-    //logoWall.mask(ellipse);
+    logoWall.mask(ellipse);
   }
 
   void shuffleApps() {
