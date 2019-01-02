@@ -4,18 +4,20 @@ import java.util.Collections;
 ArrayList<PShape> logos; 
 PGraphics logoWall; 
 PGraphics ellipse; 
-int numRows = 5; int numCols = 12; 
-int svgSize = 60; // width = height
+int numRows = 6; int numCols = 14; 
+int svgSize = 100; // width = height
 int wallWidth; int wallHeight;
 
 // Shader stuff.
 // All the shaders. Shortlist which ones to keep for the final version. 
 String[] shaders = new String[] {
   "brcosa.glsl", "hue.glsl", "pixelate.glsl", "blur.glsl", 
-  "channels.glsl", "threshold.glsl", "neon.glsl", "edges.glsl", "pixelrolls.glsl", "patches.glsl", 
+  "channels.glsl", "threshold.glsl", "neon.glsl", "edges.glsl", "pixelrolls.glsl", 
   "modcolor.glsl", "halftone.glsl", "halftone_cmyk.glsl", "invert.glsl"};
 PShader shade1; PShader shade2; PShader shade; 
 int idxShader; 
+
+long shuffleTime; long effectTime; 
   
 void setup() {
   fullScreen(P2D);
@@ -27,19 +29,36 @@ void setup() {
   wallWidth = numCols*svgSize; wallHeight = numRows*svgSize; 
   logoWall = createGraphics(svgSize*numCols, svgSize*numRows);
   logos = new ArrayList(); 
+  
   loadLogos();
   createMask();
-  drawLogoWall(); 
+  drawLogoWall();
   
   smooth();
+  
+  // Reset times
+  shuffleTime = millis(); effectTime = millis();
 }
 
 void draw() {
   background(0);
+ 
   updateShaderParams(); 
   
-  int x = width - wallWidth; int y = height - wallHeight; 
+  // Should we shuffle the wall? 
+  if (millis() - shuffleTime > 1000) {
+   resetLogos(); 
+   shuffleTime = millis(); 
+  }
   
+  // Should update the effect? 
+  if (millis() - effectTime > 800) {
+    idxShader = (idxShader + shaders.length - 1) % shaders.length;
+    shade = loadShader(shaders[idxShader]); 
+    effectTime = millis();
+  }
+  
+  int x = width - wallWidth; int y = height - wallHeight; 
   shader(shade);
   image(logoWall, x/2, y/2);
   resetShader();
@@ -52,10 +71,6 @@ void keyPressed() {
   
   if (keyCode == RIGHT) {
     idxShader = (idxShader + 1) % shaders.length;
-  }
-  
-  if (key == ' ') {
-   swapLogos(); 
   }
   
   // Load the correct shader based on the index. 
@@ -123,45 +138,38 @@ void updateShaderParams()
     shade.set("rollAmount", 0.25);
   }
 
-  // patches
-  else if (idxShader == 9) {
-    shade.set("row", map(mouseX, 0, width, 0, 1));
-    shade.set("col", map(mouseY, 0, height, 0, 1));
-  }
-
   // modcolor
-  else if (idxShader == 10) {
+  else if (idxShader == 9) {
     shade.set("modr", map(mouseX, 0, width, 0, 0.5));
     shade.set("modg", 0.3);
     shade.set("modb", map(mouseY, 0, height, 0, 0.5));
   }
 
   // halftone
-  else if (idxShader == 11) {
+  else if (idxShader == 10) {
     shade.set("pixelsPerRow", (int) map(mouseX, 0, width, 2, 100));
   }
   
   // halftone cmyk
-  else if (idxShader == 12) {
+  else if (idxShader == 11) {
     shade.set("density", map(mouseX, 0, width, 0, 1));
     shade.set("frequency", map(mouseY, 0, height, 0, 100));
   }
 
   // inversion (no parameters)
-  else if (idxShader == 13) {
+  else if (idxShader == 12) {
   }  
 }
 
 void createMask() {
-  int maskWidth = svgSize*numCols; int maskHeight = svgSize*numRows; 
-  ellipse = createGraphics(maskWidth, maskHeight); 
+  ellipse = createGraphics(wallWidth, wallHeight); 
   ellipse.beginDraw(); 
   ellipse.background(0);
   ellipse.ellipseMode(CENTER); 
   ellipse.fill(255); 
   noStroke();
   ellipse.smooth();
-  ellipse.ellipse(maskWidth/2, maskHeight/2, maskWidth, maskHeight); 
+  ellipse.ellipse(wallWidth/2, wallHeight/2, wallWidth, wallHeight); 
   ellipse.endDraw(); 
 }
 
@@ -193,11 +201,7 @@ void drawLogos() {
   logoWall.endDraw(); 
 }
 
-void swapLogos() {
-  println(logos);
+void resetLogos() {
   Collections.shuffle(logos);
-  println("SWAPPPPPPPPPP");
-  println(logos.size()); 
-  println(logos);
   drawLogoWall();
 }

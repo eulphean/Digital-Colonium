@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Flipboard" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
+<g id="flipboard-page-1">
+	<g id="flipboard-icons" transform="translate(-2482.000000, -506.000000)">
+		<g id="flipboard-news-apps" transform="translate(2330.000000, 50.000000)">
+			<g id="flipboard-flipboard" transform="translate(152.000000, 456.000000)">
+				<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="36" y1="0" x2="36" y2="72">
+					<stop  offset="0" style="stop-color:#FD242B"/>
+					<stop  offset="1" style="stop-color:#CB000B"/>
+				</linearGradient>
+				<rect fill="url(#SVGID_1_)" width="72" height="72"/>
+				<g id="flipboard-icon" transform="translate(24.000000, 24.000000)">
+					<rect id="flipboard-big" x="-9.6" y="-9.6" fill="#FFFFFF" width="14.4" height="43.2"/>
+					<rect id="flipboard-mid" x="4.8" y="-9.6" fill="#FFFFFF" fill-opacity="0.9" width="28.8" height="14.4"/>
+					<rect id="flipboard-small" x="4.8" y="4.8" fill="#FFFFFF" fill-opacity="0.8" width="14.4" height="14.4"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
