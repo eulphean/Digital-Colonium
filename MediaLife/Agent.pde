@@ -218,7 +218,7 @@ class Agent {
     // At any moment there is a teeny, tiny chance a bloop will reproduce
   Insect reproduce() {
     // asexual reproduction
-    if (random(1) < 0.0003) {
+    if (random(1) < 0.0001) {
       // Child is exact copy of this single parent. 
       DNA childDNA = dna.copy();
       // Child DNA can mutate

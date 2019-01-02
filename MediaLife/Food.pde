@@ -54,7 +54,7 @@ class Food {
     PVector position; boolean a; 
     
     do {
-      position = new PVector(int(random(width-flowerWidth)), int(random(height-flowerHeight))); 
+      position = new PVector(int(random(width-flowerWidth/2)), int(random(height-flowerHeight/2))); 
       // Intersecting with another flower or another brick? 
       a = isIntersecting(position, flowerWidth, flowerHeight);
     } while (a); 

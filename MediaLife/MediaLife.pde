@@ -65,7 +65,17 @@ Sound sound;
 World world;
 
 // SVG files. 
-File [] files; 
+File [] files;
+
+// Background image
+PImage bg;
+PShader shade; 
+
+// Shaders. 
+String[] shaders = new String[] {
+    "brcosa.glsl", "hue.glsl", "pixelate.glsl", "blur.glsl", 
+    "channels.glsl", "threshold.glsl", "neon.glsl", "edges.glsl", "pixelrolls.glsl", 
+    "modcolor.glsl", "halftone.glsl", "halftone_cmyk.glsl", "invert.glsl"};
 
 
 // Sketch applet pointer
@@ -100,11 +110,17 @@ void setup() {
   // Setup sound. 
   sound = new Sound(this); 
   sound.sampleRate(60000);
+  
+  // Load background image. 
+  //bg = loadImage("background.png"); 
+  
+  shade = loadShader(shaders[4]);
+
 }
 
-void draw() {
-  background(0);
-
+void draw() { 
+  background(0); 
+  
   // Update volume.
   sound.volume(volume);
 
