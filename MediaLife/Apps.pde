@@ -5,7 +5,7 @@ class Apps {
   ArrayList<PShape> logos; 
   PGraphics logoWall; 
   PGraphics ellipse; 
-  int numRows = 5; int numCols = 16; 
+  int numRows = 4; int numCols = 20; 
   int svgSize = 60; // width = height
   int wallWidth; int wallHeight;
   long shuffleTime; 
@@ -33,7 +33,7 @@ class Apps {
     updateShaderParams(); 
   
     // Should shuffle the apps? 
-    if (millis() - shuffleTime > 1500) {
+    if (millis() - shuffleTime > 1000) {
      shuffleApps(); 
      shuffleTime = millis(); 
     }
@@ -138,9 +138,9 @@ class Apps {
       float a = cos(frameCount/offset); float b = sin(frameCount/offset);
     
       shade.set("rbias", 0.0, 0.0);
-      shade.set("gbias", map(b, -1, 1, -0.3, 0.3), 0.0);
+      shade.set("gbias", map(b, -1, 1, -0.05, 0.05), 0.0);
       shade.set("bbias", 0.0, 0.0);
-      shade.set("rmult", map(a, -1, 1, 0.8, 2.0), 1.0);
+      shade.set("rmult", map(a, -1, 1, 0.01, 0.05), 0.5);
       shade.set("gmult", 1.0, 1.0);
       shade.set("bmult", 1.0, 1.0);
     } 
