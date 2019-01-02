@@ -5,8 +5,11 @@ class World {
   int generation; 
 
   World(int numAgents, int numFood) {
+    // App ecosystem.
+    apps = new Apps();
+    
     // Initialize all the sources of energy. 
-    food = new Food(numFood);
+    food = new Food(numFood, apps.wallWidth, apps.wallHeight);
      
     // Agents.
     agents = new ArrayList();
@@ -15,16 +18,13 @@ class World {
        agents.add(new Insect(l, new DNA(), agentScale));
     }
     
-    // App ecosystem.
-    apps = new Apps();
-    
     // Keep track of iterations.
     generation = 0; 
   }
   
   void run() {
     // Run the apps. 
-    apps.run(); 
+    //apps.run(); 
     
     // Deal with natural food.  
     food.run(agents);

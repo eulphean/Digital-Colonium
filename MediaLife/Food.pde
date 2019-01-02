@@ -1,13 +1,16 @@
 class Food {
   ArrayList<Flower> flowers; // Natural food
   ArrayList<PixelBrick> bricks; // Media bricks
+  int appsWallWidth; int appsWallHeight;
   
   float scale; 
   
-  Food(int num) {
+  Food(int num, int w, int h) {
     flowers = new ArrayList();
     bricks = new ArrayList();
     scale = flowerScale; // GUI value
+    
+    appsWallWidth = w; appsWallHeight = h; 
     
     //createBricks(); // These are static. 
     createFlowers(num); // These are random.
@@ -84,20 +87,35 @@ class Food {
     }
     
     // Intersecting with another brick?
-    for (int j = 0; j < bricks.size(); j++) {
-      PixelBrick brick = bricks.get(j); 
-      int brickW = brick.pixWidth * brick.cols; int brickH = brick.pixWidth * brick.rows;  
-      int oldTopRight = int(brick.position.x + brickW); 
-      int oldBottom = int(brick.position.y + brickH);
+    //for (int j = 0; j < bricks.size(); j++) {
+    //  PixelBrick brick = bricks.get(j); 
+    //  int brickW = brick.pixWidth * brick.cols; int brickH = brick.pixWidth * brick.rows;  
+    //  int oldTopRight = int(brick.position.x + brickW); 
+    //  int oldBottom = int(brick.position.y + brickH);
       
-      boolean a = (oldTopRight > position.x && 
-        brick.position.x < newTopRight && 
-          oldBottom > position.y && 
-            brick.position.y < newBottom); 
-      if (a) {
-       return a;  
-      }
-    }
+    //  boolean a = (oldTopRight > position.x && 
+    //    brick.position.x < newTopRight && 
+    //      oldBottom > position.y && 
+    //        brick.position.y < newBottom); 
+    //  if (a) {
+    //   return a;  
+    //  }
+    //}
+    
+    // Intersecting with the app wall? 
+    //PVector center = new PVector(width/2, height/2); 
+    //PVector dir = PVector.sub(position, center); 
+    
+    //float heading = dir.heading(); 
+    //// Vector on the edge of the ellipse
+    //PVector v = new PVector(width/2 + appsWallWidth/2 * cos(heading), height/2 + appsWallHeight/2 * sin(heading)); 
+    //float maxD = PVector.dist(v, center);
+    
+    
+    //float d = PVector.dist(center, position); 
+    //if (d < maxD + h/2) {
+    // return true; 
+    //}
     
     return false; 
   }

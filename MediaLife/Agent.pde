@@ -30,7 +30,7 @@ class Agent {
   Agent(PVector pos, DNA _dna, float radius) {
     position = pos;
     acceleration = new PVector(0, 0); 
-    velocity = new PVector(random(-5,5), random(-5, 5));
+    velocity = new PVector(random(-10,10), random(-10, 10));
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     wandertheta = 0; 
 
@@ -42,7 +42,7 @@ class Agent {
     maxForce = 0.2; 
 
     // Health units. Initial units. 
-    maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
+    maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth;
     maxMediaHealth = 100.0; curMediaHealth = 0.0; 
     alpha = 255; bodyColor = color(255, 0, 0, alpha); 
     
@@ -218,7 +218,7 @@ class Agent {
     // At any moment there is a teeny, tiny chance a bloop will reproduce
   Insect reproduce() {
     // asexual reproduction
-    if (random(1) < 0.0005) {
+    if (random(1) < 0.0003) {
       // Child is exact copy of this single parent. 
       DNA childDNA = dna.copy();
       // Child DNA can mutate

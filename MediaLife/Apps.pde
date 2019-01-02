@@ -6,7 +6,7 @@ class Apps {
   PGraphics logoWall; 
   PGraphics ellipse; 
   int numRows = 6; int numCols = 14; 
-  int svgSize = 98; // width = height
+  int svgSize = 90; // width = height
   int wallWidth; int wallHeight;
   long shuffleTime; 
   
@@ -21,7 +21,7 @@ class Apps {
   long effectTime; 
   
   Apps() {
-    idxShader = 8; 
+    idxShader = 4; 
     shade = loadShader(shaders[idxShader]);
     
     // Logo brick dimensions.
@@ -97,7 +97,7 @@ class Apps {
       }
     logoWall.endDraw();
     // Do an alpha mask. 
-    logoWall.mask(ellipse);
+    //logoWall.mask(ellipse);
   }
 
   void shuffleApps() {

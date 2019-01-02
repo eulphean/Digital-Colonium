@@ -51,7 +51,7 @@ class Insect extends Agent {
      pushMatrix(); 
       float theta = velocity.heading() + radians(90);
       translate(headCenter.x, headCenter.y); 
-      rotate(theta);
+      //rotate(theta);
       scale(scale); 
       // antennas(); 
       //head(); 
