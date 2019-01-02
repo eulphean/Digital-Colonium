@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Kik" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 512 511.5273" enable-background="new 0 0 512 511.5273" xml:space="preserve">
-<sodipodi:namedview  bordercolor="#666666" borderopacity="1" fit-margin-bottom="0" fit-margin-left="0" fit-margin-right="0" fit-margin-top="0" gridtolerance="10" guidetolerance="10" id="namedview3432" inkscape:current-layer="svg3415" inkscape:cx="256" inkscape:cy="256" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="1056" inkscape:window-maximized="1" inkscape:window-width="1855" inkscape:window-x="65" inkscape:window-y="24" inkscape:zoom="1.7949219" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
+<svg version="1.1"
+	 id="Udemy.svg" inkscape:version="0.92.2 (5c3e80d, 2017-08-06)" sodipodi:docname="udemy-icon.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64"
+	 enable-background="new 0 0 64 64" xml:space="preserve">
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview10" inkscape:current-layer="svg8" inkscape:cx="35.870206" inkscape:cy="83.5" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="1001" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:zoom="1.3242188" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
 	</sodipodi:namedview>
-<title  id="title3417">logo</title>
-<desc  id="desc3419">Created with Sketch.</desc>
-<rect fill="#5DCD11" width="512" height="511.5273"/>
-<g id="kik-g3517" transform="matrix(11.533184,0,0,11.533184,93.497293,-5475.1161)">
-	<path id="kik-fill-1" inkscape:connector-curvature="0" fill="#FFFFFF" d="M26.8278,495.1927c2.029,0,3.6733,1.6422,3.6733,3.668
-		s-1.6443,3.668-3.6733,3.668c-2.0289,0-3.673-1.6422-3.673-3.668S24.799,495.1927,26.8278,495.1927"/>
-	<path id="kik-fill-8" inkscape:connector-curvature="0" fill="#FFFFFF" d="M14.8883,498.5728l4.2011-4.1471
-		c1.3589-1.3414,1.3292-3.5485-0.0653-4.8528l0,0c-1.3099-1.2252-3.3491-1.2002-4.6287,0.057l-6.227,6.1172l-0.0258-12.3825
-		c-0.0037-1.8023-1.4003-3.3366-3.196-3.4033c-1.8888-0.0702-3.4465,1.4453-3.4465,3.3289L1.5,508.6434
-		c0,1.8312,1.4799,3.3156,3.3055,3.3156l0,0c1.8256,0,3.3054-1.4843,3.3055-3.3155l0.0002-4.1394l1.6755-1.5593l5.6636,7.6469
-		c1.0889,1.4703,3.1546,1.7879,4.6324,0.7121l0,0c1.4984-1.0907,1.8233-3.1971,0.7238-4.6909L14.8883,498.5728L14.8883,498.5728z"/>
+<g>
+	<rect x="0.2615" y="0.1416" fill="#5DCD11" width="63.549" height="63.549"/>
+	<g id="g3517" transform="matrix(11.533184,0,0,11.533184,93.497293,-5475.1161)">
+		<path id="Fill-1" inkscape:connector-curvature="0" fill="#FFFFFF" d="M-3.7481,477.2847c0.2518,0,0.4559,0.2038,0.4559,0.4553
+			c0,0.2514-0.2041,0.4553-0.4559,0.4553c-0.2518,0-0.4559-0.2038-0.4559-0.4553C-4.204,477.4886-3.9999,477.2847-3.7481,477.2847"
+			/>
+		<path id="Fill-8" inkscape:connector-curvature="0" fill="#FFFFFF" d="M-5.23,477.7043l0.5214-0.5147
+			c0.1687-0.1665,0.165-0.4404-0.0081-0.6023l0,0c-0.1626-0.1521-0.4157-0.149-0.5745,0.0071l-0.7729,0.7592l-0.0032-1.5369
+			c-0.0005-0.2237-0.1738-0.4142-0.3967-0.4224c-0.2344-0.0087-0.4278,0.1794-0.4278,0.4132l0,3.1468
+			c0,0.2273,0.1837,0.4115,0.4103,0.4115l0,0c0.2266,0,0.4103-0.1842,0.4103-0.4115l0-0.5138l0.208-0.1935l0.703,0.9491
+			c0.1352,0.1825,0.3916,0.2219,0.575,0.0884l0,0c0.186-0.1354,0.2263-0.3969,0.0898-0.5822L-5.23,477.7043L-5.23,477.7043z"/>
+	</g>
 </g>
 </svg>

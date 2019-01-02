@@ -42,9 +42,6 @@ class Insect extends Agent {
     // Spots
     spots = new ArrayList(); 
     numSpots = 50; 
-    
-    // Create antennas and spot collections. 
-    createSpots();
   }
   
   void display() {
@@ -57,7 +54,7 @@ class Insect extends Agent {
       rotate(theta);
       scale(scale); 
       // antennas(); 
-      head(); 
+      //head(); 
       legs(); 
       body();
      popMatrix();
@@ -132,17 +129,5 @@ class Insect extends Agent {
      PVector headEdge = new PVector(headRadius*cos(rad), headRadius*sin(rad));
      antennas.add(new Antenna(headEdge, i)); 
     }
-  }
-
-  
-  void createSpots() {
-    //// Num spots
-    //PVector bodyCenter = new PVector(0, bodyHeight/2);
-    //for (int i = 0; i < numSpots; i++) {
-    //  float angle = random(360); 
-    //  float randX = bodyCenter.x + random(bodyWidth/2) * cos(angle); 
-    //  float randY = bodyCenter.y + random(bodyHeight/2) * sin(angle);
-    //  spots.add(new PVector(randX, randY));
-    //}
   }
 }

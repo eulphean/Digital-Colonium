@@ -64,6 +64,10 @@ Sound sound;
 // Initialize a world
 World world;
 
+// SVG files. 
+File [] files; 
+
+
 // Sketch applet pointer
 PApplet sketchPointer = this; 
 
@@ -81,7 +85,12 @@ void setup() {
   healthStats = false; 
   turnOnVision = false;
   releaseAgents = false;
-
+  
+  // Read all the files. 
+  String path = dataPath("SVG"); 
+  files = listFiles(path);
+  
+  // GUI stuff. 
   initializeGui();
 
   world = new World(numAgents, numFood);

@@ -5,14 +5,30 @@ class Flower {
   int flowerHeight; int flowerWidth; 
   float scale; 
   color petalColor;
+  PGraphics head; PShape icon; 
+  PVector centerHead, base;
   
   Flower(PVector pos, float s) {
     rot = 0; 
     scale = s; 
     position = pos; 
-    flowerHeight = int(90*s);
-    flowerWidth = int(60*s);
+    flowerHeight = int(70*s);
+    flowerWidth = int(50*s);
     petalColor = color(random(255), random(255), random(255));
+    centerHead = new PVector(flowerWidth/2, flowerHeight/3); 
+    base = new PVector(centerHead.x, flowerHeight);
+    
+    createHead(); 
+  }
+  
+  void createHead() {
+    int randIdx = floor(random(0, files.length)); 
+    icon = loadShape(files[randIdx].getAbsolutePath()); 
+    head = createGraphics(flowerWidth, flowerWidth); 
+    head.beginDraw();
+    head.fill(0); 
+    head.shape(icon,0, 0, flowerWidth, flowerWidth);  
+    head.endDraw();
   }
   
   void run() {
@@ -20,16 +36,13 @@ class Flower {
       translate(position.x, position.y);
       scale(scale, scale);
       
-      // Draw the bounding box
-      // Enable this for debugging. 
-      color c = color(255, 255, 255, 0); 
-      fill(c);
-      stroke(0); 
+      //// Draw the bounding box
+      //// Enable this for debugging. 
+      //color c = color(255, 255, 255, 0); 
+      //fill(c);
+      //stroke(0); 
       
-      rect(0, 0, flowerWidth, flowerHeight); 
-      
-      PVector centerHead = new PVector(flowerWidth/2, flowerHeight/3); 
-      PVector base = new PVector(centerHead.x, flowerHeight);
+      //rect(0, 0, flowerWidth, flowerHeight); 
       
       // Smooth flower face. 
       noStroke();
@@ -59,23 +72,12 @@ class Flower {
       line(centerHead.x, centerHead.y, base.x, base.y); 
       popStyle();
       
-      ellipseMode(CENTER); 
-      // Petals.
-      pushMatrix();
-        translate(centerHead.x, centerHead.y);
-        rotate(radians(rot));
-        fill(petalColor); 
-        for (int i = 0; i < 6; i++) {
-          ellipse(0, -flowerWidth/4, flowerWidth/2, flowerWidth/2);
-          rotate(2*PI/3);
-        }
-        rot+=10;
+      pushMatrix(); 
+       translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3); 
+       //shader(shade);
+       image(head, 0, 0); 
+       //resetShader();
       popMatrix();
-      
-      // Center part. 
-      noStroke();
-      fill(255, 255, 0); // Yellow
-      ellipse(centerHead.x, centerHead.y, flowerWidth/2.5, flowerWidth/2.5);
     popMatrix();
   } 
 }

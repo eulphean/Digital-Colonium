@@ -21,7 +21,7 @@ class Apps {
   long effectTime; 
   
   Apps() {
-    idxShader = 4; 
+    idxShader = 8; 
     shade = loadShader(shaders[idxShader]);
     
     // Logo brick dimensions.
@@ -63,8 +63,6 @@ class Apps {
   
   void prepareAppWall() {
     // Load all the logos. 
-    String path = dataPath("SVG"); 
-    File [] files = listFiles(path);
     for (File f : files) {
       // Only load SVG files. 
       String fileName = f.getAbsolutePath(); 
