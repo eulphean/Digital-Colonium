@@ -208,9 +208,9 @@ class Agent {
         env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
         
         // Chance to create a new flower when one is created. 
-        if (random(1) < 0.90) {
-         f.createFlowers(1); 
-        } 
+        //if (random(1) < 0.90) {
+        // f.createFlowers(1); 
+        //} 
       }
     }
   }
@@ -221,8 +221,7 @@ class Agent {
     if (random(1) < 0.0001) {
       // Child is exact copy of this single parent. 
       DNA childDNA = dna.copy();
-      // Child DNA can mutate
-      // childDNA.mutate(0.01);
+
       // Child is exact copy of single parent
       return new Insect(new PVector(0, 0), childDNA, random(1, 3.0));
     } 

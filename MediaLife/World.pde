@@ -24,10 +24,10 @@ class World {
   
   void run() {
     // Run the apps. 
-    //apps.run(); 
+    apps.run(); 
     
     // Deal with natural food.  
-    food.run(agents);
+    food.run();
 
     // Handle agents display, eating, reproduction
     for (int i = agents.size()-1; i >= 0; i--) {
@@ -47,10 +47,10 @@ class World {
       }
       
       
-      Insect child = a.reproduce(); 
-      if (child != null) {
-        agents.add(child);
-      }
+      //Insect child = a.reproduce(); 
+      //if (child != null) {
+      //  agents.add(child);
+      //}
     }
     
     if (releaseAgents) {
@@ -60,6 +60,12 @@ class World {
       }
       releaseAgents = false; 
     }
+    
+    // Create more flowers if done
+    if (food.flowers.size() == 0) {
+      food = new Food(numFood, apps.wallWidth, apps.wallHeight);
+    }
+    
     generation++; 
   }
 }

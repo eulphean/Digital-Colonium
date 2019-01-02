@@ -120,15 +120,10 @@ class Food {
     return false; 
   }
   
-  void run(ArrayList<Insect> agents) {
+  void run() {
    // Show flowers.  
    for (Flower f: flowers) { 
      f.run();
    }
-   
-   // Show bricks.
-   //for (int i = 0; i < bricks.size(); i++) {
-   //  bricks.get(i).run(agents);
-   //}
   }
 }

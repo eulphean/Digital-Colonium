@@ -5,7 +5,7 @@ class Flower {
   int flowerHeight; int flowerWidth; 
   float scale; 
   color petalColor;
-  PGraphics head; PShape icon; 
+  PGraphics h; PShape icon; 
   PVector centerHead, base;
   PShader shade; int idxShader;
   
@@ -30,16 +30,17 @@ class Flower {
   void createHead() {
     int randIdx = floor(random(0, files.length)); 
     icon = loadShape(files[randIdx].getAbsolutePath()); 
-    head = createGraphics(flowerWidth, flowerWidth); 
-    head.beginDraw();
-    head.fill(0); 
-    head.shape(icon,0, 0, flowerWidth, flowerWidth);  
-    head.endDraw();
+    h = createGraphics(flowerWidth, flowerWidth); 
+    h.beginDraw();
+    h.fill(0); 
+    h.shape(icon,0, 0, flowerWidth, flowerWidth);  
+    h.endDraw();
   }
   
   void run() {
     updateShaderParams();
     pushMatrix();
+      pushStyle();
       translate(position.x, position.y);
       scale(scale, scale);
       
@@ -82,9 +83,10 @@ class Flower {
       pushMatrix(); 
        translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3); 
        shader(shade);
-       image(head, 0, 0); 
+       image(h, 0, 0); 
        resetShader();
       popMatrix();
+      popStyle();
     popMatrix();
   } 
   

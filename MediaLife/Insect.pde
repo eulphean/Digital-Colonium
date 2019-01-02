@@ -20,12 +20,12 @@ class Insect extends Agent {
   
   Insect(PVector pos, DNA _dna, float s) {
     // Initialize its base class. 
-    super(pos, _dna, 4*s); 
+    super(pos, _dna, 2*s); 
    
     // Head properties. 
     headCenter = pos; 
     scale = s;
-    headRadius = 4; // Hardcoding these number. They are either coming from genotype or somewhere. 
+    headRadius = 2; // Hardcoding these number. They are either coming from genotype or somewhere. 
     bodyHeight = 20;
     bodyWidth = bodyHeight/2;
     
@@ -51,10 +51,9 @@ class Insect extends Agent {
      pushMatrix(); 
       float theta = velocity.heading() + radians(90);
       translate(headCenter.x, headCenter.y); 
-      //rotate(theta);
+      rotate(theta);
       scale(scale); 
-      // antennas(); 
-      //head(); 
+      head(); 
       legs(); 
       body();
      popMatrix();
