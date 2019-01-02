@@ -16,7 +16,7 @@ class Apps {
     "brcosa.glsl", "hue.glsl", "pixelate.glsl", "blur.glsl", 
     "channels.glsl", "threshold.glsl", "neon.glsl", "edges.glsl", "pixelrolls.glsl", 
     "modcolor.glsl", "halftone.glsl", "halftone_cmyk.glsl", "invert.glsl"};
-  PShader shade1; PShader shade2; PShader shade; 
+  PShader shade; 
   int idxShader; 
   long effectTime; 
   
