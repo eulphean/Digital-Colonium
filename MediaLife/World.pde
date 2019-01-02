@@ -1,22 +1,31 @@
 class World {
-  ArrayList<Insect> agents = new ArrayList<Insect>();
-  Food food;; 
+  ArrayList<Insect> agents;
+  Apps apps;
+  Food food;
   int generation; 
 
   World(int numAgents, int numFood) {
-    // Initialize all the sources of energy
+    // Initialize all the sources of energy. 
     food = new Food(numFood);
      
+    // Agents.
+    agents = new ArrayList();
     for (int i = 0; i < numAgents; i++) {
        PVector l = new PVector(0, 0);
        agents.add(new Insect(l, new DNA(), agentScale));
     }
+    
+    // App ecosystem.
+    apps = new Apps();
     
     // Keep track of iterations.
     generation = 0; 
   }
   
   void run() {
+    // Run the apps. 
+    apps.run(); 
+    
     // Deal with natural food.  
     food.run(agents);
 

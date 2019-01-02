@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Flicker" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="36" y1="69.6254" x2="36" y2="2.045577e-06">
+		<stop  offset="0" style="stop-color:#DCDCDC"/>
+		<stop  offset="1" style="stop-color:#D2D2D2"/>
+	</linearGradient>
+	<rect fill="url(#SVGID_1_)" width="72" height="72"/>
+	<g>
+		<path fill="#1D66D8" d="M32.6964,35.9972c0,5.4703-4.4333,9.9031-9.9028,9.9031c-5.4692,0-9.9025-4.4331-9.9025-9.9028
+			c0-5.4692,4.4333-9.9034,9.9028-9.9034c5.4692,0,9.9028,4.4342,9.9028,9.9031"/>
+	</g>
+	<g>
+		<path fill="#FB0A84" d="M59.0299,35.9972c0,5.4703-4.4339,9.9031-9.9028,9.9031c-5.4697,0-9.9034-4.4331-9.9034-9.9028
+			c0-5.4692,4.4336-9.9034,9.9031-9.9034C54.596,26.0941,59.0299,30.5283,59.0299,35.9972"/>
+	</g>
+</g>
+</svg>

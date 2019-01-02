@@ -1,6 +1,7 @@
 class Food {
   ArrayList<Flower> flowers; // Natural food
   ArrayList<PixelBrick> bricks; // Media bricks
+  
   float scale; 
   
   Food(int num) {
@@ -8,7 +9,7 @@ class Food {
     bricks = new ArrayList();
     scale = flowerScale; // GUI value
     
-    createBricks(); // These are static. 
+    //createBricks(); // These are static. 
     createFlowers(num); // These are random.
   }
   
@@ -108,8 +109,8 @@ class Food {
    }
    
    // Show bricks.
-   for (int i = 0; i < bricks.size(); i++) {
-     bricks.get(i).run(agents);
-   }
+   //for (int i = 0; i < bricks.size(); i++) {
+   //  bricks.get(i).run(agents);
+   //}
   }
 }

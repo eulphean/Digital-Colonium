@@ -117,14 +117,14 @@ class Agent {
      applyForce(steer);
     }
 
-    // Media attraction.
-    target = findMedia(f); 
-    if (target != null) {
-     float newMediaWeight = map(curMediaHealth, -maxMediaHealth, maxMediaHealth, mediaAttractionWeight, -mediaAvoidanceWeight);
-     steer = seek(target, true);
-     steer.mult(newMediaWeight); 
-     applyForce(steer);
-    }
+    //// Media attraction.
+    //target = findMedia(f); 
+    //if (target != null) {
+    // float newMediaWeight = map(curMediaHealth, -maxMediaHealth, maxMediaHealth, mediaAttractionWeight, -mediaAvoidanceWeight);
+    // steer = seek(target, true);
+    // steer.mult(newMediaWeight); 
+    // applyForce(steer);
+    //}
     
     // Wander if nothing is found or I'm way too healthy or media saturated. 
     if (target == null || curMediaHealth >= maxMediaHealth || curBodyHealth >= maxBodyHealth) {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Kayak" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 72.1698 72" enable-background="new 0 0 72.1698 72" xml:space="preserve">
+<g id="kayak-page-1">
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="36.0849" y1="72" x2="36.0849" y2="18.3471">
+		<stop  offset="0" style="stop-color:#F66F00"/>
+		<stop  offset="1" style="stop-color:#FE8300"/>
+	</linearGradient>
+	<rect fill="url(#SVGID_1_)" width="72.1698" height="72"/>
+	<g id="kayak-icons" transform="translate(-2330.000000, -354.000000)">
+		<g id="kayak-travel-apps" transform="translate(2330.000000, 50.000000)">
+			<g id="kayak-kayak" transform="translate(0.000000, 304.000000)">
+				<g id="kayak-icon" transform="translate(38.000000, 18.000000)">
+					<g id="kayak-mask">
+						<path id="kayak-path-2" fill="#FFFFFF" d="M-3.5053,40.1883c0,0.6604-0.5381,1.1958-1.2031,1.1958h-5.9911
+							c-0.6645,0-1.2031-0.5317-1.2031-1.1958V-7.8042C-11.9026-8.4646-11.3646-9-10.6995-9h5.9911
+							c0.6645,0,1.2031,0.5317,1.2031,1.1958V11.719L5.5855-7.9071C5.865-8.5107,6.6284-9,7.292-9h5.899
+							c0.9947,0,1.4704,0.7364,1.0626,1.6442L4.2269,14.9667c-0.0046,0.0102,11.7254,24.2628,11.7254,24.2628
+							c0.5757,1.1883-0.0302,2.1546-1.3551,2.1546H8.641c-0.6594,0-1.4363-0.4845-1.7272-1.0822L-3.5053,18.8934V40.1883z"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
