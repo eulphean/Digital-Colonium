@@ -24,7 +24,7 @@ class World {
   
   void run() {
     // Run the apps. 
-    apps.run(); 
+    // apps.run(); 
     
     // Deal with natural food.  
     food.run();
