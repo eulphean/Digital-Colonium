@@ -18,16 +18,12 @@ int numAgents = 50;
 Slider numAgentsSlider;
 float bodyHealth = 200.0; 
 Slider bodyHealthSlider; 
-float mediaHealth = 100.0; 
-Slider mediaHealthSlider; 
 float agentScale = 1.0; 
 Slider agentScaleSlider; 
 
 // Perceptions
 int foodPerceptionRad = 40; 
 Slider foodRadSlider; 
-int mediaPerceptionRad = 40; 
-Slider mediaRadSlider; 
 int seperationPerceptionRad = 40; 
 Slider seperationRadSlider; 
 
@@ -36,10 +32,6 @@ float foodW = 2.0;
 Slider foodWeightSlider;
 float seperationW = 0.5; 
 Slider seperationWeightSlider; 
-float mediaAttractionW = 0.5; 
-Slider mediaAttractSlider; 
-float mediaAvoidanceW = 0.3; 
-Slider mediaAvoidSlider; 
 float wanderingW = 0.5; 
 Slider wanderSlider;
 float volume = 0.5; 
@@ -57,7 +49,7 @@ boolean debug;
 boolean healthStats;
 boolean turnOnVision;
 boolean releaseAgents; 
-boolean showEye; 
+boolean showAppWatcher; 
 boolean createFood; 
 
 // Sound
@@ -91,7 +83,7 @@ void setup() {
   healthStats = false; 
   turnOnVision = false;
   releaseAgents = false;
-  showEye = false; 
+  showAppWatcher = false; 
   createFood = false; 
   
   // GUI stuff. 
@@ -152,14 +144,6 @@ void initializeGui() {
     .setColorCaptionLabel(color(255))
     .setGroup(g1);
 
-  mediaRadSlider = cp5.addSlider("mediaPerceptionRad")
-    .setPosition(0, 20)
-    .setSize(100, 20)
-    .setRange(0, 150)
-    .setValue(mediaPerceptionRad)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
   seperationRadSlider = cp5.addSlider("seperationPerceptionRad")
     .setPosition(0, 40)
     .setSize(100, 20)
@@ -205,22 +189,6 @@ void initializeGui() {
     .setSize(100, 20)
     .setRange(0, 1.0)
     .setValue(seperationW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  mediaAttractSlider = cp5.addSlider("mediaAttractionW")
-    .setPosition(0, 160)
-    .setSize(100, 20)
-    .setRange(0, 1.0)
-    .setValue(mediaAttractionW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  mediaAvoidSlider = cp5.addSlider("mediaAvoidanceW")
-    .setPosition(0, 180)
-    .setSize(100, 20)
-    .setRange(0, 1.0)
-    .setValue(mediaAvoidanceW)
     .setColorCaptionLabel(color(255))
     .setGroup(g1);
 
@@ -290,7 +258,7 @@ void keyPressed() {
   }
   
   if (key == 'e') {
-    showEye = !showEye;  
+    showAppWatcher = !showAppWatcher;  
   }
   
   if (key == 'f') {

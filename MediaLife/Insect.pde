@@ -6,11 +6,7 @@ class Insect extends Agent {
   PVector headCenter;
   float headRadius; 
   
-  // Antenna properties. 
-  // [NOTE] Could evolve certainly. 
-  ArrayList<Antenna> antennas; 
-  IntList antIndices; 
-  int numAntennas, maxAntennas; 
+  // Properties.  
   int maxAngle; int minAngle; 
   int antennaOffset; 
   
@@ -28,16 +24,6 @@ class Insect extends Agent {
     headRadius = 2; // Hardcoding these number. They are either coming from genotype or somewhere. 
     bodyHeight = 20;
     bodyWidth = bodyHeight/2;
-    
-    // List of antennas. 
-    antennas = new ArrayList(); 
-    antIndices = new IntList(); 
-    minAngle = 200; maxAngle = 340; 
-    antennaOffset = 10;
-    numAntennas = floor(random(0, 10)); // Hardcoding. Should be figured out based on Agent's current state. 
-    maxAntennas = (maxAngle-minAngle)/antennaOffset;
-    calcRandomIndices(numAntennas, maxAntennas);
-    initAntennas();
     
     // Spots
     spots = new ArrayList(); 
@@ -67,12 +53,6 @@ class Insect extends Agent {
     fill(255);
     ellipse(0, 0, headRadius*2, headRadius*2);
     popStyle();
-  }
-  
-  void antennas() {
-   for (Antenna a: antennas) {
-    a.run(); 
-   }
   }
   
   void legs() {
@@ -107,26 +87,5 @@ class Insect extends Agent {
       stroke(0); strokeWeight(1);
       //line(0, 0, 0, bodyHeight);
     popStyle();
-  }
-  
-  void calcRandomIndices(int numAntennas, int maxAntennas) {
-    for (int i = 0; i < numAntennas; i++) {
-      int idx; 
-      do {
-       idx = floor(random(maxAntennas));
-      } while(antIndices.hasValue(idx)); // Keep checking until I find a random number that's not in the list. 
-      antIndices.append(idx); 
-    }
-  }
-  
-  void initAntennas() {
-    for (int i = 0; i < antIndices.size(); i++) {
-     // Theta at that index. 
-     int theta = antennaOffset * antIndices.get(i) + minAngle; 
-     // Location on the head's surface. 
-     float rad = radians(theta);
-     PVector headEdge = new PVector(headRadius*cos(rad), headRadius*sin(rad));
-     antennas.add(new Antenna(headEdge, i)); 
-    }
   }
 }

@@ -5,20 +5,16 @@ class Agent {
   float wandertheta; 
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; float maxMediaPerceptionRad; 
+  float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; 
   float maxSpeed; float maxForce; float maxAheadDistance;
   
   // Weights for acccumulating forces on the agent.  
-  float foodWeight; float seperationWeight; float mediaAttractionWeight; float mediaAvoidanceWeight; float wanderingWeight;
+  float foodWeight; float seperationWeight; float wanderingWeight;
   
-  // Health units: Average of these determine the looming death of the agent. 
-  // These could honestly evolve as well. This could be a genotype (maxBodyHealth and maxMediaHealth)
+  // Health units. 
   float maxBodyHealth; float curBodyHealth; 
-  float maxMediaHealth; float curMediaHealth;
   
-  // Local flags.
-  boolean isConsumingMedia = false; 
-  color bodyColor; int alpha;
+  color bodyColor; 
   
   // Sound
   Oscillator osc; Env env; float envVals[]; int midi; float amp;
@@ -36,6 +32,7 @@ class Agent {
 
     maxSpeed = 3.0;
     maxRadius = radius; // Size for the boid.
+    bodyColor = color(255, 0, 0);
  
     
     // TODO: Evolve these parameters. 
@@ -43,8 +40,6 @@ class Agent {
 
     // Health units. Initial units. 
     maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth;
-    maxMediaHealth = 100.0; curMediaHealth = 0.0; 
-    alpha = 255; bodyColor = color(255, 0, 0, alpha); 
     
     // DNA
     dna = _dna; 
@@ -54,20 +49,17 @@ class Agent {
     env = new Env(sketchPointer); envVals = getADSRValues(false);
   }
   
-  void run(Food f, ArrayList<Insect> agents, float a) {
+  void run(ArrayList<Flower> flowers, ArrayList<Insect> agents, float a) {
     // Newly calculated oscillator amplitude.
     amp = a; 
     
     updateGuiParameters(); 
     
     // Evaluate all the forces acting on the agents.
-    behaviors(f, agents);
+    behaviors(flowers, agents);
     
     // Remove food from canvas if agent stepped on it. 
-    consumeFood(f); 
-    
-    // Check if the agent is inside a media brick. 
-    consumeMedia(f);
+    consumeFood(flowers); 
 
     // Keep updating position until reaching the target.
     update(); 
@@ -86,20 +78,17 @@ class Agent {
     // Weights Rad
     foodWeight = foodW; 
     seperationWeight = seperationW; 
-    mediaAttractionWeight = mediaAttractionW; 
-    mediaAvoidanceWeight = mediaAvoidanceW;
     wanderingWeight = wanderingW;
     
     // Perception Rad
     maxFoodPerceptionRad = foodPerceptionRad;
-    maxMediaPerceptionRad = mediaPerceptionRad;
     maxSeperationRad = seperationPerceptionRad;
     
     // Ahead distance
     maxAheadDistance = aheadDistance; 
   }
   
-  void behaviors(Food f, ArrayList<Insect> agents) {
+  void behaviors(ArrayList<Flower> f, ArrayList<Insect> agents) {
     PVector target;
     PVector steer; 
     
@@ -116,18 +105,10 @@ class Agent {
      steer.mult(newFoodWeight); 
      applyForce(steer);
     }
-
-    //// Media attraction.
-    //target = findMedia(f); 
-    //if (target != null) {
-    // float newMediaWeight = map(curMediaHealth, -maxMediaHealth, maxMediaHealth, mediaAttractionWeight, -mediaAvoidanceWeight);
-    // steer = seek(target, true);
-    // steer.mult(newMediaWeight); 
-    // applyForce(steer);
-    //}
     
     // Wander if nothing is found or I'm way too healthy or media saturated. 
-    if (target == null || curMediaHealth >= maxMediaHealth || curBodyHealth >= maxBodyHealth) {
+    if (target == null || curBodyHealth >= maxBodyHealth) {
+      
       steer = wander(); 
       steer.mult(wanderingWeight);
       applyForce(steer);
@@ -156,45 +137,19 @@ class Agent {
     if (curBodyHealth >= -maxBodyHealth) {
       curBodyHealth -= 0.1;   
     }
-    
-    if (curMediaHealth >= -maxMediaHealth) {
-      curMediaHealth -= 0.2;  
-    }
-  }
-  
-  // Is it in the vicinity of the media brick that it's actually 
-  // consuming media. 
-  void consumeMedia(Food f) {
-    ArrayList<PixelBrick> bricks = f.bricks;  
-    
-    for (PixelBrick pb: bricks) {
-      float d = PVector.dist(pb.center, position); 
-      if (d < pb.getCircleRad()) {
-        isConsumingMedia = true; 
-        if (curMediaHealth <= maxMediaHealth) {
-          curMediaHealth += 0.5; // Half-unit/frame 
-          alpha-=0.1;
-          bodyColor = (bodyColor & 0xffffff) | (alpha << 24); 
-        }
-        return; 
-      }
-    }
-    
-    //alpha = 255; bodyColor = (bodyColor & 0xffffff) | (alpha << 24); 
-    isConsumingMedia = false;
   }
   
   // Did it just step on food when it was hungry? 
-  void consumeFood(Food f) {
+  void consumeFood(ArrayList<Flower> flowers) {
     // Feeling pretty health. Nothing to consume. 
     if (curBodyHealth >= maxBodyHealth) {
       return;   
     }
     
-    ArrayList<Flower> flowers = f.flowers;
-    // Are we touching any food objects?
+    // Are we touching any food objects that are not eaten? 
     for (int i = flowers.size()-1; i >= 0; i--) {
       Flower fl = flowers.get(i);
+      // Only check this flower if it's not eaten before. 
       if (!fl.isEaten) {
         float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
         PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
@@ -202,23 +157,18 @@ class Agent {
         if (d < flWidth/2) {
           curBodyHealth += 20; // 20 units/flower 
           bodyColor = fl.petalColor; // Color transfer from flower to insect
-          //flowers.remove(i);
-          fl.isEaten = true; 
+          fl.isEaten = true; // Critical flag. 
           
+          println("Ringing");
           // Ring & pass it through an envelope 
-          osc.play(midiToFreq(midi), amp);
+          osc.play(midiToFreq(midi), 1.0);
           env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
-          
-          // Chance to create a new flower when one is created. 
-          //if (random(1) < 0.90) {
-          // f.createFlowers(1); 
-          //} 
         }
       }
     }
   }
   
-    // At any moment there is a teeny, tiny chance a bloop will reproduce
+  // At any moment there is a teeny, tiny chance a bloop will reproduce
   Insect reproduce() {
     // asexual reproduction
     if (random(1) < 0.0001) {
@@ -242,8 +192,7 @@ class Agent {
   
   // Check for death
   boolean dead() {
-   float netHealth = curBodyHealth + curMediaHealth; 
-   return netHealth < 0.0; 
+   return curBodyHealth < 0.0; 
   }
   
   void displayAgent() {
@@ -254,7 +203,6 @@ class Agent {
       float theta = velocity.heading() + radians(90);
       translate(position.x,position.y);
       rotate(theta);
-      fill(isConsumingMedia ? color(255, 0, 0, 175) : color(255));
       beginShape(TRIANGLES);
       vertex(0, -maxRadius*2);
       vertex(-maxRadius, maxRadius*2);
@@ -268,7 +216,6 @@ class Agent {
         textSize(15); 
         fill(255); 
         text("Body:" + nf(curBodyHealth, 0, 2), -10, 30); 
-        text("Media:" + nf(curMediaHealth, 0, 2), -10, 45);
        popStyle();
      }
     popMatrix();
@@ -300,10 +247,6 @@ class Agent {
       // Seperation radius
       fill(color(255, 0, 0, 50));
       ellipse(position.x,position.y,maxSeperationRad,maxSeperationRad); 
-      
-      // Media perception radius. 
-      fill(color(255, 255, 0, 50)); 
-      ellipse(position.x, position.y, maxMediaPerceptionRad, maxMediaPerceptionRad);
     }
   }
   
@@ -339,6 +282,7 @@ class Agent {
     
     return seek(target);
   }
+ 
   // Calculates a steering force towards a target. 
   // STEER = DESIRED MINUS VELOCITY
   PVector seek(PVector target) {
@@ -367,24 +311,6 @@ class Agent {
     PVector steer = PVector.sub(desired,velocity);
     steer.limit(maxForce);  // Limit to maximum steering force
     
-    return steer; 
-  }
-  
-  // Obstacle avoidance. 
-  PVector avoidMedia(Food f) {
-    PVector steer = new PVector(0, 0);
-    for (PixelBrick pb : f.bricks) {
-      float desiredSeperation = pb.getCircleRad() + maxRadius;
-      
-      if (PVector.dist(ahead, pb.center) < desiredSeperation) {
-        // Obstacle ahead. Steer to avoid this obstacle. 
-        PVector desired = PVector.sub(ahead, pb.center); 
-        desired.normalize(); 
-        desired.limit(maxSpeed); 
-        steer = PVector.sub(desired, velocity); 
-        steer.limit(maxForce); 
-      }
-    }
     return steer; 
   }
  
@@ -417,7 +343,7 @@ class Agent {
     return steer;
   }
   
-  PVector findFood(Food f) {
+  PVector findFood(ArrayList<Flower> flowers) {
     float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target = null;
     
@@ -426,7 +352,7 @@ class Agent {
     }
     
     // Find the closest food particle.
-    for (Flower fl : f.flowers) {
+    for (Flower fl : flowers) {
        if (!fl.isEaten) {
          PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
          // Calculate the minimum distance to food
@@ -438,25 +364,6 @@ class Agent {
            }
          }
        }
-    }
-    
-    return target; 
-  }
-  
-  PVector findMedia(Food f) {
-    float minD = 5000000; // Helpful to calculate a local minima. 
-    PVector target=null;
-    
-    for (PixelBrick pb : f.bricks) {
-     // Find the closest food particle.
-     // Calculate the minimum distance to food
-     float d = PVector.dist(position, pb.center); 
-     if (d < maxMediaPerceptionRad) {
-       if (d < minD) {
-         minD = d;   
-         target = pb.center; 
-       }
-     }
     }
     
     return target; 

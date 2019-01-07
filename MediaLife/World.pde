@@ -1,15 +1,16 @@
-class World {
+// Maintain the entire world. 
+// Insects, Flowers, and the App watcher. 
+
+class World { 
   ArrayList<Insect> agents;
-  Apps apps;
-  Food food;
-  int generation; 
+  AppWatcher appWatcher;
+  ArrayList<Flower> flowers; // Apps
+  int generation;
+ 
 
   World(int numAgents, int numFood) {
-    // App ecosystem.
-    apps = new Apps();
-    
-    // Initialize all the sources of energy. 
-    food = new Food(numFood, apps.wallWidth, apps.wallHeight);
+    // App watcher
+    appWatcher = new AppWatcher();
      
     // Agents.
     agents = new ArrayList();
@@ -18,20 +19,29 @@ class World {
        agents.add(new Insect(l, new DNA(), agentScale));
     }
     
+    // Apps
+    flowers = new ArrayList(); 
+    createFlowers(numFood);
+    
+    
     // Keep track of iterations.
     generation = 0; 
   }
   
   void run() {
-    // Run the apps.
-    if (showEye) {
-      apps.run(); 
+    // App watcher
+    if (showAppWatcher) {
+      appWatcher.run(); 
     }
     
-    // Deal with natural food.  
-    food.run();
+    // Apps
+    for (Flower f : flowers) {
+      if (!f.isEaten) {  
+        f.run();
+      }
+    }
 
-    // Handle agents display, eating, reproduction
+    // Agents: Handle agents display, eating, reproduction
     for (int i = agents.size()-1; i >= 0; i--) {
       Insect a = agents.get(i);
       
@@ -40,21 +50,16 @@ class World {
       
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
-      a.run(food, agents, amp);
+      a.run(flowers, agents, amp);
       a.display();
       
       // Health of the agent.
       if (a.dead()) { // Is it dead? 
         agents.remove(i); 
       }
-      
-      
-      //Insect child = a.reproduce(); 
-      //if (child != null) {
-      //  agents.add(child);
-      //}
     }
     
+    // Release more agents. TODO: Automate this through reproduction. 
     if (releaseAgents) {
       for (int i = 0; i < 20; i++) {
         PVector l = new PVector(0, 0);
@@ -63,19 +68,19 @@ class World {
       releaseAgents = false; 
     }
     
+    // Create more apps. TODO: Automate this through app watcher. 
+    // This should be controlled by the app watcher. 
     if (createFood) {
-     // Find how many are already eaten. 
-     // Choose a random number between 0, already eaten
-     // Now, go back through the food
-     // Assign the one that's eaten a new position, update isEaten flag
+      
+     // Calculate food already eaten. 
      int numEaten = 0; 
-     for (Flower f : food.flowers) {
+     for (Flower f : flowers) {
        numEaten = f.isEaten ? numEaten + 1 : numEaten; 
      }
      
+     // Reset already eaten food. 
      int foodsToGenerate = numEaten; 
-     print("Foods to Generate: " + foodsToGenerate); 
-     for (Flower f : food.flowers) {
+     for (Flower f : flowers) {
        if (f.isEaten) {
         // I can update this. 
         PVector newPos = getNewFlower(f.flowerWidth, f.flowerHeight); 
@@ -96,6 +101,15 @@ class World {
     generation++; 
   }
   
+  void createFlowers(int num) {
+   // Dummy flower to calculate the height and width. 
+   Flower f = new Flower(new PVector(0, 0), flowerScale); 
+   
+   for (int i = 0; i < num; i++) {
+     PVector position = getNewFlower(f.flowerWidth, f.flowerHeight);
+     flowers.add(new Flower(position, flowerScale));
+   }
+  }
    
   PVector getNewFlower(int flowerWidth, int flowerHeight) {
     PVector position; boolean a; 
@@ -115,9 +129,9 @@ class World {
     int newBottom = int(position.y + h);
     
     // Check with all the existing flower.
-    for (int i = 0; i < food.flowers.size(); i++) {
+    for (int i = 0; i < flowers.size(); i++) {
       // Existing Flower dimensions. 
-      Flower f = food.flowers.get(i); 
+      Flower f = flowers.get(i); 
       int oldTopRight = int(f.position.x + w); 
       int oldBottom = int(f.position.y + h); 
       
@@ -132,37 +146,6 @@ class World {
         return a;  
       }
     }
-    
-    // Intersecting with another brick?
-    //for (int j = 0; j < bricks.size(); j++) {
-    //  PixelBrick brick = bricks.get(j); 
-    //  int brickW = brick.pixWidth * brick.cols; int brickH = brick.pixWidth * brick.rows;  
-    //  int oldTopRight = int(brick.position.x + brickW); 
-    //  int oldBottom = int(brick.position.y + brickH);
-      
-    //  boolean a = (oldTopRight > position.x && 
-    //    brick.position.x < newTopRight && 
-    //      oldBottom > position.y && 
-    //        brick.position.y < newBottom); 
-    //  if (a) {
-    //   return a;  
-    //  }
-    //}
-    
-    // Intersecting with the app wall? 
-    //PVector center = new PVector(width/2, height/2); 
-    //PVector dir = PVector.sub(position, center); 
-    
-    //float heading = dir.heading(); 
-    //// Vector on the edge of the ellipse
-    //PVector v = new PVector(width/2 + appsWallWidth/2 * cos(heading), height/2 + appsWallHeight/2 * sin(heading)); 
-    //float maxD = PVector.dist(v, center);
-    
-    
-    //float d = PVector.dist(center, position); 
-    //if (d < maxD + h/2) {
-    // return true; 
-    //}
     
     return false; 
   }
