@@ -81,6 +81,7 @@ class World {
         PVector newPos = getNewFlower(f.flowerWidth, f.flowerHeight); 
         f.position.x = newPos.x; f.position.y = newPos.y;
         f.isEaten = false; 
+        f.createHead();
         f.assignShader();
         foodsToGenerate--; 
        }
