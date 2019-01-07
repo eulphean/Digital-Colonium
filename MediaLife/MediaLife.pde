@@ -95,7 +95,6 @@ void setup() {
 
   // Setup sound. 
   sound = new Sound(this); 
-  sound.sampleRate(60000);
 }
 
 void draw() { 
