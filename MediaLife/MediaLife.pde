@@ -57,6 +57,8 @@ boolean debug;
 boolean healthStats;
 boolean turnOnVision;
 boolean releaseAgents; 
+boolean showEye; 
+boolean createFood; 
 
 // Sound
 Sound sound; 
@@ -64,28 +66,22 @@ Sound sound;
 // Initialize a world
 World world;
 
-// SVG files. 
-File [] files;
-
-// Background image
-PImage bg;
-PShader shade; 
-
-// Shaders. 
-String[] shaders = new String[] {
-    "brcosa.glsl", "hue.glsl", "pixelate.glsl", "blur.glsl", 
-    "channels.glsl", "threshold.glsl", "neon.glsl", "edges.glsl", "pixelrolls.glsl", 
-    "modcolor.glsl", "halftone.glsl", "halftone_cmyk.glsl", "invert.glsl"};
-
-
 // Sketch applet pointer
 PApplet sketchPointer = this; 
+
+// Factories for Shaders and Icons. 
+ShaderFactory shaderFactory;
+IconFactory iconFactory; 
 
 void setup() {
   fullScreen(P2D);
 
   // Run some code when the sketch closes. 
   prepareExitHandler();
+  
+  // Load all shaders and icons inside the factory. 
+  shaderFactory = new ShaderFactory();
+  iconFactory = new IconFactory();
 
   // Initialize GUI flags. 
   hideGui = false; 
@@ -95,10 +91,8 @@ void setup() {
   healthStats = false; 
   turnOnVision = false;
   releaseAgents = false;
-  
-  // Read all the files. 
-  String path = dataPath("SVG"); 
-  files = listFiles(path);
+  showEye = false; 
+  createFood = false; 
   
   // GUI stuff. 
   initializeGui();
@@ -110,12 +104,6 @@ void setup() {
   // Setup sound. 
   sound = new Sound(this); 
   sound.sampleRate(60000);
-  
-  // Load background image. 
-  //bg = loadImage("background.png"); 
-  
-  shade = loadShader(shaders[4]);
-
 }
 
 void draw() { 
@@ -138,7 +126,7 @@ void draw() {
     g1.show(); 
     //pushStyle();
     //color c = color(255);
-    println("Frame rate: " + frameRate);
+    // println("Frame rate: " + frameRate);
     //fill(c);
     //textSize(15);
     // Generation
@@ -299,6 +287,14 @@ void keyPressed() {
 
   if (key == ' ') {
     releaseAgents = !releaseAgents;
+  }
+  
+  if (key == 'e') {
+    showEye = !showEye;  
+  }
+  
+  if (key == 'f') {
+    createFood = !createFood; 
   }
 }
 

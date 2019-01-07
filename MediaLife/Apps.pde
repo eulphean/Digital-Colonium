@@ -2,7 +2,7 @@ import java.util.Collections;
   
 class Apps {
   // Brick stuff. 
-  ArrayList<PShape> logos; 
+  ArrayList<Icon> icons; 
   PGraphics logoWall; 
   PGraphics ellipse; 
   int numRows = 4; int numCols = 20; 
@@ -10,18 +10,19 @@ class Apps {
   int wallWidth; int wallHeight;
   long shuffleTime; 
   
-  PShader shade; 
+  Shade shader; 
   int idxShader; 
   long effectTime; 
   
   Apps() {
+    // Get the shader at specific index. 
     idxShader = 4; 
-    shade = loadShader(shaders[idxShader]);
+    shader = shaderFactory.getShaderAtIdx(idxShader); 
     
     // Logo brick dimensions.
     wallWidth = numCols*svgSize; wallHeight = numRows*svgSize; 
     logoWall = createGraphics(svgSize*numCols, svgSize*numRows);
-    logos = new ArrayList(); 
+    icons = iconFactory.getAllIcons(); 
     
     prepareAppWall(); 
     
@@ -39,32 +40,23 @@ class Apps {
     }
     
     // Should update the effect? 
-    if (millis() - effectTime > 5000) {
-      //idxShader = (idxShader + shaders.length - 1) % shaders.length;'
-      //idxShader = floor(random(shaders.length-1));
-      idxShader = 4; 
-      shade = loadShader(shaders[idxShader]); 
-      effectTime = millis();
-    }
+    //if (millis() - effectTime > 5000) {
+    //  //idxShader = (idxShader + shaders.length - 1) % shaders.length;'
+    //  //idxShader = floor(random(shaders.length-1));
+    //  effectTime = millis();
+    //}
     
     showApps(); 
   }
   
   void showApps() {
     int x = width - wallWidth; int y = height - wallHeight; 
-    shader(shade);
+    shader(shader.shade);
     image(logoWall, x/2, y/2);
     resetShader();
   }
   
-  void prepareAppWall() {
-    // Load all the logos. 
-    for (File f : files) {
-      // Only load SVG files. 
-      String fileName = f.getAbsolutePath(); 
-      logos.add(loadShape(fileName)); 
-    }
-    
+  void prepareAppWall() {    
     createMask(); 
     drawAppsOffscreen();
   }
@@ -87,7 +79,7 @@ class Apps {
       for (int x = 0; x < numCols; x++) {
        for (int y = 0; y < numRows; y++) {
          int idx = x + numCols * y;
-         PShape img = logos.get(idx); 
+         PShape img = icons.get(idx).ic;  
          logoWall.shape(img, x*svgSize, y*svgSize, svgSize, svgSize); 
        }
       }
@@ -97,12 +89,14 @@ class Apps {
   }
 
   void shuffleApps() {
-    Collections.shuffle(logos);
+    Collections.shuffle(icons);
     drawAppsOffscreen();
   }
   
   void updateShaderParams() 
   {
+    PShader shade = shader.shade; 
+    
     float offset = 2*PI; 
     float x = cos(frameCount/offset); float y = sin(frameCount/offset);
     

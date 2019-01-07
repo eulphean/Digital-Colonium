@@ -5,9 +5,10 @@ class Flower {
   int flowerHeight; int flowerWidth; 
   float scale; 
   color petalColor;
-  PGraphics h; PShape icon; 
+  PGraphics h; Icon icon; 
   PVector centerHead, base;
-  PShader shade; int idxShader;
+  boolean isEaten; 
+  Shade shader; int idxShader;
   
   Flower(PVector pos, float s) {
     rot = 0; 
@@ -23,22 +24,24 @@ class Flower {
     createHead(); 
     
     // Shader 
-    idxShader = floor(random(shaders.length-1));
-    shade = loadShader(shaders[idxShader]); 
+    assignShader();
+    
+    // Eaten 
+    isEaten = false;
   }
   
   void createHead() {
-    int randIdx = floor(random(0, files.length)); 
-    icon = loadShape(files[randIdx].getAbsolutePath()); 
+    icon = iconFactory.getRandomIcon(); 
     h = createGraphics(flowerWidth, flowerWidth); 
     h.beginDraw();
     h.fill(0); 
-    h.shape(icon,0, 0, flowerWidth, flowerWidth);  
+    h.shape(icon.ic,0, 0, flowerWidth, flowerWidth);  
     h.endDraw();
   }
   
-  void run() {
+  void run() {    
     updateShaderParams();
+    
     pushMatrix();
       pushStyle();
       translate(position.x, position.y);
@@ -48,8 +51,7 @@ class Flower {
       //// Enable this for debugging. 
       //color c = color(255, 255, 255, 0); 
       //fill(c);
-      //stroke(0); 
-      
+      //stroke(0);
       //rect(0, 0, flowerWidth, flowerHeight); 
       
       // Smooth flower face. 
@@ -81,8 +83,8 @@ class Flower {
       popStyle();
       
       pushMatrix(); 
-       translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3); 
-       shader(shade);
+       translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3);
+       shader(shader.shade);
        image(h, 0, 0); 
        resetShader();
       popMatrix();
@@ -90,8 +92,16 @@ class Flower {
     popMatrix();
   } 
   
+  void assignShader() {
+    idxShader = floor(random(shaderFactory.shaders.length)); 
+    shader = shaderFactory.getShaderAtIdx(idxShader);
+  }
+  
   void updateShaderParams() 
   {
+    // Store a local copy of the shader from the object to modify.
+    PShader shade = shader.shade; 
+    
     float offset = 2*PI; 
     float x = cos(frameCount/offset); float y = sin(frameCount/offset); 
     // brcosa

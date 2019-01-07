@@ -195,22 +195,25 @@ class Agent {
     // Are we touching any food objects?
     for (int i = flowers.size()-1; i >= 0; i--) {
       Flower fl = flowers.get(i);
-      float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
-      PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
-      float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
-      if (d < flWidth/2) {
-        curBodyHealth += 20; // 20 units/flower 
-        bodyColor = fl.petalColor; // Color transfer from flower to insect
-        flowers.remove(i);
-        
-        // Ring & pass it through an envelope 
-        osc.play(midiToFreq(midi), amp);
-        env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
-        
-        // Chance to create a new flower when one is created. 
-        //if (random(1) < 0.90) {
-        // f.createFlowers(1); 
-        //} 
+      if (!fl.isEaten) {
+        float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
+        PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
+        float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
+        if (d < flWidth/2) {
+          curBodyHealth += 20; // 20 units/flower 
+          bodyColor = fl.petalColor; // Color transfer from flower to insect
+          //flowers.remove(i);
+          fl.isEaten = true; 
+          
+          // Ring & pass it through an envelope 
+          osc.play(midiToFreq(midi), amp);
+          env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
+          
+          // Chance to create a new flower when one is created. 
+          //if (random(1) < 0.90) {
+          // f.createFlowers(1); 
+          //} 
+        }
       }
     }
   }
@@ -424,13 +427,15 @@ class Agent {
     
     // Find the closest food particle.
     for (Flower fl : f.flowers) {
-       PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
-       // Calculate the minimum distance to food
-       float d = PVector.dist(position, center); 
-       if (d < maxFoodPerceptionRad) {
-         if (d < minD) {
-           minD = d;   
-           target = center; 
+       if (!fl.isEaten) {
+         PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
+         // Calculate the minimum distance to food
+         float d = PVector.dist(position, center); 
+         if (d < maxFoodPerceptionRad) {
+           if (d < minD) {
+             minD = d;   
+             target = center; 
+           }
          }
        }
     }

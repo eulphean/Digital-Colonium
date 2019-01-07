@@ -21,6 +21,7 @@ class Food {
    Flower f = new Flower(new PVector(0, 0), scale); 
    
    for (int i = 0; i < num; i++) {
+     //PVector position = new PVector(int(random(width-f.flowerWidth/2)), int(random(height-f.flowerHeight/2)));
      PVector position = getNewFlower(f.flowerWidth, f.flowerHeight);
      flowers.add(new Flower(position, scale));
    }
@@ -123,7 +124,9 @@ class Food {
   void run() {
    // Show flowers.  
    for (Flower f: flowers) { 
-     f.run();
+     if (!f.isEaten) {
+       f.run();
+     }
    }
   }
 }
