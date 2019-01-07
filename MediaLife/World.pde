@@ -1,12 +1,12 @@
 // Maintain the entire world. 
 // Insects, Flowers, and the App watcher. 
+// World schedules when the app watcher opens. 
 
 class World { 
   ArrayList<Insect> agents;
   AppWatcher appWatcher;
   ArrayList<Flower> flowers; // Apps
   int generation;
- 
 
   World(int numAgents, int numFood) {
     // App watcher
@@ -30,9 +30,7 @@ class World {
   
   void run() {
     // App watcher
-    if (showAppWatcher) {
-      appWatcher.run(); 
-    }
+    appWatcher.run(); 
     
     // Apps
     for (Flower f : flowers) {
@@ -68,34 +66,9 @@ class World {
       releaseAgents = false; 
     }
     
-    // Create more apps. TODO: Automate this through app watcher. 
-    // This should be controlled by the app watcher. 
-    if (createFood) {
-      
-     // Calculate food already eaten. 
-     int numEaten = 0; 
-     for (Flower f : flowers) {
-       numEaten = f.isEaten ? numEaten + 1 : numEaten; 
-     }
-     
-     // Reset already eaten food. 
-     int foodsToGenerate = numEaten; 
-     for (Flower f : flowers) {
-       if (f.isEaten) {
-        // I can update this. 
-        PVector newPos = getNewFlower(f.flowerWidth, f.flowerHeight); 
-        f.position.x = newPos.x; f.position.y = newPos.y;
-        f.isEaten = false; 
-        f.createHead();
-        f.assignShader();
-        foodsToGenerate--; 
-       }
-       
-       if (foodsToGenerate == 0) {
-        break; // Break out of the for loop.  
-       }
-     }
-     createFood = false; 
+    if (appWatcher.createFood) {
+     createNewFood();
+     appWatcher.createFood = false;
     }
     
     generation++; 
@@ -108,6 +81,33 @@ class World {
    for (int i = 0; i < num; i++) {
      PVector position = getNewFlower(f.flowerWidth, f.flowerHeight);
      flowers.add(new Flower(position, flowerScale));
+   }
+  }
+  
+  void createNewFood() {
+   // Calculate food already eaten. 
+   int numEaten = 0; 
+   for (Flower f : flowers) {
+     numEaten = f.isEaten ? numEaten + 1 : numEaten; 
+   }
+   
+   // Reset already eaten food. Don't reset the entire food. 
+   int foodsToGenerate = floor(random(1, numEaten)); 
+   println("New foods to generate: " + foodsToGenerate);
+   for (Flower f : flowers) {
+     if (f.isEaten) {
+      // I can update this. 
+      PVector newPos = getNewFlower(f.flowerWidth, f.flowerHeight); 
+      f.position.x = newPos.x; f.position.y = newPos.y;
+      f.isEaten = false; 
+      f.createHead();
+      f.assignShader();
+      foodsToGenerate--; 
+     }
+     
+     if (foodsToGenerate == 0) {
+      break; // Break out of the for loop.  
+     }
    }
   }
    

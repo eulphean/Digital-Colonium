@@ -50,7 +50,6 @@ boolean healthStats;
 boolean turnOnVision;
 boolean releaseAgents; 
 boolean showAppWatcher; 
-boolean createFood; 
 
 // Sound
 Sound sound; 
@@ -84,7 +83,6 @@ void setup() {
   turnOnVision = false;
   releaseAgents = false;
   showAppWatcher = false; 
-  createFood = false; 
   
   // GUI stuff. 
   initializeGui();
@@ -113,11 +111,12 @@ void draw() {
 
   if (hideGui) {
     g1.hide();
+    //println("Frame rate: " + frameRate);
   } else {
     g1.show(); 
     //pushStyle();
     //color c = color(255);
-    // println("Frame rate: " + frameRate);
+     
     //fill(c);
     //textSize(15);
     // Generation
@@ -257,11 +256,7 @@ void keyPressed() {
   }
   
   if (key == 'e') {
-    showAppWatcher = !showAppWatcher;  
-  }
-  
-  if (key == 'f') {
-    createFood = !createFood; 
+    showAppWatcher = true; 
   }
 }
 

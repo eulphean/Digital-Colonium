@@ -1,52 +1,102 @@
 import java.util.Collections; 
-  
+
 class AppWatcher {
   // Brick stuff. 
   ArrayList<Icon> icons; 
   PGraphics logoWall; 
   PGraphics ellipse; 
-  int numRows = 4; int numCols = 20; 
-  int svgSize = 60; // width = height
+  int numRows; int numCols; 
+  int svgSize; // width = height
   int wallWidth; int wallHeight;
-  long shuffleTime; 
   
+  long shuffleTime; 
+
+  // Shader parameters. 
   Shade shader; 
   int idxShader; 
   long effectTime; 
   
+  // Animation stufff. 
+  int aniCounter; int aniPeriod; // Animation counter
+  boolean isAnimating, isWaitingInitialized;
+  long waitTime; long timeToWait;
+  
+  // Food stuff. 
+  boolean createFood; long timeToCreateFood; 
+  
   AppWatcher() {
+    // SVG params. 
+    numRows = 4; numCols = 20; svgSize = 60; 
+    
+    
     // Get the shader at specific index. 
     idxShader = 4; 
     shader = shaderFactory.getShaderAtIdx(idxShader); 
     
+    // Animation 
+    aniCounter = 0; // Defines the change of state. 
+    aniPeriod = 500; // 500 frames long animation.
+    isAnimating = true; isWaitingInitialized = false;
+    timeToWait = 4000; 
+    
+    // Food. 
+    createFood = false; 
+    
     // Logo brick dimensions.
     wallWidth = numCols*svgSize; wallHeight = numRows*svgSize; 
     logoWall = createGraphics(svgSize*numCols, svgSize*numRows);
-    icons = iconFactory.getAllIcons(); 
-    
-    prepareAppWall(); 
+    icons = iconFactory.getAllIcons();  
     
     // Reset times
     shuffleTime = millis(); effectTime = millis();
+    
+    // App wall and mask it with the shape. 
+    drawAppsOffscreen();
   }
   
   void run() {
-    updateShaderParams(); 
-  
-    // Should shuffle the apps? 
-    if (millis() - shuffleTime > 500) {
-     shuffleApps(); 
-     shuffleTime = millis(); 
+    // Don't draw this when not required. 
+    if (showAppWatcher) {
+      updateShaderParams();
+      
+      // Update the shape. 
+      if (isAnimating) {
+       updateMaskShape(); 
+       aniCounter++;
+      }   
+      
+      // Do an alpha mask. 
+      logoWall.mask(ellipse);
+      
+      // Actual draw logic. 
+      showApps();  
+      
+      shuffleApps();
+      updateShader();
+      
+      // Evaluate animation state. 
+      checkAnimation();
     }
-    
-    // Should update the effect? 
-    //if (millis() - effectTime > 5000) {
-    //  //idxShader = (idxShader + shaders.length - 1) % shaders.length;'
-    //  //idxShader = floor(random(shaders.length-1));
-    //  effectTime = millis();
-    //}
-    
-    showApps(); 
+  }
+  
+  void checkAnimation(){
+    // Done with 1 period of animation. 
+    if (aniCounter%aniPeriod == 0) {
+      showAppWatcher = false; 
+    } else if (aniCounter%(aniPeriod/2)==0) { // Eye fully open 
+      isAnimating = false;
+      
+      // Begin waiting. At some point, food must be created. 
+      if (!isWaitingInitialized) {
+        createFood = true;
+        waitTime = millis();
+        isWaitingInitialized = true;
+        timeToCreateFood = floor(random(1, timeToWait-1000));
+      } else if (millis() - waitTime > timeToWait) {
+        isAnimating = true; 
+        isWaitingInitialized = false;
+      }
+    }
   }
   
   void showApps() {
@@ -55,13 +105,8 @@ class AppWatcher {
     image(logoWall, x/2, y/2);
     resetShader();
   }
-  
-  void prepareAppWall() {    
-    createMask(); 
-    drawAppsOffscreen();
-  }
  
-  void createMask() {
+  void updateMaskShape() {
     ellipse = createGraphics(wallWidth, wallHeight); 
     ellipse.beginDraw(); 
     ellipse.background(0);
@@ -69,8 +114,13 @@ class AppWatcher {
     ellipse.fill(255); 
     noStroke();
     ellipse.smooth();
-    ellipse.ellipse(wallWidth/2, wallHeight/2, wallWidth, wallHeight); 
-    ellipse.endDraw(); 
+    
+    // Starts at 0 right now. 
+    float val = cos(TWO_PI*aniCounter/500);
+    int ellipseHeight = int(map(val, -1, 1, wallHeight, 0));
+    
+    ellipse.ellipse(wallWidth/2, wallHeight/2, wallWidth, ellipseHeight); 
+    ellipse.endDraw();
   }
   
   void drawAppsOffscreen() {
@@ -84,13 +134,22 @@ class AppWatcher {
        }
       }
     logoWall.endDraw();
-    // Do an alpha mask. 
-    logoWall.mask(ellipse);
   }
 
   void shuffleApps() {
-    Collections.shuffle(icons);
-    drawAppsOffscreen();
+    if (millis() - shuffleTime > 500) { 
+      shuffleTime = millis(); 
+      Collections.shuffle(icons);
+      drawAppsOffscreen();
+    }
+  }
+  
+  void updateShader() {
+    //if (millis() - effectTime > 5000) {
+    //  idxShader = (idxShader + shaders.length - 1) % shaders.length;
+    //  idxShader = floor(random(shaders.length-1));
+    //  effectTime = millis();
+    //}   
   }
   
   // Shader params for the appWatcher

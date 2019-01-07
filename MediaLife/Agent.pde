@@ -159,7 +159,6 @@ class Agent {
           bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
           
-          println("Ringing");
           // Ring & pass it through an envelope 
           osc.play(midiToFreq(midi), amp);
           env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 

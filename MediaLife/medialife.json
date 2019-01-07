@@ -27,7 +27,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 405
+    "value": 394.9999694824219
   },
   "/aheadDistance": {
     "min": 0,
