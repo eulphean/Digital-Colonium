@@ -1,19 +1,25 @@
 // Natural food. 
 class Flower {
-  PVector position; 
+  PVector position;
+  PVector aniPosition; // Postion to use when it's animating
   int rot;
   int flowerHeight; int flowerWidth; 
   float scale; 
   color petalColor;
   PGraphics h; Icon icon; 
   PVector centerHead, base;
-  boolean isEaten; 
+  boolean isEaten, isReady; 
   Shade shader; int idxShader;
   
+  // Animating stuff.
+  Ani xPosAni, yPosAni;
+  boolean xDoneAnimating, yDoneAnimating; 
+
   Flower(PVector pos, float s) {
     rot = 0; 
     scale = s; 
     position = pos; 
+    aniPosition = new PVector(0, 0); // Used during animation.
     flowerHeight = int(70*s);
     flowerWidth = int(50*s);
     petalColor = color(random(255), random(255), random(255));
@@ -26,8 +32,9 @@ class Flower {
     // Shader 
     assignShader();
     
-    // Eaten 
+    // Eaten and ready to be evaluated? 
     isEaten = false;
+    isReady = true;
   }
   
   void createHead() {
@@ -44,7 +51,11 @@ class Flower {
     
     pushMatrix();
       pushStyle();
-      translate(position.x, position.y);
+      if (isReady) {
+        translate(position.x, position.y);
+      } else {
+        translate(aniPosition.x, aniPosition.y); 
+      }
       scale(scale, scale);
       
       //// Draw the bounding box
@@ -91,6 +102,32 @@ class Flower {
       popStyle();
     popMatrix();
   } 
+  
+  boolean isThere() {
+   return isReady && !isEaten;  
+  }
+  
+  void fly (PVector target, Easing easing) {
+   xPosAni = new Ani(aniPosition, 5.0f, "x", target.x); 
+   xPosAni.setEasing(easing); 
+   xPosAni.setCallbackObject(this); 
+   xPosAni.setCallback("onEnd:xDoneAnimating");
+   
+   yPosAni = new Ani(aniPosition, 5.0f, "y", target.y); 
+   yPosAni.setEasing(easing); 
+   yPosAni.setCallbackObject(this); 
+   yPosAni.setCallback("onEnd:yDoneAnimating");
+  }
+  
+  void xDoneAnimating() {
+   xDoneAnimating = true; 
+   isReady = yDoneAnimating; 
+  }
+  
+  void yDoneAnimating() {
+   yDoneAnimating = true;
+   isReady = xDoneAnimating;
+  }
   
   void assignShader() {
     idxShader = floor(random(shaderFactory.shaders.length)); 

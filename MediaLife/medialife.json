@@ -27,7 +27,7 @@
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 394.9999694824219
+    "value": 405
   },
   "/aheadDistance": {
     "min": 0,
@@ -47,11 +47,11 @@
   "/foodW": {
     "min": 0,
     "max": 2,
-    "value": 1.5
+    "value": 0.8799999952316284
   },
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 50
+    "value": 39.999996185302734
   }
 }

@@ -149,8 +149,8 @@ class Agent {
     // Are we touching any food objects that are not eaten? 
     for (int i = flowers.size()-1; i >= 0; i--) {
       Flower fl = flowers.get(i);
-      // Only check this flower if it's not eaten before. 
-      if (!fl.isEaten) {
+      // Only check this flower is there. 
+      if (fl.isThere()) {
         float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
         PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
         float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
@@ -313,7 +313,6 @@ class Agent {
     return steer; 
   }
  
-  
   // Checks for nearby boids and steers away. 
   PVector seperation(ArrayList<Insect> agents) {
     PVector sum, steer; 
@@ -352,7 +351,7 @@ class Agent {
     
     // Find the closest food particle.
     for (Flower fl : flowers) {
-       if (!fl.isEaten) {
+       if (fl.isThere()) {
          PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
          // Calculate the minimum distance to food
          float d = PVector.dist(position, center); 

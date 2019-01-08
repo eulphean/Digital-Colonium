@@ -8,6 +8,7 @@ class AppWatcher {
   int numRows; int numCols; 
   int svgSize; // width = height
   int wallWidth; int wallHeight;
+  PVector position; // Image position from the corner since it's drawn as an Image. 
   
   long shuffleTime; 
 
@@ -24,13 +25,16 @@ class AppWatcher {
   // Food stuff. 
   boolean createFood; long timeToCreateFood; 
   
+  // Time
+  long appWatcherTime; long appWatcherWait;
+  
   AppWatcher() {
     // SVG params. 
-    numRows = 4; numCols = 20; svgSize = 60; 
+    numRows = 5; numCols = 16; svgSize = 30; 
     
     
     // Get the shader at specific index. 
-    idxShader = 4; 
+    idxShader = floor(random(shaderFactory.shaders.length)); 
     shader = shaderFactory.getShaderAtIdx(idxShader); 
     
     // Animation 
@@ -49,6 +53,13 @@ class AppWatcher {
     
     // Reset times
     shuffleTime = millis(); effectTime = millis();
+    
+    // App Watcher Position.
+    position = new PVector(0, 0); 
+    updatePosition(); 
+    
+    //
+    appWatcherTime = millis(); appWatcherWait = floor(random(5000, 10000));
     
     // App wall and mask it with the shape. 
     drawAppsOffscreen();
@@ -72,10 +83,11 @@ class AppWatcher {
       showApps();  
       
       shuffleApps();
-      updateShader();
       
       // Evaluate animation state. 
       checkAnimation();
+    } else if (millis() - appWatcherTime > appWatcherWait) {
+      showAppWatcher = true; 
     }
   }
   
@@ -83,6 +95,18 @@ class AppWatcher {
     // Done with 1 period of animation. 
     if (aniCounter%aniPeriod == 0) {
       showAppWatcher = false; 
+      
+      // Load shader for next time eye opens. 
+      idxShader = floor(random(shaderFactory.shaders.length)); 
+      shader = shaderFactory.getShaderAtIdx(idxShader);
+      
+      // Reset tie
+      appWatcherTime = millis(); 
+      appWatcherWait = floor(random(5000, 10000)); 
+      
+      // Assign eye a new position. 
+      updatePosition();
+      
     } else if (aniCounter%(aniPeriod/2)==0) { // Eye fully open 
       isAnimating = false;
       
@@ -100,9 +124,9 @@ class AppWatcher {
   }
   
   void showApps() {
-    int x = width - wallWidth; int y = height - wallHeight; 
+    // Image needs to be drawn at a specific position. 
     shader(shader.shade);
-    image(logoWall, x/2, y/2);
+    image(logoWall, position.x, position.y);
     resetShader();
   }
  
@@ -137,19 +161,16 @@ class AppWatcher {
   }
 
   void shuffleApps() {
-    if (millis() - shuffleTime > 500) { 
+    if (millis() - shuffleTime > 100) { 
       shuffleTime = millis(); 
       Collections.shuffle(icons);
       drawAppsOffscreen();
     }
   }
   
-  void updateShader() {
-    //if (millis() - effectTime > 5000) {
-    //  idxShader = (idxShader + shaders.length - 1) % shaders.length;
-    //  idxShader = floor(random(shaders.length-1));
-    //  effectTime = millis();
-    //}   
+  void updatePosition() {
+    int x = width - wallWidth; int y = height - wallHeight; 
+    position.x = random(0, x); position.y = random(0, y);
   }
   
   // Shader params for the appWatcher

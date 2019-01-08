@@ -1,5 +1,7 @@
 import controlP5.*; 
 import processing.sound.*;
+import de.looksgood.ani.*;
+import de.looksgood.ani.easing.*;
 
 // Initialize the GUI
 ControlP5 cp5; 
@@ -37,6 +39,13 @@ Slider wanderSlider;
 float volume = 0.5; 
 Slider volumeSlider; 
 
+// Animation easings 
+Easing[] easings = { 
+  Ani.QUAD_OUT, Ani.CUBIC_OUT, Ani.QUART_OUT, Ani.QUINT_OUT, Ani.SINE_OUT, Ani.CIRC_IN, Ani.CIRC_OUT, 
+  Ani.EXPO_IN, Ani.EXPO_OUT, Ani.BACK_IN, Ani.BACK_OUT, Ani.BOUNCE_IN, Ani.BOUNCE_OUT, 
+  Ani.ELASTIC_IN, Ani.ELASTIC_OUT
+};
+
 // Lookead
 float aheadDistance = 30.0; 
 Slider aheadDistanceSlider; 
@@ -66,6 +75,8 @@ IconFactory iconFactory;
 
 void setup() {
   fullScreen(P2D);
+  
+  Ani.init(this);
 
   // Run some code when the sketch closes. 
   prepareExitHandler();

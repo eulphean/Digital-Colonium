@@ -1,16 +1,17 @@
 // Maintain the entire world. 
 // Insects, Flowers, and the App watcher. 
 // World schedules when the app watcher opens. 
-
 class World { 
   ArrayList<Insect> agents;
   AppWatcher appWatcher;
   ArrayList<Flower> flowers; // Apps
   int generation;
+  int totalSystemFood; 
 
   World(int numAgents, int numFood) {
     // App watcher
     appWatcher = new AppWatcher();
+    totalSystemFood = numFood; 
      
     // Agents.
     agents = new ArrayList();
@@ -23,12 +24,11 @@ class World {
     flowers = new ArrayList(); 
     createFlowers(numFood);
     
-    
     // Keep track of iterations.
     generation = 0; 
   }
   
-  void run() {
+  void run() {   
     // App watcher
     appWatcher.run(); 
     
@@ -67,7 +67,7 @@ class World {
     }
     
     if (appWatcher.createFood) {
-     createNewFood();
+     createNewFlowers();
      appWatcher.createFood = false;
     }
     
@@ -84,24 +84,31 @@ class World {
    }
   }
   
-  void createNewFood() {
+  void createNewFlowers() {
    // Calculate food already eaten. 
    int numEaten = 0; 
    for (Flower f : flowers) {
      numEaten = f.isEaten ? numEaten + 1 : numEaten; 
    }
    
-   // Reset already eaten food. Don't reset the entire food. 
-   int foodsToGenerate = floor(random(1, numEaten)); 
+   // Do I really want to create new apps? 
+   int foodsToGenerate = 0; 
+   if (numEaten > 0.35 * totalSystemFood) {
+     foodsToGenerate = floor(random(1, numEaten)); 
+   }
+   
    println("New foods to generate: " + foodsToGenerate);
    for (Flower f : flowers) {
-     if (f.isEaten) {
-      // I can update this. 
-      PVector newPos = getNewFlower(f.flowerWidth, f.flowerHeight); 
-      f.position.x = newPos.x; f.position.y = newPos.y;
-      f.isEaten = false; 
-      f.createHead();
+     if (f.isEaten && foodsToGenerate > 0) {
+      // Create a custom flower, which is not ready until it's animated.  
+      PVector targetPos = getNewFlower(f.flowerWidth, f.flowerHeight); 
+      f.position.x = targetPos.x; f.position.y = targetPos.y; // So, others don't overlap with this. 
+      f.aniPosition.x = appWatcher.position.x + appWatcher.wallWidth/2; f.aniPosition.y = appWatcher.position.y + appWatcher.wallHeight/2; // This position is lerped till the animation completes. 
+      f.isEaten = false; f.isReady = false; 
+      //f.createHead();
       f.assignShader();
+      int idx = (int) random(0, easings.length); 
+      f.fly(targetPos, easings[idx]);
       foodsToGenerate--; 
      }
      
