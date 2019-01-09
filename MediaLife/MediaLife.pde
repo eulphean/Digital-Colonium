@@ -130,7 +130,7 @@ void draw() {
 
   if (hideGui) {
     g1.hide();
-    //println("Frame rate: " + frameRate);
+    println("Frame rate: " + frameRate);
   } else {
     g1.show(); 
     //pushStyle();

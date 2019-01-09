@@ -14,6 +14,8 @@ class Insect extends Agent {
   float bodyHeight; float bodyWidth; 
   ArrayList<PVector> spots; int numSpots;
   
+  PShape body;
+  
   Insect(PVector pos, DNA _dna, float s) {
     // Initialize its base class. 
     super(pos, _dna, 2*s); 
@@ -28,6 +30,11 @@ class Insect extends Agent {
     // Spots
     spots = new ArrayList(); 
     numSpots = 50; 
+    
+    // Create body
+    ellipseMode(CENTER);
+    body = createShape(ELLIPSE, 0, 0, bodyWidth, bodyHeight);
+    body.setFill(color(255, 0, 0)); 
   }
   
   void display() {
@@ -39,9 +46,9 @@ class Insect extends Agent {
       translate(headCenter.x, headCenter.y); 
       rotate(theta);
       scale(scale); 
-      head(); 
+      //head(); 
       legs(); 
-      body();
+      body(theta);
      popMatrix();
    }
   }
@@ -76,16 +83,12 @@ class Insect extends Agent {
     }
   }
   
-  void body() {
-    pushStyle(); 
-      ellipseMode(CENTER); 
-      fill(bodyColor); 
-      noStroke();
-      ellipse(0, bodyHeight/2, bodyWidth, bodyHeight);
-      // Line
-      fill(0); 
-      stroke(0); strokeWeight(1);
-      //line(0, 0, 0, bodyHeight);
-    popStyle();
+  void body(float theta) {
+    pushMatrix(); 
+      translate(0, bodyHeight/2); 
+      body.setFill(bodyColor); 
+      body.setStroke(bodyColor); 
+      shape(body); 
+    popMatrix();
   }
 }
