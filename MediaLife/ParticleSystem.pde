@@ -2,17 +2,26 @@ class Particle {
  PVector position;
  PVector velocity;
  color particleColor; 
+ PShape particle; 
  
  
  Particle() { 
+   ellipseMode(CENTER); 
+   particle = createShape(ELLIPSE, 0, 0, 4, 4);
  }
  
  void run(float alpha) {
    position = position.add(velocity); 
+   particleColor = (particleColor & 0xffffff) | (floor(alpha) << 24); 
    pushStyle();
    noStroke();
-   fill (particleColor, alpha); 
-   ellipse(position.x, position.y, 4, 4); 
+   pushMatrix();
+     translate(position.x, position.y); 
+     particle.setFill(particleColor); 
+     particle.setStroke(particleColor);
+     shape(particle);
+   popMatrix();
+   //ellipse(position.x, position.y, 4, 4); 
    popStyle();
  }
  
@@ -22,6 +31,7 @@ class Particle {
    position.y  = newPos.y;
    velocity = new PVector(random(-1, 1), random(-1, 1)); 
    particleColor = color(random(255), random(255), random(255));
+
  }
 }
 

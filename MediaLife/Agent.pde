@@ -43,7 +43,7 @@ class Agent {
     maxForce = 0.2; 
 
     // Health units. Initial units. 
-    maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
+    maxBodyHealth = 100.0; curBodyHealth = 10;
     
     // DNA
     dna = _dna; 
@@ -107,31 +107,36 @@ class Agent {
     PVector target;
     PVector steer; 
     
+    if (curBodyHealth >= 50) {
+     alignmentWeight = 0; 
+     cohesionWeight = 0;
+     seperationWeight = 2.0;
+    }
+    
     // Seperation between agents. 
     steer = seperation(agents); 
     steer.mult(seperationWeight); 
     applyForce(steer);
     
     steer = align(agents); 
-    steer.mult(alignmentWeight); 
+    steer.mult(alignmentWeight);
     applyForce(steer); 
     
-    steer = cohesion(agents); 
+    steer = cohesion(agents);   
     steer.mult(cohesionWeight); 
     applyForce(steer); 
     
     // Food. 
     target = findFood(f);
     if (target != null) {
-    // float newFoodWeight = map(curBodyHealth, -maxBodyHealth, maxBodyHealth, foodWeight, 0.5); 
+     float newFoodWeight = map(curBodyHealth, 0, maxBodyHealth, foodWeight, 0); 
      steer = seek(target, true /*Arrive*/); 
-     steer.mult(foodWeight); 
+     steer.mult(newFoodWeight); 
      applyForce(steer);
     }
     
     //// Wander if nothing is found or I'm way too healthy or media saturated. 
-    if (target == null || curBodyHealth >= maxBodyHealth) {
-      
+    if (target == null) {
       steer = wander(); 
       steer.mult(wanderingWeight);
       applyForce(steer);
@@ -157,8 +162,8 @@ class Agent {
     // Update ahead vector position. 
     ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     
-    if (curBodyHealth >= -maxBodyHealth) {
-      curBodyHealth -= 0.1;   
+    if (curBodyHealth >= 0) {
+      curBodyHealth -= 0.2;   
     }
   }
   
@@ -178,7 +183,7 @@ class Agent {
         PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
         float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
         if (d < flWidth/2) {
-          curBodyHealth += 20; // 20 units/flower 
+          curBodyHealth += 60; // 20 units/flower 
           bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
           
@@ -217,7 +222,8 @@ class Agent {
   
   // Check for death
   boolean dead() {
-   return curBodyHealth < 0.0; 
+   return false;
+   //return curBodyHealth < 0.0; 
   }
   
   void displayAgent() {
@@ -413,7 +419,7 @@ class Agent {
     float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target = null;
     
-    if (curBodyHealth >= maxBodyHealth) {
+    if (curBodyHealth >= maxBodyHealth/3) {
      return null; 
     }
     
