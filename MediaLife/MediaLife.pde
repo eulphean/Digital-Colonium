@@ -28,12 +28,20 @@ int foodPerceptionRad = 40;
 Slider foodRadSlider; 
 int seperationPerceptionRad = 40; 
 Slider seperationRadSlider; 
+int alignmentPerceptionRad = 50; 
+Slider alignmentRadSlider; 
+int cohesionPerceptionRad = 50; 
+Slider cohesionRadSlider; 
 
 // Weights
 float foodW = 2.0; 
 Slider foodWeightSlider;
 float seperationW = 0.5; 
 Slider seperationWeightSlider; 
+float alignmentW = 0.5; 
+Slider alignmentWeightSlider; 
+float cohesionW = 0.5; 
+Slider cohesionWeightSlider; 
 float wanderingW = 0.5; 
 Slider wanderSlider;
 float volume = 0.5; 
@@ -188,7 +196,7 @@ void initializeGui() {
   foodWeightSlider = cp5.addSlider("foodW")
     .setPosition(0, 120)
     .setSize(100, 20)
-    .setRange(0, 2.0)
+    .setRange(0, 20.0)
     .setValue(foodW)
     .setColorCaptionLabel(color(255))
     .setGroup(g1);
@@ -196,8 +204,24 @@ void initializeGui() {
   seperationWeightSlider = cp5.addSlider("seperationW")
     .setPosition(0, 140)
     .setSize(100, 20)
-    .setRange(0, 1.0)
+    .setRange(0, 10.0)
     .setValue(seperationW)
+    .setColorCaptionLabel(color(255))
+    .setGroup(g1);
+  
+  cohesionWeightSlider = cp5.addSlider("cohesionW")
+    .setPosition(0, 160)
+    .setSize(100, 20)
+    .setRange(0, 5.0)
+    .setValue(cohesionW)
+    .setColorCaptionLabel(color(255))
+    .setGroup(g1);
+    
+  alignmentWeightSlider = cp5.addSlider("alignmentW")
+    .setPosition(0, 180)
+    .setSize(100, 20)
+    .setRange(0, 5.0)
+    .setValue(alignmentW)
     .setColorCaptionLabel(color(255))
     .setGroup(g1);
 
@@ -230,6 +254,22 @@ void initializeGui() {
     .setSize(100, 20)
     .setRange(0, 3.0)
     .setValue(agentScale)
+    .setColorCaptionLabel(color(255))
+    .setGroup(g1);
+  
+  alignmentRadSlider = cp5.addSlider("alignmentPerceptionRad")
+    .setPosition(0, 280)
+    .setSize(100, 20)
+    .setRange(0, 150)
+    .setValue(alignmentPerceptionRad)
+    .setColorCaptionLabel(color(255))
+    .setGroup(g1);
+  
+  cohesionRadSlider = cp5.addSlider("cohesionPerceptionRad")
+    .setPosition(0, 300)
+    .setSize(100, 20)
+    .setRange(0, 150)
+    .setValue(cohesionPerceptionRad)
     .setColorCaptionLabel(color(255))
     .setGroup(g1);
 

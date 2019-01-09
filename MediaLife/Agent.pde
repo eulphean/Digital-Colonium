@@ -5,11 +5,12 @@ class Agent {
   float wandertheta; 
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; float maxSeperationRad; float maxRadius; 
+  float maxFoodPerceptionRad; float maxRadius; 
+  float maxSeperationRad; float maxCohesionRad; float maxAlignmentRad; 
   float maxSpeed; float maxForce; float maxAheadDistance;
   
   // Weights for acccumulating forces on the agent.  
-  float foodWeight; float seperationWeight; float wanderingWeight;
+  float foodWeight; float seperationWeight; float wanderingWeight; float cohesionWeight; float alignmentWeight; 
   
   // Health units. 
   float maxBodyHealth; float curBodyHealth; 
@@ -42,7 +43,7 @@ class Agent {
     maxForce = 0.2; 
 
     // Health units. Initial units. 
-    maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth;
+    maxBodyHealth = 200.0; curBodyHealth = maxBodyHealth/2;
     
     // DNA
     dna = _dna; 
@@ -87,11 +88,16 @@ class Agent {
     // Weights Rad
     foodWeight = foodW; 
     seperationWeight = seperationW; 
+    cohesionWeight = cohesionW; 
+    alignmentWeight = alignmentW; 
     wanderingWeight = wanderingW;
+
     
     // Perception Rad
     maxFoodPerceptionRad = foodPerceptionRad;
     maxSeperationRad = seperationPerceptionRad;
+    maxCohesionRad = cohesionPerceptionRad; // TODO: Have its own param. 
+    maxAlignmentRad = alignmentPerceptionRad; // TODO: Have its own param. 
     
     // Ahead distance
     maxAheadDistance = aheadDistance; 
@@ -106,16 +112,24 @@ class Agent {
     steer.mult(seperationWeight); 
     applyForce(steer);
     
+    steer = align(agents); 
+    steer.mult(alignmentWeight); 
+    applyForce(steer); 
+    
+    steer = cohesion(agents); 
+    steer.mult(cohesionWeight); 
+    applyForce(steer); 
+    
     // Food. 
     target = findFood(f);
     if (target != null) {
-     float newFoodWeight = map(curBodyHealth, -maxBodyHealth, maxBodyHealth, foodWeight, 0.5); 
+    // float newFoodWeight = map(curBodyHealth, -maxBodyHealth, maxBodyHealth, foodWeight, 0.5); 
      steer = seek(target, true /*Arrive*/); 
-     steer.mult(newFoodWeight); 
+     steer.mult(foodWeight); 
      applyForce(steer);
     }
     
-    // Wander if nothing is found or I'm way too healthy or media saturated. 
+    //// Wander if nothing is found or I'm way too healthy or media saturated. 
     if (target == null || curBodyHealth >= maxBodyHealth) {
       
       steer = wander(); 
@@ -351,6 +365,48 @@ class Agent {
     }
     
     return steer;
+  }
+  
+  // Alignment
+  // For every nearby boid in the system, calculate the average velocity
+  PVector align (ArrayList<Insect> agents) {
+    PVector steer = new PVector();
+    int count = 0;
+    for (Agent other : agents) {
+      float d = PVector.dist(position,other.position);
+      if ((d > 0) && (d < maxAlignmentRad)) {
+        steer.add(other.velocity);
+        count++;
+      }
+    }
+    if (count > 0) {
+      steer.div((float)count);
+      // Implement Reynolds: Steering = Desired - Velocity
+      steer.normalize();
+      steer.mult(maxSpeed);
+      steer.sub(velocity);
+      steer.limit(maxForce);
+    }
+    return steer;
+  }
+
+  // Cohesion
+  // For the average position (i.e. center) of all nearby boids, calculate steering vector towards that position
+  PVector cohesion (ArrayList<Insect> agents) {
+    PVector sum = new PVector(0,0);   // Start with empty vector to accumulate all positions
+    int count = 0;
+    for (Agent other : agents) {
+      float d = PVector.dist(position,other.position);
+      if ((d > 0) && (d < maxCohesionRad)) {
+        sum.add(other.position); // Add position
+        count++;
+      }
+    }
+    if (count > 0) {
+      sum.div((float)count);
+      return seek(sum);  // Steer towards the position
+    }
+    return sum;
   }
   
   PVector findFood(ArrayList<Flower> flowers) {
