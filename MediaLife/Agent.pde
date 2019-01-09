@@ -21,6 +21,9 @@ class Agent {
   
   // DNA of the agent. 
   DNA dna; 
+  
+  // Particle systems. 
+  ParticleSystem particles; 
  
   // Init the agent. 
   Agent(PVector pos, DNA _dna, float radius) {
@@ -47,6 +50,9 @@ class Agent {
     // Flower & Media sound. 
     osc = getRandomOscillator(); midi = getRandomMidi(false); amp = 0.0; // Will update from world
     env = new Env(sketchPointer); envVals = getADSRValues(false);
+    
+    // Particles 
+    particles = new ParticleSystem();
   }
   
   void run(ArrayList<Flower> flowers, ArrayList<Insect> agents, float a) {
@@ -71,6 +77,9 @@ class Agent {
     if (displayAgent) {
      displayAgent();
     }
+    
+    // Update particles systems if there are live particles. 
+    particles.run();
   }
  
   
@@ -158,6 +167,9 @@ class Agent {
           curBodyHealth += 20; // 20 units/flower 
           bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
+          
+          // Release particles. 
+          particles.init(center, bodyColor);
           
           // Ring & pass it through an envelope 
           osc.play(midiToFreq(midi), amp);
