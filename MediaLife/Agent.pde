@@ -16,7 +16,7 @@ class Agent {
   float maxBodyHealth; float curBodyHealth; 
   
   // Genotypes. 
-  color bodyColor; color strokeColor; float scale; 
+  color bodyColor; color strokeColor; float scale; float strokeWeight;
   
   float size; 
   
@@ -39,10 +39,10 @@ class Agent {
     maxSpeed = 3.0;
     size = 5.0; // Size for the boid.
     
-    // Initial colors
+    // Genotypes. 
     strokeColor = color(255, 0, 0);
     bodyColor = color(0, 0, 0, 0);
-    scale = s;
+    scale = s; strokeWeight = random(2, 5);
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
@@ -88,7 +88,6 @@ class Agent {
     particles.run();
   }
  
-  
   void updateGuiParameters() {
     // Weights Rad
     foodWeight = foodW; 
@@ -96,7 +95,6 @@ class Agent {
     cohesionWeight = cohesionW; 
     alignmentWeight = alignmentW; 
     wanderingWeight = wanderingW;
-
     
     // Perception Rad
     maxFoodPerceptionRad = foodPerceptionRad;
@@ -189,6 +187,7 @@ class Agent {
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
           strokeColor = color(dna.getColorComp(dna.genes[3]), dna.getColorComp(dna.genes[4]), dna.getColorComp(dna.genes[5]));
           scale = map(dna.genes[6], 0, 1, 1.5, 3.0);
+          strokeWeight = map(dna.genes[7], 0, 1, 4, 13); 
           
           // Release particles. 
           particles.init(center, bodyColor);

@@ -30,7 +30,7 @@ class Figment extends Agent {
       translate(0, bodyHeight/2);
       body.setFill(bodyColor); 
       body.setStroke(strokeColor); 
-      body.strokeWeight(4);
+      body.strokeWeight(strokeWeight);
       shape(body); 
     popMatrix();
   }
