@@ -3,7 +3,7 @@ class DNA {
 
   // The genetic sequence
   float[] genes;
-  int len = 6;
+  int len = 7;
   
   // Constructor (makes a random DNA)
   DNA() {

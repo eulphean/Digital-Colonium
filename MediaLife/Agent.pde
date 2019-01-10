@@ -1,13 +1,13 @@
 class Agent {
   // Not evolving traits. 
-  PVector position; PVector ahead; 
+  PVector position;
   PVector velocity; PVector acceleration;
   float wandertheta; 
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad; float maxRadius; 
+  float maxFoodPerceptionRad;
   float maxSeperationRad; float maxCohesionRad; float maxAlignmentRad; 
-  float maxSpeed; float maxForce; float maxAheadDistance;
+  float maxSpeed; float maxForce;
   
   // Weights for acccumulating forces on the agent.  
   float foodWeight; float seperationWeight; float wanderingWeight; float cohesionWeight; float alignmentWeight; 
@@ -16,7 +16,9 @@ class Agent {
   float maxBodyHealth; float curBodyHealth; 
   
   // Genotypes. 
-  color bodyColor; color strokeColor;
+  color bodyColor; color strokeColor; float scale; 
+  
+  float size; 
   
   // Sound
   Oscillator osc; Env env; float envVals[]; int midi; float amp;
@@ -28,29 +30,28 @@ class Agent {
   ParticleSystem particles; 
  
   // Init the agent. 
-  Agent(PVector pos, float radius) {
+  Agent(PVector pos, float s) {
     position = pos;
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-10,10), random(-10, 10));
-    ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
     wandertheta = 0; 
 
     maxSpeed = 3.0;
-    maxRadius = radius; // Size for the boid.
+    size = 5.0; // Size for the boid.
     
     // Initial colors
     strokeColor = color(255, 0, 0);
     bodyColor = color(0, 0, 0, 0);
+    scale = s;
  
     // TODO: Evolve these parameters. 
-    maxForce = 0.2; 
+    maxForce = 0.15; 
 
     // Health units. Initial units. 
-    maxBodyHealth = 100.0; curBodyHealth = 10;
+    maxBodyHealth = 100.0; curBodyHealth = 20;
     
     // DNA
-    dna = new DNA(); 
-    // Body color is determined by the DNA. 
+    dna = new DNA();  
     
     // Flower & Media sound. 
     osc = getRandomOscillator(); midi = getRandomMidi(false); amp = 0.0; // Will update from world
@@ -102,9 +103,6 @@ class Agent {
     maxSeperationRad = seperationPerceptionRad;
     maxCohesionRad = cohesionPerceptionRad; // TODO: Have its own param. 
     maxAlignmentRad = alignmentPerceptionRad; // TODO: Have its own param. 
-    
-    // Ahead distance
-    maxAheadDistance = aheadDistance; 
   }
   
   void behaviors(ArrayList<Flower> f, ArrayList<Figment> agents) {
@@ -162,9 +160,6 @@ class Agent {
     // Reset accelerationelertion to 0 each cycle
     acceleration.mult(0);
     
-    // Update ahead vector position. 
-    ahead = position.copy().add(velocity.copy().normalize().mult(maxAheadDistance));
-    
     if (curBodyHealth >= 0) {
       curBodyHealth -= 0.2;   
     }
@@ -192,7 +187,8 @@ class Agent {
           
           dna.mutate(0.5); // App is consumed, there is a probability for the figment to mutate
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
-          strokeColor = color(dna.getColorComp(dna.genes[2]), dna.getColorComp(dna.genes[3]), dna.getColorComp(dna.genes[4]));
+          strokeColor = color(dna.getColorComp(dna.genes[3]), dna.getColorComp(dna.genes[4]), dna.getColorComp(dna.genes[5]));
+          scale = map(dna.genes[6], 0, 1, 1.5, 3.0);
           
           // Release particles. 
           particles.init(center, bodyColor);
@@ -218,10 +214,10 @@ class Agent {
   }
   
   void wraparound() {
-    if (position.x < -maxRadius) position.x = width+maxRadius;
-    if (position.y < -maxRadius) position.y = height+maxRadius;
-    if (position.x > width+maxRadius) position.x = -maxRadius;
-    if (position.y > height+maxRadius) position.y = -maxRadius;
+    if (position.x < -size) position.x = width+size;
+    if (position.y < -size) position.y = height+size;
+    if (position.x > width+size) position.x = -size;
+    if (position.y > height+size) position.y = -size;
   }
   
   // Check for death
@@ -239,9 +235,9 @@ class Agent {
       translate(position.x,position.y);
       rotate(theta);
       beginShape(TRIANGLES);
-      vertex(0, -maxRadius*2);
-      vertex(-maxRadius, maxRadius*2);
-      vertex(maxRadius, maxRadius*2);
+      vertex(0, 0);
+      vertex(-size, size*2);
+      vertex(size, size*2);
       endShape();
      popStyle();
      
@@ -261,13 +257,7 @@ class Agent {
   
   void displayDebug() {
     // Debug content
-    if (debug) {
-      pushStyle();
-      stroke(255);
-      strokeWeight(3);
-      line(position.x, position.y, ahead.x, ahead.y);
-      popStyle();
-     
+    if (debug) {     
       // Position marker. 
       fill(0, 255, 0);
       ellipse(position.x, position.y, 3, 3);

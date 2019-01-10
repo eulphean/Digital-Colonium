@@ -37,7 +37,7 @@
   "/alignmentW": {
     "min": 0,
     "max": 5,
-    "value": 1.0499999523162842
+    "value": 1.100000023841858
   },
   "/cohesionPerceptionRad": {
     "min": 0,
@@ -52,7 +52,7 @@
   "/cohesionW": {
     "min": 0,
     "max": 5,
-    "value": 0.7999999523162842
+    "value": 0.699999988079071
   },
   "/numFood": {
     "min": 0,
@@ -67,7 +67,7 @@
   "/agentScale": {
     "min": 0,
     "max": 3,
-    "value": 2.0399999618530273
+    "value": 2.18999981880188
   },
   "/numAgents": {
     "min": 0,
