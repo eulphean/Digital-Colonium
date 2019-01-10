@@ -5,7 +5,6 @@ class Flower {
   int rot;
   int flowerHeight; int flowerWidth; 
   float scale; 
-  color petalColor;
   PGraphics h; Icon icon; 
   PVector centerHead, base;
   boolean isEaten, isReady; 
@@ -22,7 +21,6 @@ class Flower {
     aniPosition = new PVector(0, 0); // Used during animation.
     flowerHeight = int(70*s);
     flowerWidth = int(50*s);
-    petalColor = color(random(255), random(255), random(255));
     centerHead = new PVector(flowerWidth/2, flowerHeight/3); 
     base = new PVector(centerHead.x, flowerHeight);
     

@@ -2,7 +2,7 @@
 // Insects, Flowers, and the App watcher. 
 // World schedules when the app watcher opens. 
 class World { 
-  ArrayList<Insect> agents;
+  ArrayList<Figment> agents;
   AppWatcher appWatcher;
   ArrayList<Flower> flowers; // Apps
   int generation;
@@ -17,7 +17,7 @@ class World {
     agents = new ArrayList();
     for (int i = 0; i < numAgents; i++) {
        PVector l = new PVector(0, 0);
-       agents.add(new Insect(l, new DNA(), agentScale));
+       agents.add(new Figment(l, agentScale));
     }
     
     // Apps
@@ -41,7 +41,7 @@ class World {
 
     // Agents: Handle agents display, eating, reproduction
     for (int i = agents.size()-1; i >= 0; i--) {
-      Insect a = agents.get(i);
+      Figment a = agents.get(i);
       
       // Update sound amplitudes (as a cluster) 
       float amp = (2.0 / agents.size());
@@ -61,7 +61,7 @@ class World {
     if (releaseAgents) {
       for (int i = 0; i < 20; i++) {
         PVector l = new PVector(0, 0);
-        agents.add(new Insect(l, new DNA(), agentScale));
+        agents.add(new Figment(l, agentScale));
       }
       releaseAgents = false; 
     }

@@ -1,4 +1,4 @@
-class Insect extends Agent {
+class Figment extends Agent {
   // Organism
   float scale; 
   
@@ -16,9 +16,9 @@ class Insect extends Agent {
   
   PShape body;
   
-  Insect(PVector pos, DNA _dna, float s) {
+  Figment(PVector pos,  float s) {
     // Initialize its base class. 
-    super(pos, _dna, 2*s); 
+    super(pos, 2*s); 
    
     // Head properties. 
     headCenter = pos; 
@@ -87,7 +87,7 @@ class Insect extends Agent {
     pushMatrix(); 
       translate(0, bodyHeight/2); 
       body.setFill(bodyColor); 
-      body.setStroke(bodyColor); 
+      body.setStroke(strokeColor); 
       shape(body); 
     popMatrix();
   }

@@ -15,7 +15,8 @@ class Agent {
   // Health units. 
   float maxBodyHealth; float curBodyHealth; 
   
-  color bodyColor; 
+  // Genotypes. 
+  color bodyColor; color strokeColor;
   
   // Sound
   Oscillator osc; Env env; float envVals[]; int midi; float amp;
@@ -27,7 +28,7 @@ class Agent {
   ParticleSystem particles; 
  
   // Init the agent. 
-  Agent(PVector pos, DNA _dna, float radius) {
+  Agent(PVector pos, float radius) {
     position = pos;
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-10,10), random(-10, 10));
@@ -36,9 +37,11 @@ class Agent {
 
     maxSpeed = 3.0;
     maxRadius = radius; // Size for the boid.
-    bodyColor = color(255, 0, 0);
- 
     
+    // Initial colors
+    strokeColor = color(255, 0, 0);
+    bodyColor = color(0, 0, 0, 0);
+ 
     // TODO: Evolve these parameters. 
     maxForce = 0.2; 
 
@@ -46,7 +49,8 @@ class Agent {
     maxBodyHealth = 100.0; curBodyHealth = 10;
     
     // DNA
-    dna = _dna; 
+    dna = new DNA(); 
+    // Body color is determined by the DNA. 
     
     // Flower & Media sound. 
     osc = getRandomOscillator(); midi = getRandomMidi(false); amp = 0.0; // Will update from world
@@ -56,7 +60,7 @@ class Agent {
     particles = new ParticleSystem();
   }
   
-  void run(ArrayList<Flower> flowers, ArrayList<Insect> agents, float a) {
+  void run(ArrayList<Flower> flowers, ArrayList<Figment> agents, float a) {
     // Newly calculated oscillator amplitude.
     amp = a; 
     
@@ -103,7 +107,7 @@ class Agent {
     maxAheadDistance = aheadDistance; 
   }
   
-  void behaviors(ArrayList<Flower> f, ArrayList<Insect> agents) {
+  void behaviors(ArrayList<Flower> f, ArrayList<Figment> agents) {
     PVector target;
     PVector steer; 
     
@@ -183,8 +187,12 @@ class Agent {
         float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
         if (d < flWidth/2) {
           curBodyHealth += 60; // 20 units/flower 
-          bodyColor = fl.petalColor; // Color transfer from flower to insect
+          //bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
+          
+          dna.mutate(0.5); // App is consumed, there is a probability for the figment to mutate
+          bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
+          strokeColor = color(dna.getColorComp(dna.genes[2]), dna.getColorComp(dna.genes[3]), dna.getColorComp(dna.genes[4]));
           
           // Release particles. 
           particles.init(center, bodyColor);
@@ -198,14 +206,11 @@ class Agent {
   }
   
   // At any moment there is a teeny, tiny chance a bloop will reproduce
-  Insect reproduce() {
+  Figment reproduce() {
     // asexual reproduction
     if (random(1) < 0.0001) {
-      // Child is exact copy of this single parent. 
-      DNA childDNA = dna.copy();
-
       // Child is exact copy of single parent
-      return new Insect(new PVector(0, 0), childDNA, random(1, 3.0));
+      return new Figment(new PVector(0, 0), random(1, 3.0));
     } 
     else {
       return null;
@@ -345,7 +350,7 @@ class Agent {
   }
  
   // Checks for nearby boids and steers away. 
-  PVector seperation(ArrayList<Insect> agents) {
+  PVector seperation(ArrayList<Figment> agents) {
     PVector sum, steer; 
     sum = steer = new PVector();
     int count = 0;
@@ -374,7 +379,7 @@ class Agent {
   
   // Alignment
   // For every nearby boid in the system, calculate the average velocity
-  PVector align (ArrayList<Insect> agents) {
+  PVector align (ArrayList<Figment> agents) {
     PVector steer = new PVector();
     int count = 0;
     for (Agent other : agents) {
@@ -397,7 +402,7 @@ class Agent {
 
   // Cohesion
   // For the average position (i.e. center) of all nearby boids, calculate steering vector towards that position
-  PVector cohesion (ArrayList<Insect> agents) {
+  PVector cohesion (ArrayList<Figment> agents) {
     PVector sum = new PVector(0,0);   // Start with empty vector to accumulate all positions
     int count = 0;
     for (Agent other : agents) {

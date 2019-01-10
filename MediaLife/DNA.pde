@@ -1,13 +1,14 @@
+// Phenotypes: Color (this will mutate each time an app is consumed)
 class DNA {
 
   // The genetic sequence
   float[] genes;
-  int len = 1; // Genotypes in the system.
+  int len = 6;
   
   // Constructor (makes a random DNA)
   DNA() {
     // DNA is random floating point values between 0 and 1 (!!)
-    genes = new float[1];
+    genes = new float[len];
     for (int i = 0; i < genes.length; i++) {
       genes[i] = random(0,1);
     }
@@ -48,5 +49,9 @@ class DNA {
          genes[i] = random(0,1);
       }
     }
+  }
+  
+  int getColorComp(float val) {
+    return floor(map(val, 0, 1, 0, 255)); 
   }
 }
