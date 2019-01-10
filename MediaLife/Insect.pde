@@ -47,7 +47,7 @@ class Insect extends Agent {
       rotate(theta);
       scale(scale); 
       //head(); 
-      legs(); 
+      //legs(); 
       body(theta);
      popMatrix();
    }

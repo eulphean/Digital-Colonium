@@ -110,7 +110,6 @@ class Agent {
     if (curBodyHealth >= 50) {
      alignmentWeight = 0; 
      cohesionWeight = 0;
-     seperationWeight = 2.0;
     }
     
     // Seperation between agents. 

@@ -41,7 +41,7 @@ class AppWatcher {
     aniCounter = 0; // Defines the change of state. 
     aniPeriod = 500; // 500 frames long animation.
     isAnimating = true; isWaitingInitialized = false;
-    timeToWait = 4000; 
+    timeToWait = 3000; 
     
     // Food. 
     createFood = false; 
@@ -58,8 +58,8 @@ class AppWatcher {
     position = new PVector(0, 0); 
     updatePosition(); 
     
-    //
-    appWatcherTime = millis(); appWatcherWait = floor(random(15000, 20000));
+    // First time app watcher
+    appWatcherTime = millis(); appWatcherWait = floor(random(7000, 10000));
     
     // App wall and mask it with the shape. 
     drawAppsOffscreen();

@@ -33,7 +33,7 @@ class Flower {
     assignShader();
     
     // Eaten and ready to be evaluated? 
-    isEaten = false;
+    isEaten = true;
     isReady = true;
   }
   

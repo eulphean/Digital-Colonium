@@ -94,7 +94,9 @@ class World {
    // Do I really want to create new apps? 
    int foodsToGenerate = 0; 
    if (numEaten > 0.35 * totalSystemFood) {
-     foodsToGenerate = floor(random(1, numEaten)); 
+     // Minimum food is the minimum for the number of agents. 
+     // # agents * 2, numEaten
+     foodsToGenerate = floor(random(agents.size() * 2, numEaten)); 
    }
    
    println("New foods to generate: " + foodsToGenerate);

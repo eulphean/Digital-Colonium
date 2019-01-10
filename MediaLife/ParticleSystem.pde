@@ -42,7 +42,7 @@ class ParticleSystem {
   color particleColor;
   
   ParticleSystem() {
-   numParticles = 25;
+   numParticles = 10;
    run = false; 
    alpha = 255; frame = 0; maxFrames = 100; 
    particles = new ArrayList(); 
