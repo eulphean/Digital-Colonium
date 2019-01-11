@@ -30,7 +30,7 @@ class Agent {
   ParticleSystem particles; 
  
   // Init the agent. 
-  Agent(PVector pos, float s) {
+  Agent(PVector pos) {
     position = pos;
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-10,10), random(-10, 10));
@@ -42,7 +42,7 @@ class Agent {
     // Genotypes. 
     strokeColor = color(255, 0, 0);
     bodyColor = color(0, 0, 0, 0);
-    scale = s; strokeWeight = random(2, 5);
+    scale = random(0.5, 2.0); strokeWeight = random(2, 5);
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
@@ -186,7 +186,7 @@ class Agent {
           dna.mutate(0.5); // App is consumed, there is a probability for the figment to mutate
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
           strokeColor = color(dna.getColorComp(dna.genes[3]), dna.getColorComp(dna.genes[4]), dna.getColorComp(dna.genes[5]));
-          scale = map(dna.genes[6], 0, 1, 1.5, 3.0);
+          scale = map(dna.genes[6], 0, 1, 1, 2.0);
           strokeWeight = map(dna.genes[7], 0, 1, 4, 13); 
           
           // Release particles. 
@@ -205,7 +205,7 @@ class Agent {
     // asexual reproduction
     if (random(1) < 0.0001) {
       // Child is exact copy of single parent
-      return new Figment(new PVector(0, 0), random(1, 3.0));
+      return new Figment(new PVector(0, 0));
     } 
     else {
       return null;

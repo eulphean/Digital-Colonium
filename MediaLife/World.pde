@@ -16,9 +16,8 @@ class World {
     // Agents.
     agents = new ArrayList();
     for (int i = 0; i < numAgents; i++) {
-       float scale = random(1.0, 2.5);
        PVector l = new PVector(0, 0);
-       agents.add(new Figment(l, scale));
+       agents.add(new Figment(l));
     }
     
     // Apps
@@ -62,7 +61,7 @@ class World {
     if (releaseAgents) {
       for (int i = 0; i < 20; i++) {
         PVector l = new PVector(0, 0);
-        agents.add(new Figment(l, agentScale));
+        agents.add(new Figment(l));
       }
       releaseAgents = false; 
     }

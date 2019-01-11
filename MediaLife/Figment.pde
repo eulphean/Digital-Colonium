@@ -1,14 +1,18 @@
 class Figment extends Agent {
   int bodyHeight; int bodyWidth; 
-  PShape body; 
+  PShape fig; 
   
-  Figment(PVector pos,  float s) {
+  Figment(PVector pos) {
     // Initialize its base class. 
-    super(pos, s); 
+    super(pos); 
     bodyHeight = 20;
     bodyWidth = bodyHeight/2;
 
-    body = createShape(ELLIPSE, 0, 0, 10, 20); 
+    // Base shape. 
+    fig = loadShape("Figment.svg"); 
+    fig.disableStyle();
+    fig.scale(2.0); // Base scale. 
+    fig.translate(-fig.width, 0);
   }
   
   void display() {
@@ -20,18 +24,20 @@ class Figment extends Agent {
     float theta = velocity.heading() + radians(90);
     translate(position.x, position.y); 
     rotate(theta);
-    scale(scale); 
-    body(theta);
+    scale(scale);
+    body();
    popMatrix();
   }
   
-  void body(float theta) {
+  void body() {
     pushMatrix(); 
-      translate(0, bodyHeight/2);
-      body.setFill(bodyColor); 
-      body.setStroke(strokeColor); 
-      body.strokeWeight(strokeWeight);
-      shape(body); 
+      pushStyle();
+      fill(strokeColor); 
+      noStroke();
+      //stroke(255); 
+      //strokeWeight(0.5);
+      shape(fig); 
+      popStyle();
     popMatrix();
   }
 }
