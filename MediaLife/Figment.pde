@@ -34,6 +34,7 @@ class Figment extends Agent {
       pushStyle();
       fill(bodyColor); 
       noStroke();
+      blendMode(BLEND);
       shape(fig); 
       popStyle();
     popMatrix();
