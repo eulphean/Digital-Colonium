@@ -16,7 +16,7 @@ class Agent {
   float maxBodyHealth; float curBodyHealth; 
   
   // Genotypes. 
-  color bodyColor; color strokeColor; float scale; float strokeWeight;
+  color bodyColor; float scale;
   
   float size; 
   
@@ -40,9 +40,8 @@ class Agent {
     size = 5.0; // Size for the boid.
     
     // Genotypes. 
-    strokeColor = color(255, 0, 0);
-    bodyColor = color(0, 0, 0, 0);
-    scale = random(0.5, 2.0); strokeWeight = random(2, 5);
+    bodyColor = color(255, 0, 0);
+    scale = random(0.5, 2.0);
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
@@ -185,12 +184,10 @@ class Agent {
           
           dna.mutate(0.5); // App is consumed, there is a probability for the figment to mutate
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
-          strokeColor = color(dna.getColorComp(dna.genes[3]), dna.getColorComp(dna.genes[4]), dna.getColorComp(dna.genes[5]));
           scale = map(dna.genes[6], 0, 1, 1, 2.0);
-          strokeWeight = map(dna.genes[7], 0, 1, 4, 13); 
           
           // Release particles. 
-          particles.init(center, bodyColor);
+          particles.init(center);
           
           // Ring & pass it through an envelope 
           osc.play(midiToFreq(midi), amp);

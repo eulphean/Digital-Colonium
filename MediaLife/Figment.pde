@@ -32,10 +32,8 @@ class Figment extends Agent {
   void body() {
     pushMatrix(); 
       pushStyle();
-      fill(strokeColor); 
+      fill(bodyColor); 
       noStroke();
-      //stroke(255); 
-      //strokeWeight(0.5);
       shape(fig); 
       popStyle();
     popMatrix();

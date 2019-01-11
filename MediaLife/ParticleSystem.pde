@@ -25,7 +25,7 @@ class Particle {
    popStyle();
  }
  
- void init(PVector newPos, color c) {
+ void init(PVector newPos) {
    position = new PVector(0, 0);
    position.x = newPos.x;
    position.y  = newPos.y;
@@ -66,11 +66,11 @@ class ParticleSystem {
    }
   }
   
-  void init(PVector position, color particleColor) {
+  void init(PVector position) {
     // Initialize the system. 
     alpha = 255; frame = 0;  
     for (int i = 0; i < numParticles; i++) {
-     particles.get(i).init(position, particleColor); 
+     particles.get(i).init(position); 
     }
     
     // Run it. 
