@@ -35,13 +35,13 @@ class Agent {
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-10,10), random(-10, 10));
     wandertheta = 0; 
-
-    maxSpeed = 3.0;
+    
     size = 5.0; // Size for the boid.
     
     // Genotypes. 
     bodyColor = color(255, 0, 0);
     scale = random(0.5, 2.0);
+    maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
@@ -184,7 +184,8 @@ class Agent {
           
           dna.mutate(0.5); // App is consumed, there is a probability for the figment to mutate
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
-          scale = map(dna.genes[6], 0, 1, 1, 2.0);
+          scale = map(dna.genes[3], 0, 1, 1, 2.0);
+          maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
           
           // Release particles. 
           particles.init(center);
