@@ -13,7 +13,7 @@ class Agent {
   float foodWeight; float seperationWeight; float wanderingWeight; float cohesionWeight; float alignmentWeight; 
   
   // Health units. 
-  float maxBodyHealth; float curBodyHealth; 
+  float maxBodyHealth; float curBodyHealth; float foodUnitHealth; float minusHealth; float flockThreshHealth; 
   
   // Genotypes. 
   color bodyColor; float scale;
@@ -47,7 +47,9 @@ class Agent {
     maxForce = 0.15; 
 
     // Health units. Initial units. 
-    maxBodyHealth = 100.0; curBodyHealth = 20;
+    maxBodyHealth = 240.0; curBodyHealth = 20; foodUnitHealth = 60; minusHealth = 0.2; 
+    flockThreshHealth = 50; 
+    
     
     // DNA
     dna = new DNA();  
@@ -106,7 +108,8 @@ class Agent {
     PVector target;
     PVector steer; 
     
-    if (curBodyHealth >= 50) {
+    // Convert into a flock.
+    if (curBodyHealth >= flockThreshHealth) {
      alignmentWeight = 0; 
      cohesionWeight = 0;
     }
@@ -158,7 +161,7 @@ class Agent {
     acceleration.mult(0);
     
     if (curBodyHealth >= 0) {
-      curBodyHealth -= 0.2;   
+      curBodyHealth -= minusHealth;   
     }
   }
   
@@ -178,7 +181,7 @@ class Agent {
         PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
         float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
         if (d < flWidth/2) {
-          curBodyHealth += 60; // 20 units/flower 
+          curBodyHealth += foodUnitHealth;
           //bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
           
