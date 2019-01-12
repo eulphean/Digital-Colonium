@@ -17,10 +17,10 @@ class Agent {
   
   // Genotypes. 
   color bodyColor; float scale;
-  int numFins; int numSpots; 
+  boolean showAntennas; boolean showEye; int numFins;
   float mutationProb = 0.5; // Agents mutate when they eat apps. 
-  
   float size; 
+  boolean updateFins;
   
   // Sound
   Oscillator osc; Env env; float envVals[]; int midi; float amp;
@@ -44,7 +44,8 @@ class Agent {
     bodyColor = color(255, 0, 0);
     scale = random(0.5, 1.5);
     maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
-    numSpots = 0; numFins = 0;
+    showAntennas = false; showEye = false; numFins = 0;
+    updateFins = false;
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
@@ -52,7 +53,6 @@ class Agent {
     // Health units. Initial units. 
     maxBodyHealth = 240.0; curBodyHealth = 20; foodUnitHealth = 60; minusHealth = 0.2; 
     flockThreshHealth = 50; 
-    
     
     // DNA
     dna = new DNA();  
@@ -193,8 +193,12 @@ class Agent {
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
           scale = map(dna.genes[3], 0, 1, 0.5, 1.5);
           maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
-          numFins = floor(map(dna.genes[4], 0, 1, 1, 13));
-          numSpots = floor(map(dna.genes[5], 0, 1, 1, 12));
+          showEye = dna.genes[4] < 0.2; 
+          showAntennas = dna.genes[5] < 0.7;
+          numFins = floor(map(dna.genes[6], 0, 1, 1, 7));
+          if (numFins > 0) {
+            updateFins = true;
+          }
           
           // Release particles. 
           particles.init(center);

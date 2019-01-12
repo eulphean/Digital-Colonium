@@ -3,8 +3,8 @@ class DNA {
 
   // The genetic sequence
   float[] genes;
-  int len = 6;
-  // R,G,B, Size, NumFins, NumSpots
+  int len = 7;
+  // R,G,B, Size, Eye, Antennas, Fins
   // BodyColor
   
   // Constructor (makes a random DNA)
