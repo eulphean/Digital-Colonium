@@ -7,7 +7,7 @@
   "/seperationPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 58.499996185302734
+    "value": 80.99999237060547
   },
   "/seperationW": {
     "min": 0,
@@ -47,7 +47,7 @@
   "/foodPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 130.5
+    "value": 100.49999237060547
   },
   "/cohesionW": {
     "min": 0,

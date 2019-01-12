@@ -42,7 +42,9 @@ class Agent {
     
     // Genotypes. 
     bodyColor = color(255, 0, 0);
-    scale = random(0.5, 1.5);
+    scale = 0.5;
+    maxSeperationRad = map(scale, 0.5, 1.5, 35, 75);
+    maxFoodPerceptionRad = map(scale, 0.5, 1.5, 90, 130);
     maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
     showAntennas = false; showEye = false; numFins = 0;
     updateFins = false;
@@ -101,8 +103,8 @@ class Agent {
     wanderingWeight = wanderingW;
     
     // Perception Rad
-    maxFoodPerceptionRad = foodPerceptionRad;
-    maxSeperationRad = seperationPerceptionRad;
+    // maxFoodPerceptionRad = foodPerceptionRad;
+    // maxSeperationRad = seperationPerceptionRad;
     maxCohesionRad = cohesionPerceptionRad; // TODO: Have its own param. 
     maxAlignmentRad = alignmentPerceptionRad; // TODO: Have its own param. 
   }
@@ -185,20 +187,21 @@ class Agent {
         float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
         if (d < flWidth/2) {
           curBodyHealth += foodUnitHealth;
-          //bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
           
-          // Only mutate when it eats an App. 50% chance
-          dna.mutate(0.4); // App is consumed, there is a probability for the figment to mutate
-          bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
-          scale = map(dna.genes[3], 0, 1, 0.5, 1.5);
-          maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
-          showEye = dna.genes[4] < 0.2; 
-          showAntennas = dna.genes[5] < 0.7;
-          numFins = floor(map(dna.genes[6], 0, 1, 1, 7));
-          if (numFins > 0) {
-            updateFins = true;
-          }
+          println(numFins);
+          //if (numFins == 6) {
+          //  println("Reset");
+          //  bodyColor = color(255, 0, 0); 
+          //  position.x = 0; position.y = 0;
+          //  velocity.x = random(-10,10); velocity.y = random(-10, 10);
+          //  scale = 0.5;
+          //  wandertheta = 0;
+          //} else {
+            // Only mutate when it eats an App. 50% chance
+            dna.mutate(0.6); // App is consumed, there is a probability for the figment to mutate
+            updateGenotypes();
+          //}
           
           // Release particles. 
           particles.init(center);
@@ -208,6 +211,20 @@ class Agent {
           env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
         }
       }
+    }
+  }
+  
+  void updateGenotypes() {
+    bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
+    scale = map(dna.genes[3], 0, 1, 0.5, 1.5);
+    maxSeperationRad = map(scale, 0.5, 1.5, 35, 75);
+    maxFoodPerceptionRad = map(scale, 0.5, 1.5, 90, 130);
+    maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
+    showEye = dna.genes[4] < 0.2; 
+    showAntennas = dna.genes[5] < 0.7;
+    numFins = round(map(dna.genes[6], 0, 1, 1, 6)); // Max fins are 6 (minus the tail)
+    if (numFins > 0) {
+      updateFins = true;
     }
   }
   

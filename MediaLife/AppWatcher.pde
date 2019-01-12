@@ -59,7 +59,7 @@ class AppWatcher {
     updatePosition(); 
     
     // First time app watcher
-    appWatcherTime = millis(); appWatcherWait = floor(random(7000, 10000));
+    appWatcherTime = millis(); appWatcherWait = ceil(random(7000, 10000));
     
     // App wall and mask it with the shape. 
     drawAppsOffscreen();
@@ -102,7 +102,7 @@ class AppWatcher {
       
       // Reset tie
       appWatcherTime = millis(); 
-      appWatcherWait = floor(random(15000, 20000)); 
+      appWatcherWait = ceil(random(15000, 20000)); 
       
       // Assign eye a new position. 
       updatePosition();
@@ -115,7 +115,7 @@ class AppWatcher {
         createFood = true;
         waitTime = millis();
         isWaitingInitialized = true;
-        timeToCreateFood = floor(random(1, timeToWait-1000));
+        timeToCreateFood = ceil(random(1, timeToWait-1000));
       } else if (millis() - waitTime > timeToWait) {
         isAnimating = true; 
         isWaitingInitialized = false;

@@ -36,7 +36,7 @@ class Figment extends Agent {
     fig.scale(3.0); 
     loadBodyParts();
     
-    numExtensions = 7; // Extensions that are determined by mutation.
+    numExtensions = 6; // Extensions that are determined by mutation.
   }
   
   void display() {
@@ -125,10 +125,10 @@ class Figment extends Agent {
          }
          
          case 6: {
-          // Draw tail
-          fill(bodyColor); 
-          shape(tail);
-          break; 
+          //// Draw tail
+          //fill(bodyColor); 
+          //shape(tail);
+          //break; 
          }
          
          default: {
@@ -142,11 +142,11 @@ class Figment extends Agent {
       fill(bodyColor);
       shape(body);
       
-      // Eye
-      if (showEye) {
-        fill(255);
-        shape(eye);
-      }
+      //// Eye
+      //if (showEye) {
+      //  fill(255);
+      //  shape(eye);
+      //}
     popMatrix();
   }
   
@@ -156,7 +156,7 @@ class Figment extends Agent {
     for (int i = 0; i < numFins; i++) {
       int idx; 
       do {
-        idx = floor(random(0, numExtensions));
+        idx = round(random(0, numExtensions));
       } while (randIndices.hasValue(idx));
       randIndices.push(idx);
     }

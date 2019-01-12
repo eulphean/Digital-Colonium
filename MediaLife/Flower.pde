@@ -93,9 +93,13 @@ class Flower {
       
       pushMatrix(); 
        translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3);
-       shader(shader.shade);
-       image(h, 0, 0); 
-       resetShader();
+       if (this.isThere()) {
+        shader(shader.shade);
+        image(h, 0, 0); 
+        resetShader();
+       } else {
+        image(h, 0, 0); 
+       }
       popMatrix();
       popStyle();
     popMatrix();

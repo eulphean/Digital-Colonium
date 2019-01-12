@@ -8,6 +8,8 @@ class Particle {
  Particle() { 
    ellipseMode(CENTER); 
    particle = createShape(ELLIPSE, 0, 0, 4, 4);
+   position = new PVector();
+   velocity = new PVector();
  }
  
  void run(float alpha) {
@@ -26,12 +28,10 @@ class Particle {
  }
  
  void init(PVector newPos) {
-   position = new PVector(0, 0);
    position.x = newPos.x;
    position.y  = newPos.y;
-   velocity = new PVector(random(-1, 1), random(-1, 1)); 
+   velocity.x = random(-1, 1); velocity.y = random(-1, 1);
    particleColor = color(random(255), random(255), random(255));
-
  }
 }
 
