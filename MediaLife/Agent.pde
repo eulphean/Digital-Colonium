@@ -17,6 +17,8 @@ class Agent {
   
   // Genotypes. 
   color bodyColor; float scale;
+  int numFins; int numSpots; 
+  float mutationProb = 0.5; // Agents mutate when they eat apps. 
   
   float size; 
   
@@ -40,8 +42,9 @@ class Agent {
     
     // Genotypes. 
     bodyColor = color(255, 0, 0);
-    scale = random(0.5, 2.0);
+    scale = random(0.5, 1.5);
     maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
+    numSpots = 0; numFins = 0;
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
@@ -185,10 +188,13 @@ class Agent {
           //bodyColor = fl.petalColor; // Color transfer from flower to insect
           fl.isEaten = true; // Critical flag. 
           
-          dna.mutate(0.5); // App is consumed, there is a probability for the figment to mutate
+          // Only mutate when it eats an App. 50% chance
+          dna.mutate(0.4); // App is consumed, there is a probability for the figment to mutate
           bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
-          scale = map(dna.genes[3], 0, 1, 1, 2.0);
+          scale = map(dna.genes[3], 0, 1, 0.5, 1.5);
           maxSpeed = map(scale, 0.5, 2.0, 5.0, 3.0);
+          numFins = floor(map(dna.genes[4], 0, 1, 1, 13));
+          numSpots = floor(map(dna.genes[5], 0, 1, 1, 12));
           
           // Release particles. 
           particles.init(center);

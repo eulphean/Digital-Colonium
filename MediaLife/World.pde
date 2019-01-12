@@ -98,8 +98,7 @@ class World {
      // # agents * 2, numEaten
      foodsToGenerate = floor(random(agents.size() * 2, numEaten)); 
    }
-   
-   println("New foods to generate: " + foodsToGenerate);
+  
    for (Flower f : flowers) {
      if (f.isEaten && foodsToGenerate > 0) {
       // Create a custom flower, which is not ready until it's animated.  
