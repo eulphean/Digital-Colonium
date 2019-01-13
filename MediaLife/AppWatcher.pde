@@ -27,6 +27,7 @@ class AppWatcher {
   
   // Time
   long appWatcherTime; long appWatcherWait;
+  float amp; float frequency; 
   
   AppWatcher() {
     // SVG params. 
@@ -63,6 +64,9 @@ class AppWatcher {
     
     // App wall and mask it with the shape. 
     drawAppsOffscreen();
+    
+    frequency = Frequency.ofMidiNote(30).asHz();
+    amp = 3.0;
   }
   
   void run() {
@@ -88,6 +92,7 @@ class AppWatcher {
       checkAnimation();
     } else if (millis() - appWatcherTime > appWatcherWait) {
       showAppWatcher = true; 
+      out.playNote(0, 4.0, new EmitterInstrument(random(40, 80), amp));
     }
   }
   
