@@ -26,9 +26,9 @@ class Figment extends Agent {
   // Antennas: Boolean
   // NumExtensions: 1-7 (fins + tail)
   // Eye: boolean
-  Figment(PVector pos) {
+  Figment(PVector pos, float amp) {
     // Initialize its base class. 
-    super(pos); 
+    super(pos, amp); 
     // Base shape
     fig = loadShape("Figment.svg");
     fig.disableStyle();

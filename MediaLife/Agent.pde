@@ -23,16 +23,18 @@ class Agent {
   boolean updateFins;
   
   // Sound
-  Oscillator osc; Env env; float envVals[]; int midi; float amp;
+  ToneInstrument instrument;
   
   // DNA of the agent. 
   DNA dna; 
   
   // Particle systems. 
   ParticleSystem particles; 
+  
+  float frequency; float amp;
  
   // Init the agent. 
-  Agent(PVector pos) {
+  Agent(PVector pos, float a) {
     position = pos;
     acceleration = new PVector(0, 0); 
     velocity = new PVector(random(-10,10), random(-10, 10));
@@ -59,18 +61,18 @@ class Agent {
     // DNA
     dna = new DNA();  
     
-    // Flower & Media sound. 
-    osc = getRandomOscillator(); midi = getRandomMidi(false); amp = 0.0; // Will update from world
-    env = new Env(sketchPointer); envVals = getADSRValues(false);
+    // Agent's instrument. 
+    // Calculate a random midi note and get its corresponding frequency.
+    int randMidi = floor(random(70, 120));
+    frequency = Frequency.ofMidiNote(randMidi).asHz();
+    //instrument = new ToneInstrument(frequenct, amp);
+    amp = a;
     
     // Particles 
     particles = new ParticleSystem();
   }
   
-  void run(ArrayList<Flower> flowers, ArrayList<Figment> agents, float a) {
-    // Newly calculated oscillator amplitude.
-    amp = a; 
-    
+  void run(ArrayList<Flower> flowers, ArrayList<Figment> agents) {
     updateGuiParameters(); 
     
     // Evaluate all the forces acting on the agents.
@@ -103,8 +105,8 @@ class Agent {
     wanderingWeight = wanderingW;
     
     // Perception Rad
-    // maxFoodPerceptionRad = foodPerceptionRad;
-    // maxSeperationRad = seperationPerceptionRad;
+    // maxFoodPerceptionRad = foodPerceptionRad; Genotype
+    // maxSeperationRad = seperationPerceptionRad; Genotype
     maxCohesionRad = cohesionPerceptionRad; // TODO: Have its own param. 
     maxAlignmentRad = alignmentPerceptionRad; // TODO: Have its own param. 
   }
@@ -189,7 +191,6 @@ class Agent {
           curBodyHealth += foodUnitHealth;
           fl.isEaten = true; // Critical flag. 
           
-          println(numFins);
           //if (numFins == 6) {
           //  println("Reset");
           //  bodyColor = color(255, 0, 0); 
@@ -206,9 +207,8 @@ class Agent {
           // Release particles. 
           particles.init(center);
           
-          // Ring & pass it through an envelope 
-          osc.play(midiToFreq(midi), amp);
-          env.play(osc, envVals[0], envVals[1], envVals[2], envVals[3]); 
+          // Play the sound.
+          out.playNote(0, 0.1, new ToneInstrument(frequency, amp));
         }
       }
     }
@@ -233,7 +233,7 @@ class Agent {
     // asexual reproduction
     if (random(1) < 0.0001) {
       // Child is exact copy of single parent
-      return new Figment(new PVector(0, 0));
+      return new Figment(new PVector(0, 0), 0.0);
     } 
     else {
       return null;

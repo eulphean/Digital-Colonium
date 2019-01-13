@@ -13,11 +13,14 @@ class World {
     appWatcher = new AppWatcher();
     totalSystemFood = numFood; 
      
+    // Instrument amplitude/agent. 
+    float amp = (10.0 / numAgents);
+    
     // Agents.
     agents = new ArrayList();
     for (int i = 0; i < numAgents; i++) {
        PVector l = new PVector(0, 0);
-       agents.add(new Figment(l));
+       agents.add(new Figment(l, amp));
     }
     
     // Apps
@@ -43,13 +46,12 @@ class World {
     for (int i = agents.size()-1; i >= 0; i--) {
       Figment a = agents.get(i);
       
-      // Update sound amplitudes (as a cluster) 
-      float amp = (2.0 / agents.size());
-      
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
-      a.run(flowers, agents, amp);
+      //out.pauseNotes();
+      a.run(flowers, agents);
       a.display();
+      //out.resumeNotes();
       
       // Health of the agent.
       if (a.dead()) { // Is it dead? 
@@ -61,7 +63,7 @@ class World {
     if (releaseAgents) {
       for (int i = 0; i < 20; i++) {
         PVector l = new PVector(0, 0);
-        agents.add(new Figment(l));
+        agents.add(new Figment(l, 0.0));
       }
       releaseAgents = false; 
     }

@@ -1,5 +1,6 @@
 import controlP5.*; 
-import processing.sound.*;
+import ddf.minim.*;
+import ddf.minim.ugens.*;
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
@@ -68,8 +69,9 @@ boolean turnOnVision;
 boolean releaseAgents; 
 boolean showAppWatcher; 
 
-// Sound
-Sound sound; 
+// Sound engine.
+Minim minim; 
+AudioOutput out;
 
 // Initialize a world
 World world;
@@ -111,20 +113,21 @@ void setup() {
   smooth();
 
   // Setup sound. 
-  sound = new Sound(this); 
+  minim = new Minim(this);
+  out = minim.getLineOut(Minim.STEREO, 2048);
 }
 
 void draw() { 
   background(0); 
   
   // Update volume.
-  sound.volume(volume);
+  // TODO: Hook out.setVolume
 
   if (restartWorld) {
     world = new World(numAgents, numFood);
     restartWorld = false;
   }
-
+  
   // Update environment
   world.run();
 
@@ -244,7 +247,7 @@ void initializeGui() {
   volumeSlider = cp5.addSlider("volume")
     .setPosition(0, 240)
     .setSize(100, 20)
-    .setRange(0, 1.0)
+    .setRange(0, 5.0)
     .setValue(volume)
     .setColorCaptionLabel(color(255))
     .setGroup(g1);
