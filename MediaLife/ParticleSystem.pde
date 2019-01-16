@@ -7,7 +7,7 @@ class Particle {
  
  Particle() { 
    ellipseMode(CENTER); 
-   particle = createShape(ELLIPSE, 0, 0, 4, 4);
+   particle = createShape(ELLIPSE, 0, 0, 2, 2);
    position = new PVector();
    velocity = new PVector();
  }

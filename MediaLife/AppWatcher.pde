@@ -31,7 +31,7 @@ class AppWatcher {
   
   AppWatcher() {
     // SVG params. 
-    numRows = 5; numCols = 16; svgSize = 30; 
+    numRows = 5; numCols = 16; svgSize = 20; 
     
     
     // Get the shader at specific index. 
@@ -66,7 +66,7 @@ class AppWatcher {
     drawAppsOffscreen();
     
     frequency = Frequency.ofMidiNote(30).asHz();
-    amp = 3.0;
+    amp = 2.0;
   }
   
   void run() {
@@ -92,7 +92,7 @@ class AppWatcher {
       checkAnimation();
     } else if (millis() - appWatcherTime > appWatcherWait) {
       showAppWatcher = true; 
-      out.playNote(0, 4.0, new EmitterInstrument(random(40, 80), amp));
+      out.playNote(0, 6.0, new EmitterInstrument(random(60, 80), amp));
     }
   }
   
@@ -107,7 +107,7 @@ class AppWatcher {
       
       // Reset tie
       appWatcherTime = millis(); 
-      appWatcherWait = ceil(random(15000, 20000)); 
+      appWatcherWait = ceil(random(10000, 15000)); 
       
       // Assign eye a new position. 
       updatePosition();

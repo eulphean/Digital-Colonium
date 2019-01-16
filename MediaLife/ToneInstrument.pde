@@ -58,7 +58,7 @@ class EmitterInstrument implements Instrument
   EmitterInstrument( float frequency, float amplitude )
   {    
     osc = new Oscil( frequency, amplitude, Waves.SINE);
-    adsr = new ADSR(amplitude, 10.0, 0.1, 1.0, 5.0);
+    adsr = new ADSR(amplitude, 10.0, 0.1, 1.0, 4.0);
     // patch everything together up to the final output
     osc.patch( adsr );
   }

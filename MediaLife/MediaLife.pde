@@ -86,6 +86,8 @@ IconFactory iconFactory;
 void setup() {
   fullScreen(P2D);
   
+  noCursor();
+  
   Ani.init(this);
 
   // Run some code when the sketch closes. 
