@@ -28,6 +28,7 @@ class AppWatcher {
   // Time
   long appWatcherTime; long appWatcherWait;
   float amp; float frequency; 
+  EmitterInstrument instrument;
   
   AppWatcher() {
     // SVG params. 
@@ -67,6 +68,8 @@ class AppWatcher {
     
     frequency = Frequency.ofMidiNote(30).asHz();
     amp = 2.0;
+    
+    instrument = new EmitterInstrument(random(60, 70), amp);
   }
   
   void run() {
@@ -92,7 +95,7 @@ class AppWatcher {
       checkAnimation();
     } else if (millis() - appWatcherTime > appWatcherWait) {
       showAppWatcher = true; 
-      out.playNote(0, 6.0, new EmitterInstrument(random(60, 80), amp));
+      out.playNote(0, 6.0, instrument);
     }
   }
   

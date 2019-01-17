@@ -98,7 +98,7 @@ void setup() {
   iconFactory = new IconFactory();
 
   // Initialize GUI flags. 
-  hideGui = false; 
+  hideGui = true; 
   displayAgent = false; 
   restartWorld = false;
   debug = false;
