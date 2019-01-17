@@ -14,7 +14,7 @@ class World {
     totalSystemFood = numFood; 
      
     // Instrument amplitude/agent. 
-    float amp = (10.0 / numAgents);
+    float amp = (8.0 / numAgents);
     
     // Agents.
     agents = new ArrayList();

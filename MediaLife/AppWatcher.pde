@@ -61,15 +61,15 @@ class AppWatcher {
     updatePosition(); 
     
     // First time app watcher
-    appWatcherTime = millis(); appWatcherWait = ceil(random(7000, 10000));
+    appWatcherTime = millis(); appWatcherWait = ceil(random(2000, 5000));
     
     // App wall and mask it with the shape. 
     drawAppsOffscreen();
     
-    frequency = Frequency.ofMidiNote(30).asHz();
-    amp = 2.0;
+    frequency = Frequency.ofMidiNote(60).asHz();
+    amp = 0.5;
     
-    instrument = new EmitterInstrument(random(60, 70), amp);
+    instrument = new EmitterInstrument(frequency, amp);
   }
   
   void run() {
@@ -95,7 +95,7 @@ class AppWatcher {
       checkAnimation();
     } else if (millis() - appWatcherTime > appWatcherWait) {
       showAppWatcher = true; 
-      out.playNote(0, 6.0, instrument);
+      out.playNote(0.5, 3.0, instrument);
     }
   }
   
