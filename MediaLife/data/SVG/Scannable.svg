@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Scannable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 119.8 119.8" enable-background="new 0 0 119.8 119.8" xml:space="preserve">
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="59.9" y1="1.8" x2="59.9" y2="121.6" gradientTransform="matrix(1 0 0 -1 0 121.6)">
+	<stop  offset="0" style="stop-color:#03C3F2"/>
+	<stop  offset="1" style="stop-color:#249BB4"/>
+</linearGradient>
+<rect fill="url(#SVGID_1_)" width="119.8" height="119.8"/>
+<title>Scannable</title>
+<desc>Created with Sketch.</desc>
+<g id="scannable-page-1">
+	<g id="scannable-icons" transform="translate(-2026.000000, -962.000000)">
+		<g id="scannable-productivity-apps" transform="translate(1418.000000, 50.000000)">
+			<g id="scannable-scannable" transform="translate(608.000000, 912.000000)">
+				<g id="scannable-icon" transform="translate(15.000000, 29.000000)">
+					<g id="scannable-left">
+						<path id="scannable-wing_1_" fill="#FFFFFF" d="M0,4.9l20.5-5.1c0,0,7.5,4.8,11,7.5c4,3,11.5,9.5,11.5,9.5v31.5
+							c0,0-6.8,6-10,8.5c-3.5,2.7-10,7-10,7L12,44.3l4-12.5l-12-6L0,4.9z"/>
+						
+							<linearGradient id="scannable-upper-shadow_2_" gradientUnits="userSpaceOnUse" x1="-505.4893" y1="111.6188" x2="-504.5514" y2="112.6188" gradientTransform="matrix(33.5 0 0 6 16934 -643)">
+							<stop  offset="0" style="stop-color:#B1E6F2"/>
+							<stop  offset="1" style="stop-color:#B1E6F2"/>
+						</linearGradient>
+						<polygon id="scannable-upper-shadow_1_" fill="url(#scannable-upper-shadow_2_)" points="4,25.8 37.5,31.8 16,31.8 						"/>
+						
+							<linearGradient id="scannable-bottom-shadow_1_" gradientUnits="userSpaceOnUse" x1="-500.3301" y1="55.5" x2="-501.1155" y2="56.1661" gradientTransform="matrix(26 0 0 12 13042 -635.8)">
+							<stop  offset="0" style="stop-color:#E7F5F8"/>
+							<stop  offset="1" style="stop-color:#E4F4F7"/>
+						</linearGradient>
+						<polygon id="scannable-bottom-shadow" fill="url(#scannable-bottom-shadow_1_)" points="16,31.8 38,31.8 12,43.8 						"/>
+					</g>
+					
+						<g id="scannable-right" transform="translate(68.500000, 32.000000) scale(-1, 1) translate(-68.500000, -32.000000) translate(47.000000, 0.000000)" opacity="0.7">
+						<path id="scannable-wing" fill="#00B0F8" d="M0,4.9l20.5-5.1c0,0,7.5,4.8,11,7.5c4,3,11.5,9.5,11.5,9.5v31.5c0,0-6.8,6-10,8.5
+							c-3.5,2.7-10,7-10,7L12,44.3l4-12.5l-12-6L0,4.9z"/>
+						<polygon id="scannable-upper-shadow" fill="#0099ED" points="4,25.8 37.5,31.8 16,31.8 						"/>
+						<polygon id="scannable-botton-shadow" fill="#00CCFD" points="16,31.8 38,31.8 12,43.8 						"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

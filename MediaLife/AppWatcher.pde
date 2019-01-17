@@ -32,7 +32,7 @@ class AppWatcher {
   
   AppWatcher() {
     // SVG params. 
-    numRows = 5; numCols = 16; svgSize = 20; 
+    numRows = 5; numCols = 17; svgSize = 20; 
     
     
     // Get the shader at specific index. 
