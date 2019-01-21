@@ -60,7 +60,6 @@ class Figment extends Agent {
   
   void body() {
     pushMatrix(); 
-      pushStyle();
       fill(bodyColor); 
       noStroke();
       

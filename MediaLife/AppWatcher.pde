@@ -70,6 +70,9 @@ class AppWatcher {
     amp = 0.5;
     
     instrument = new EmitterInstrument(frequency, amp);
+    
+    // Graphics. 
+    ellipse = createGraphics(wallWidth, wallHeight); 
   }
   
   void run() {
@@ -139,7 +142,6 @@ class AppWatcher {
   }
  
   void updateMaskShape() {
-    ellipse = createGraphics(wallWidth, wallHeight); 
     ellipse.beginDraw(); 
     ellipse.background(0);
     ellipse.ellipseMode(CENTER); 

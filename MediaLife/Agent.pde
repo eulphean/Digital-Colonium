@@ -22,8 +22,8 @@ class Agent {
   float size; 
   boolean updateFins;
   
-  // Sound
-  ToneInstrument instrument;
+  //// Sound
+  //ToneInstrument instrument;
   
   // DNA of the agent. 
   DNA dna; 
@@ -65,7 +65,7 @@ class Agent {
     // Calculate a random midi note and get its corresponding frequency.
     int randMidi = floor(random(70, 120));
     frequency = Frequency.ofMidiNote(randMidi).asHz();
-    //instrument = new ToneInstrument(frequenct, amp);
+    //instrument = new ToneInstrument(frequency, amp);
     amp = a;
     
     // Particles 
@@ -255,7 +255,6 @@ class Agent {
   
   void displayAgent() {
     pushMatrix();
-     pushStyle();
       stroke(0);
       // Draw a boid.  
       float theta = velocity.heading() + radians(90);
@@ -266,15 +265,12 @@ class Agent {
       vertex(-size, size*2);
       vertex(size, size*2);
       endShape();
-     popStyle();
      
      // Show health stats. 
      if (healthStats) {
-       pushStyle(); 
         textSize(15); 
-        fill(255); 
+        fill(255);
         text("Body:" + nf(curBodyHealth, 0, 2), -10, 30); 
-       popStyle();
      }
     popMatrix();
     
