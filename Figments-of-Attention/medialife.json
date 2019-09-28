@@ -12,7 +12,7 @@
   "/seperationW": {
     "min": 0,
     "max": 10,
-    "value": 0.9999999403953552
+    "value": 1.1999999284744263
   },
   "/volume": {
     "min": 0,
@@ -22,7 +22,7 @@
   "/flowerScale": {
     "min": 0,
     "max": 1,
-    "value": 0.7199999690055847
+    "value": 0.8100000023841858
   },
   "/foodW": {
     "min": 0,
@@ -37,7 +37,7 @@
   "/alignmentW": {
     "min": 0,
     "max": 5,
-    "value": 1.100000023841858
+    "value": 0.7999999523162842
   },
   "/cohesionPerceptionRad": {
     "min": 0,
@@ -52,12 +52,12 @@
   "/cohesionW": {
     "min": 0,
     "max": 5,
-    "value": 0.699999988079071
+    "value": 0.7499999403953552
   },
   "/numFood": {
     "min": 0,
     "max": 500,
-    "value": 250
+    "value": 350
   },
   "/aheadDistance": {
     "min": 0,

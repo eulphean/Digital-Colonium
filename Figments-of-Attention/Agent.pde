@@ -47,7 +47,8 @@ class Agent {
     scale = 0.5;
     maxSeperationRad = map(scale, 0.5, 1.0, 25, 65);
     maxFoodPerceptionRad = map(scale, 0.5, 1.0, 70, 110);
-    maxSpeed = map(scale, 0.5, 1.0, 3.0, 2.0);
+    maxSpeed = 3.0;
+    //maxSpeed = map(scale, 0.5, 1.0, 3.0, 2.0);
     showAntennas = false; showEye = false; numFins = 0;
     updateFins = false;
  
@@ -217,9 +218,9 @@ class Agent {
   void updateGenotypes() {
     bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
     scale = map(dna.genes[3], 0, 1, 0.5, 1.0);
-    maxSeperationRad = map(scale, 0.5, 1.0, 30, 65);
+    maxSeperationRad = map(scale, 0.5, 1.0, 20, 45);
     maxFoodPerceptionRad = map(scale, 0.5, 1.0, 90, 130);
-    maxSpeed = map(scale, 0.5, 1.0, 3.0, 2.0);
+    //maxSpeed = map(scale, 0.5, 1.0, 3.0, 1.0);
     showEye = dna.genes[4] < 0.2; 
     showAntennas = dna.genes[5] < 0.7;
     numFins = round(map(dna.genes[6], 0, 1, 1, 6)); // Max fins are 6 (minus the tail)

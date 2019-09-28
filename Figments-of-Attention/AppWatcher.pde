@@ -61,7 +61,7 @@ class AppWatcher {
     updatePosition(); 
     
     // First time app watcher
-    appWatcherTime = millis(); appWatcherWait = ceil(random(2000, 5000));
+    appWatcherTime = millis(); appWatcherWait = ceil(random(5000, 10000));
     
     // App wall and mask it with the shape. 
     drawAppsOffscreen();
@@ -113,7 +113,7 @@ class AppWatcher {
       
       // Reset tie
       appWatcherTime = millis(); 
-      appWatcherWait = ceil(random(10000, 15000)); 
+      appWatcherWait = ceil(random(20000, 25000)); 
       
       // Assign eye a new position. 
       updatePosition();
