@@ -83,10 +83,12 @@ PApplet sketchPointer = this;
 ShaderFactory shaderFactory;
 IconFactory iconFactory; 
 
+// Background shader
+PGraphics pg; 
+PShader shader; 
+
 void setup() {
   fullScreen(P2D);
-  
-  noCursor();
   
   Ani.init(this);
 
@@ -117,13 +119,17 @@ void setup() {
   // Setup sound. 
   minim = new Minim(this);
   out = minim.getLineOut(Minim.STEREO, 2048);
+  
+  // Setup background shader
+  setupBackgroundShader(); 
 }
 
 void draw() { 
-  background(0); 
+  //background(255); 
+  image(pg, 0, 0); 
   
-  // Update volume.
-  // TODO: Hook out.setVolume
+  // Redraw background shader consequently. 
+  
 
   if (restartWorld) {
     world = new World(numAgents, numFood);
@@ -135,20 +141,11 @@ void draw() {
 
   if (hideGui) {
     g1.hide();
-    //println("Frame rate: " + frameRate);
+    noCursor();
   } else {
     g1.show(); 
-    //pushStyle();
-    //color c = color(255);
-     
-    //fill(c);
-    //textSize(15);
-    // Generation
-    //text("Gen: " + world.generation, 5, 25);
-    //text("Agents: " + world.agents.size(), 5, 40);
-    //text("Food: " + world.food.flowers.size(), 5, 60);
-    //text("Frame rate: " + frameRate, 5, 75);
-    // popStyle();
+    cursor(); 
+    text("Frame rate: " + frameRate, 200, 100);  
   }
 }
 
@@ -314,6 +311,17 @@ void keyPressed() {
   if (key == 'e') {
     showAppWatcher = true; 
   }
+}
+
+void setupBackgroundShader() {
+  pg = createGraphics(width, height, P2D); 
+  shader = loadShader("background.glsl");
+  shader.set("time", (float) millis()/500.0);
+  shader.set("resolution", float(pg.width), float(pg.height));
+  pg.beginDraw(); 
+  pg.shader(shader); 
+  pg.rect(0, 0, pg.width, pg.height); 
+  pg.endDraw(); 
 }
 
 void prepareExitHandler () {

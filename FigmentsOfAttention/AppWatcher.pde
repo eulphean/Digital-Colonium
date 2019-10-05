@@ -36,7 +36,8 @@ class AppWatcher {
     
     
     // Get the shader at specific index. 
-    idxShader = floor(random(shaderFactory.shaders.length)); 
+    //idxShader = floor(random(shaderFactory.shaders.length)); 
+    idxShader = 7; 
     shader = shaderFactory.getShaderAtIdx(idxShader); 
     
     // Animation 
@@ -108,8 +109,8 @@ class AppWatcher {
       showAppWatcher = false; 
       
       // Load shader for next time eye opens. 
-      idxShader = floor(random(shaderFactory.shaders.length)); 
-      shader = shaderFactory.getShaderAtIdx(idxShader);
+      ////idxShader = floor(random(shaderFactory.shaders.length)); 
+      //shader = shaderFactory.getShaderAtIdx(idxShader);
       
       // Reset tie
       appWatcherTime = millis(); 
