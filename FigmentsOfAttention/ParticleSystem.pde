@@ -1,3 +1,5 @@
+// Dopamine
+
 class Particle {
  PVector position;
  PVector velocity;
@@ -7,7 +9,7 @@ class Particle {
  
  Particle() { 
    ellipseMode(CENTER); 
-   particle = createShape(ELLIPSE, 0, 0, 2, 2);
+   particle = createShape(ELLIPSE, 0, 0, 3.5, 3.5);
    position = new PVector();
    velocity = new PVector();
  }
@@ -27,11 +29,11 @@ class Particle {
    popStyle();
  }
  
- void init(PVector newPos) {
+ void init(PVector newPos, color c) {
    position.x = newPos.x;
    position.y  = newPos.y;
    velocity.x = random(-1, 1); velocity.y = random(-1, 1);
-   particleColor = color(random(255), random(255), random(255));
+   particleColor = c; 
  }
 }
 
@@ -69,8 +71,10 @@ class ParticleSystem {
   void init(PVector position) {
     // Initialize the system. 
     alpha = 255; frame = 0;  
+    //color c = color(random(255), random(255), random(255));
+    color c = color(102, 0, 51); 
     for (int i = 0; i < numParticles; i++) {
-     particles.get(i).init(position); 
+     particles.get(i).init(position, c); 
     }
     
     // Run it. 
