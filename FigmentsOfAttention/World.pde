@@ -100,7 +100,7 @@ class World {
      // # agents * 2, numEaten
      foodsToGenerate = floor(random(agents.size() * 2, numEaten)); 
    }
-  
+   
    for (Flower f : flowers) {
      if (f.isEaten && foodsToGenerate > 0) {
       // Create a custom flower, which is not ready until it's animated.  
@@ -110,7 +110,7 @@ class World {
       f.isEaten = false; f.isReady = false; 
       //f.createHead();
       f.assignShader();
-      int idx = (int) random(0, easings.length); 
+      int idx = (int) random(0, easings.length);
       f.fly(targetPos, easings[idx]);
       foodsToGenerate--; 
      }

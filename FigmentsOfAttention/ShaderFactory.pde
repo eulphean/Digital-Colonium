@@ -17,7 +17,7 @@ class ShaderFactory {
     "modcolor.glsl", "halftone.glsl", "halftone_cmyk.glsl", "invert.glsl" };
     
   // Selected shader indicices to use. 
-  int [] selectedIndices = new int[] { 0, 1, 2, 3, 4, 5, 6, 8, 9 }; 
+  int [] selectedIndices = new int[] {0, 1, 2, 3, 4, 6, 8, 9 }; 
   
   ShaderFactory() {
     shades = new Shade[shaders.length]; 

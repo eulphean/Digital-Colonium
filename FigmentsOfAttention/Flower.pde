@@ -71,7 +71,7 @@ class Flower {
       pushMatrix(); 
       translate(base.x, base.y); 
         rotate(radians(200)); 
-        fill(0, 255, 0);
+        fill(96, 96, 96);
         ellipse(0, 0, flowerWidth/2, flowerHeight/9);
       popMatrix();
       
@@ -79,13 +79,13 @@ class Flower {
       pushMatrix(); 
       translate(base.x, base.y); 
         rotate(radians(-20));
-        fill(0, 255, 0);
+        fill(96, 96, 96);
         ellipse(0, -flowerHeight/9, flowerWidth/2, flowerHeight/9);
       popMatrix();
       
       // Stem.
       pushStyle();
-      stroke(0, 153, 0);
+      stroke(32, 32, 32);
       strokeWeight(6);
       strokeCap(SQUARE);
       line(centerHead.x, centerHead.y, base.x, base.y); 

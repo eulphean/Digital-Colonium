@@ -108,10 +108,6 @@ class AppWatcher {
     if (aniCounter%aniPeriod == 0) {
       showAppWatcher = false; 
       
-      // Load shader for next time eye opens. 
-      ////idxShader = floor(random(shaderFactory.shaders.length)); 
-      //shader = shaderFactory.getShaderAtIdx(idxShader);
-      
       // Reset tie
       appWatcherTime = millis(); 
       appWatcherWait = ceil(random(20000, 25000)); 

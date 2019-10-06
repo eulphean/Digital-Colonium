@@ -15,18 +15,9 @@ class Agent {
   // Health units. 
   float maxBodyHealth; float curBodyHealth; float foodUnitHealth; float minusHealth; float flockThreshHealth; 
   
-  // Genotypes. 
-  color bodyColor; float scale;
-  boolean showAntennas; boolean showEye; int numFins;
-  float mutationProb = 0.5; // Agents mutate when they eat apps. 
+  // Agent props
+  color bodyColor; float scale; 
   float size; 
-  boolean updateFins;
-  
-  //// Sound
-  //ToneInstrument instrument;
-  
-  // DNA of the agent. 
-  DNA dna; 
   
   // Particle systems. 
   ParticleSystem particles; 
@@ -43,30 +34,23 @@ class Agent {
     size = 5.0; // Size for the boid.
     
     // Genotypes. 
-    bodyColor = color(0, 0, 0);
+    bodyColor = color(32, 32, 32);
     scale = 0.5;
     maxSeperationRad = map(scale, 0.5, 1.0, 25, 65);
     maxFoodPerceptionRad = map(scale, 0.5, 1.0, 70, 110);
     maxSpeed = 3.0;
-    //maxSpeed = map(scale, 0.5, 1.0, 3.0, 2.0);
-    showAntennas = false; showEye = false; numFins = 0;
-    updateFins = false;
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
 
     // Health units. Initial units. 
     maxBodyHealth = 240.0; curBodyHealth = 20; foodUnitHealth = 60; minusHealth = 0.2; 
-    flockThreshHealth = 50; 
-    
-    // DNA
-    dna = new DNA();  
+    flockThreshHealth = 50;   
     
     // Agent's instrument. 
     // Calculate a random midi note and get its corresponding frequency.
     int randMidi = floor(random(70, 120));
-    frequency = Frequency.ofMidiNote(randMidi).asHz();
-    //instrument = new ToneInstrument(frequency, amp);
+    frequency = Frequency.ofMidiNote(randMidi).asHz(); 
     amp = a;
     
     // Particles 
@@ -188,45 +172,23 @@ class Agent {
         float flWidth = fl.flowerWidth; float flHeight = fl.flowerHeight; 
         PVector center = new PVector(fl.position.x + flWidth/2, fl.position.y + flHeight/2);
         float d = PVector.dist(position, center); // Distance between agent's position and flower's center.
+        
+        // Food is successfully consumed, do something when that happens. 
         if (d < flWidth/2) {
           curBodyHealth += foodUnitHealth;
           fl.isEaten = true; // Critical flag. 
           
-          //if (numFins == 6) {
-          //  println("Reset");
-          //  bodyColor = color(255, 0, 0); 
-          //  position.x = 0; position.y = 0;
-          //  velocity.x = random(-10,10); velocity.y = random(-10, 10);
-          //  scale = 0.5;
-          //  wandertheta = 0;
-          //} else {
-            // Only mutate when it eats an App. 50% chance
-            dna.mutate(0.6); // App is consumed, there is a probability for the figment to mutate
-            updateGenotypes();
-          //}
+          maxSeperationRad = map(scale, 0.5, 1.0, 20, 45);
+          maxFoodPerceptionRad = map(scale, 0.5, 1.0, 90, 130);
           
           // Release particles. 
           particles.init(center);
           
-          // Play the sound.
+          // Play a sound when food is consumed. 
           out.playNote(0, 0.1, new ToneInstrument(frequency, amp));
         }
       }
     }
-  }
-  
-  void updateGenotypes() {
-    //bodyColor = color(dna.getColorComp(dna.genes[0]), dna.getColorComp(dna.genes[1]), dna.getColorComp(dna.genes[2]));
-    //scale = map(dna.genes[3], 0, 1, 0.5, 1.0);
-    maxSeperationRad = map(scale, 0.5, 1.0, 20, 45);
-    maxFoodPerceptionRad = map(scale, 0.5, 1.0, 90, 130);
-    //maxSpeed = map(scale, 0.5, 1.0, 3.0, 1.0);
-    //showEye = dna.genes[4] < 0.2; 
-    //showAntennas = dna.genes[5] < 0.7;
-    ////numFins = round(map(dna.genes[6], 0, 1, 1, 6)); // Max fins are 6 (minus the tail)
-    //if (numFins > 0) {
-    //  updateFins = true;
-    //}
   }
   
   // At any moment there is a teeny, tiny chance a bloop will reproduce
@@ -251,7 +213,6 @@ class Agent {
   // Check for death
   boolean dead() {
    return false;
-   //return curBodyHealth < 0.0; 
   }
   
   void displayAgent() {
