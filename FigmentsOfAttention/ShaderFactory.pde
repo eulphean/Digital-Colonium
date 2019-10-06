@@ -15,6 +15,9 @@ class ShaderFactory {
     "brcosa.glsl", "hue.glsl", "pixelate.glsl", "blur.glsl", 
     "channels.glsl", "threshold.glsl", "neon.glsl", "edges.glsl", "pixelrolls.glsl", 
     "modcolor.glsl", "halftone.glsl", "halftone_cmyk.glsl", "invert.glsl" };
+    
+  // Selected shader indicices to use. 
+  int [] selectedIndices = new int[] { 0, 1, 2, 3, 4, 5, 6, 8, 9 }; 
   
   ShaderFactory() {
     shades = new Shade[shaders.length]; 
@@ -33,5 +36,5 @@ class ShaderFactory {
     Shade shader = shades[idx]; 
     Shade newShade = new Shade(shader.shade);
     return newShade; 
-  }
+  }  
 }

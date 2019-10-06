@@ -132,7 +132,8 @@ class Flower {
   }
   
   void assignShader() {
-    idxShader = floor(random(shaderFactory.shaders.length)); 
+    int idx = floor(random(shaderFactory.selectedIndices.length));
+    idxShader = shaderFactory.selectedIndices[idx];  
     shader = shaderFactory.getShaderAtIdx(idxShader);
   }
   
