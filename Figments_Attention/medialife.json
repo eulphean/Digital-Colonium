@@ -22,7 +22,7 @@
   "/flowerScale": {
     "min": 0,
     "max": 1,
-    "value": 0.8100000023841858
+    "value": 0.8899999856948853
   },
   "/foodW": {
     "min": 0,
@@ -67,7 +67,7 @@
   "/agentScale": {
     "min": 0,
     "max": 3,
-    "value": 2.18999981880188
+    "value": 3
   },
   "/numAgents": {
     "min": 0,

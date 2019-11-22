@@ -22,8 +22,13 @@ class Agent {
   // Particle systems. 
   ParticleSystem particles; 
   
+  // Sound system. 
   float frequency; float amp;
  
+  // Trail variables. 
+  int currentTrailIdx, maxTrailPoints;  
+  TrailPoint[] trail; 
+  
   // Init the agent. 
   Agent(PVector pos, float a) {
     position = pos;
@@ -55,6 +60,11 @@ class Agent {
     
     // Particles 
     particles = new ParticleSystem();
+    
+    // Initialize trail 
+    currentTrailIdx = 0; 
+    maxTrailPoints = 100; // TODO: possibly in the GUI.
+    trail = new TrailPoint[maxTrailPoints];
   }
   
   void run(ArrayList<Flower> flowers, ArrayList<Figment> agents) {
@@ -72,13 +82,18 @@ class Agent {
     // Wraparound the screen if the agent leaves. 
     wraparound();
     
-    // Show the agent.
-    if (displayAgent) {
-     displayAgent();
-    }
-    
     // Update particles systems if there are live particles. 
     particles.run();
+    
+    // Update trail
+    updateTrailPoints(); 
+  }
+  
+  void updateTrailPoints() {
+   // Position is updated so I can store this. 
+   trail[currentTrailIdx] = new TrailPoint(position.x, position.y, 255); 
+   currentTrailIdx++; 
+   currentTrailIdx %= maxTrailPoints; 
   }
  
   void updateGuiParameters() {
