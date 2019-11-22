@@ -125,11 +125,10 @@ void setup() {
 }
 
 void draw() { 
-  //background(255); 
-  image(pg, 0, 0); 
+  //background(255);  
   
   // Redraw background shader consequently. 
-  
+  image(pg, 0, 0);
 
   if (restartWorld) {
     world = new World(numAgents, numFood);
