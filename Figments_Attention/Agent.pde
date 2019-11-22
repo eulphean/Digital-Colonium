@@ -27,7 +27,7 @@ class Agent {
  
   // Trail variables. 
   int currentTrailIdx, maxTrailPoints;  
-  TrailPoint[] trail; 
+  TrailPoint[] trail;
   
   // Init the agent. 
   Agent(PVector pos, float a) {
