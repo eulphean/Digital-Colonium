@@ -63,7 +63,7 @@ class Agent {
     
     // Initialize trail 
     currentTrailIdx = 0; 
-    maxTrailPoints = 100; // TODO: possibly in the GUI.
+    maxTrailPoints = 60; // TODO: possibly in the GUI.
     trail = new TrailPoint[maxTrailPoints];
   }
   

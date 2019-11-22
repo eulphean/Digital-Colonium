@@ -47,7 +47,7 @@
   "/foodPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 100.49999237060547
+    "value": 94.5
   },
   "/cohesionW": {
     "min": 0,
@@ -62,7 +62,7 @@
   "/aheadDistance": {
     "min": 0,
     "max": 100,
-    "value": 30.000001907348633
+    "value": 33
   },
   "/agentScale": {
     "min": 0,
