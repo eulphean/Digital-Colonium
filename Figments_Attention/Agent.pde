@@ -39,7 +39,7 @@ class Agent {
     size = 5.0; // Size for the boid.
     
     // Genotypes. 
-    bodyColor = color(32, 32, 32);
+    bodyColor = color(19, 185, 240);
     scale = 0.5;
     maxSeperationRad = map(scale, 0.5, 1.0, 25, 65);
     maxFoodPerceptionRad = map(scale, 0.5, 1.0, 70, 110);

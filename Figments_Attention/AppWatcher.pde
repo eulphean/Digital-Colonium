@@ -34,7 +34,6 @@ class AppWatcher {
     // SVG params. 
     numRows = 5; numCols = 17; svgSize = 20; 
     
-    
     // Get the shader at specific index. 
     //idxShader = floor(random(shaderFactory.shaders.length)); 
     idxShader = 7; 

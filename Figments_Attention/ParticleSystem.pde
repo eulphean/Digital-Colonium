@@ -25,7 +25,6 @@ class Particle {
      particle.setStroke(particleColor);
      shape(particle);
    popMatrix();
-   //ellipse(position.x, position.y, 4, 4); 
    popStyle();
  }
  
