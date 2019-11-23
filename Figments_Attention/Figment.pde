@@ -37,8 +37,8 @@ class Figment extends Agent {
      if (trail[i] != null) {
        pushMatrix(); 
        translate(trail[i].x, trail[i].y); 
-       fill(color(43, 59, 64, trail[i].a)); 
-       ellipse(0, 0, 2, 2);
+       fill(color(34, 38, 35, trail[i].a)); 
+       ellipse(0, 0, 2.2, 2.2);
        trail[i].a -= 255/maxTrailPoints; 
        popMatrix();
      }

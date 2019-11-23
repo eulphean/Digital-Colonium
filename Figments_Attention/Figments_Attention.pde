@@ -4,92 +4,69 @@ import ddf.minim.ugens.*;
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
-// Initialize the GUI
-ControlP5 cp5; 
+// Minim sound engine. 
+Minim minim; AudioOutput out;
 
-// Sliders.
-Group g1; 
+// Sketch applet pointer. 
+PApplet sketchPointer = this; 
 
-// Food
-int numFood = 50; 
-Slider numFoodSlider;
-float flowerScale = 0.6; 
-Slider flowerScaleSlider; 
+// Factories for Shaders and Icons. 
+ShaderFactory shaderFactory; IconFactory iconFactory; 
 
-// Agent
-int numAgents = 50; 
-Slider numAgentsSlider;
-float bodyHealth = 200.0; 
-Slider bodyHealthSlider; 
-float agentScale = 1.0; 
-Slider agentScaleSlider; 
+// Background shader. 
+PGraphics pg; PShader shader; 
 
-// Perceptions
-int foodPerceptionRad = 40; 
-Slider foodRadSlider; 
-int seperationPerceptionRad = 40; 
-Slider seperationRadSlider; 
-int alignmentPerceptionRad = 50; 
-Slider alignmentRadSlider; 
-int cohesionPerceptionRad = 50; 
-Slider cohesionRadSlider; 
+// World that contains everything. 
+World world;
 
-// Weights
-float foodW = 2.0; 
-Slider foodWeightSlider;
-float seperationW = 0.5; 
-Slider seperationWeightSlider; 
-float alignmentW = 0.5; 
-Slider alignmentWeightSlider; 
-float cohesionW = 0.5; 
-Slider cohesionWeightSlider; 
-float wanderingW = 0.5; 
-Slider wanderSlider;
-float volume = 0.5; 
-Slider volumeSlider; 
-
-// Animation easings 
+// Array of all animation easings. We pick randomly.  
 Easing[] easings = { 
   Ani.QUAD_OUT, Ani.CUBIC_OUT, Ani.QUART_OUT, Ani.QUINT_OUT, Ani.SINE_OUT, Ani.CIRC_IN, Ani.CIRC_OUT, 
   Ani.EXPO_IN, Ani.EXPO_OUT, Ani.BACK_IN, Ani.BACK_OUT, Ani.BOUNCE_IN, Ani.BOUNCE_OUT, 
   Ani.ELASTIC_IN, Ani.ELASTIC_OUT
 };
 
-// Lookead
-float aheadDistance = 30.0; 
-Slider aheadDistanceSlider; 
 
-// Boolean flags. 
-boolean hideGui;
-boolean displayAgent; 
-boolean restartWorld;
-boolean debug;
-boolean healthStats;
-boolean turnOnVision;
-boolean releaseAgents; 
-boolean showAppWatcher; 
+// Interactive boolean flags. 
+boolean hideGui, displayAgent, restartWorld, debug, healthStats, turnOnVision, releaseAgents, showAppWatcher; 
 
-// Sound engine.
-Minim minim; 
-AudioOutput out;
+// Initialize the GUI
+ControlP5 cp5; 
 
-// Initialize a world
-World world;
+// GUI Parameters
+// Agent
+int numAgents = 50; 
+float agentScale = 1.0; 
+int foodPerceptionRad = 40; 
+int seperationPerceptionRad = 40;  
+int alignmentPerceptionRad = 50;  
+int cohesionPerceptionRad = 50; 
 
-// Sketch applet pointer
-PApplet sketchPointer = this; 
+// Force weight
+float foodW = 2.0; 
+float seperationW = 0.5; 
+float alignmentW = 0.5; 
+float cohesionW = 0.5; 
+float wanderingW = 0.5; 
 
-// Factories for Shaders and Icons. 
-ShaderFactory shaderFactory;
-IconFactory iconFactory; 
+// UNUSED RIGHT NOW
+float bodyHealth = 200.0; 
 
-// Background shader
-PGraphics pg; 
-PShader shader; 
+// Food
+int numFood = 50; 
+float flowerScale = 0.6; 
+
+// Volume
+float volume = 0.5; 
+
+// App Watcher (TODO: Add the time for this)
+int minWaitTime = 20000; 
+int maxWaitTime = 30000; 
 
 void setup() {
   fullScreen(P2D);
   
+  // Initialize animation engine. 
   Ani.init(this);
 
   // Run some code when the sketch closes. 
@@ -99,34 +76,25 @@ void setup() {
   shaderFactory = new ShaderFactory();
   iconFactory = new IconFactory();
 
-  // Initialize GUI flags. 
-  hideGui = true; 
-  displayAgent = false; 
-  restartWorld = false;
-  debug = false;
-  healthStats = false; 
-  turnOnVision = false;
-  releaseAgents = false;
-  showAppWatcher = false; 
+  // Initialize all interactive flags. 
+  hideGui = displayAgent = restartWorld = debug = healthStats = turnOnVision = releaseAgents = showAppWatcher = false; 
   
-  // GUI stuff. 
+  // Initialize GUI.  
   initializeGui();
 
   world = new World(numAgents, numFood);
   ellipseMode(RADIUS);
   smooth();
 
-  // Setup sound. 
+  // Initialize sound engine. 
   minim = new Minim(this);
   out = minim.getLineOut(Minim.STEREO, 2048);
   
-  // Setup background shader
+  // Initialize background shader. 
   setupBackgroundShader(); 
 }
 
 void draw() { 
-  //background(255);  
-  
   // Redraw background shader consequently. 
   image(pg, 0, 0);
 
@@ -139,143 +107,13 @@ void draw() {
   world.run();
 
   if (hideGui) {
-    g1.hide();
-    noCursor();
+    cp5.hide(); noCursor();
+    println("Frame Rate: " + frameRate); 
   } else {
-    g1.show(); 
-    cursor(); 
-    text("Frame rate: " + frameRate, 200, 100);  
+    cp5.show(); cursor(); 
+    fill(0);
+    text("Frame Rate: " + frameRate, 20, 690);  
   }
-}
-
-void initializeGui() {
-  cp5 = new ControlP5(this); 
-
-  g1 = cp5.addGroup("g1")
-    .setPosition(5, 20);
-
-  foodRadSlider = cp5.addSlider("foodPerceptionRad")
-    .setPosition(0, 0)
-    .setSize(100, 20)
-    .setRange(0, 150)
-    .setValue(foodPerceptionRad)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  seperationRadSlider = cp5.addSlider("seperationPerceptionRad")
-    .setPosition(0, 40)
-    .setSize(100, 20)
-    .setRange(0, 150)
-    .setValue(seperationPerceptionRad)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  flowerScaleSlider = cp5.addSlider("flowerScale")
-    .setPosition(0, 60)
-    .setSize(100, 20)
-    .setRange(0, 1)
-    .setValue(flowerScale)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1); 
-
-  numAgentsSlider = cp5.addSlider("numAgents")
-    .setPosition(0, 80)
-    .setSize(100, 20)
-    .setRange(0, 200)
-    .setValue(numAgents)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  numFoodSlider = cp5.addSlider("numFood")
-    .setPosition(0, 100)
-    .setSize(100, 20)
-    .setRange(0, 500)
-    .setValue(numFood)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  foodWeightSlider = cp5.addSlider("foodW")
-    .setPosition(0, 120)
-    .setSize(100, 20)
-    .setRange(0, 20.0)
-    .setValue(foodW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  seperationWeightSlider = cp5.addSlider("seperationW")
-    .setPosition(0, 140)
-    .setSize(100, 20)
-    .setRange(0, 10.0)
-    .setValue(seperationW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-  
-  cohesionWeightSlider = cp5.addSlider("cohesionW")
-    .setPosition(0, 160)
-    .setSize(100, 20)
-    .setRange(0, 5.0)
-    .setValue(cohesionW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-    
-  alignmentWeightSlider = cp5.addSlider("alignmentW")
-    .setPosition(0, 180)
-    .setSize(100, 20)
-    .setRange(0, 5.0)
-    .setValue(alignmentW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  wanderSlider = cp5.addSlider("wanderingW")
-    .setPosition(0, 200)
-    .setSize(100, 20)
-    .setRange(0, 1.0)
-    .setValue(wanderingW)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  aheadDistanceSlider = cp5.addSlider("aheadDistance")
-    .setPosition(0, 220)
-    .setSize(100, 20)
-    .setRange(0, 100)
-    .setValue(aheadDistance)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  volumeSlider = cp5.addSlider("volume")
-    .setPosition(0, 240)
-    .setSize(100, 20)
-    .setRange(0, 5.0)
-    .setValue(volume)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-  agentScaleSlider = cp5.addSlider("agentScale")
-    .setPosition(0, 260)
-    .setSize(100, 20)
-    .setRange(0, 3.0)
-    .setValue(agentScale)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-  
-  alignmentRadSlider = cp5.addSlider("alignmentPerceptionRad")
-    .setPosition(0, 280)
-    .setSize(100, 20)
-    .setRange(0, 150)
-    .setValue(alignmentPerceptionRad)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-  
-  cohesionRadSlider = cp5.addSlider("cohesionPerceptionRad")
-    .setPosition(0, 300)
-    .setSize(100, 20)
-    .setRange(0, 150)
-    .setValue(cohesionPerceptionRad)
-    .setColorCaptionLabel(color(255))
-    .setGroup(g1);
-
-
-  cp5.loadProperties(("medialife"));
 }
 
 void keyPressed() {
@@ -326,8 +164,160 @@ void setupBackgroundShader() {
 void prepareExitHandler () {
   Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
     public void run () {
-      cp5.saveProperties(("medialife"));
+      cp5.saveProperties(("figmentsofattention"));
     }
   }
   ));
+}
+
+void initializeGui() {
+  ControlFont labelFont = new ControlFont(createFont("Arial",15));
+  
+  cp5 = new ControlP5(this);
+  cp5.setColorCaptionLabel(0); 
+  cp5.setFont(labelFont);
+  cp5.setMoveable(true);
+ 
+
+  // All the groups 
+  Group agent = cp5.addGroup("Agents")
+            .setBarHeight(20)
+            .setWidth(150)
+            .setPosition(20,30)
+            .setColorLabel(color(255));
+  
+  cp5.addSlider("numAgents")
+    .setPosition(0, 0)
+    .setSize(150, 30)
+    .setRange(0, 200)
+    .setValue(numAgents)
+    .setGroup(agent);
+    
+  cp5.addSlider("agentScale")
+    .setPosition(0, 35)
+    .setSize(150, 30)
+    .setRange(0, 3.0)
+    .setValue(agentScale)
+    .setGroup(agent);
+            
+  cp5.addSlider("foodPerceptionRad")
+    .setPosition(0,70)
+    .setSize(150, 30)
+    .setRange(0, 150)
+    .setValue(foodPerceptionRad)
+    .setGroup(agent);
+  
+  cp5.addSlider("seperationPerceptionRad")
+    .setPosition(0,105)
+    .setSize(150, 30)
+    .setRange(0, 150)
+    .setValue(seperationPerceptionRad)
+    .setGroup(agent);
+  
+  cp5.addSlider("alignmentPerceptionRad")
+    .setPosition(0,140)
+    .setSize(150, 30)
+    .setRange(0, 150)
+    .setValue(alignmentPerceptionRad)
+    .setGroup(agent);
+  
+  cp5.addSlider("cohesionPerceptionRad")
+    .setPosition(0,175)
+    .setSize(150, 30)
+    .setRange(0, 150)
+    .setValue(cohesionPerceptionRad)
+    .setGroup(agent);
+  
+  cp5.addSlider("foodW")
+    .setPosition(0,210)
+    .setSize(150, 30)
+    .setRange(0, 20.0)
+    .setValue(foodW)
+    .setGroup(agent);
+
+  cp5.addSlider("seperationW")
+    .setPosition(0,245)
+    .setSize(150, 30)
+    .setRange(0, 10.0)
+    .setValue(seperationW)
+    .setGroup(agent);
+  
+  cp5.addSlider("cohesionW")
+    .setPosition(0,280)
+    .setSize(150, 30)
+    .setRange(0, 5.0)
+    .setValue(cohesionW)
+    .setGroup(agent);
+    
+  cp5.addSlider("alignmentW")
+    .setPosition(0,315)
+    .setSize(150, 30)
+    .setRange(0, 5.0)
+    .setValue(alignmentW)
+    .setGroup(agent);
+
+  cp5.addSlider("wanderingW")
+    .setPosition(0,350)
+    .setSize(150, 30)
+    .setRange(0, 1.0)
+    .setValue(wanderingW)
+    .setGroup(agent);
+ 
+  // Apps group. 
+  Group apps = cp5.addGroup("Apps")
+           .setBarHeight(20)
+           .setWidth(150)
+           .setPosition(20,450)
+           .setColorLabel(color(255));
+            
+  cp5.addSlider("numFood")
+    .setPosition(0, 0)
+    .setSize(150, 30)
+    .setRange(0, 500)
+    .setValue(numFood)
+    .setGroup(apps);
+  
+  cp5.addSlider("flowerScale")
+    .setPosition(0, 35)
+    .setSize(150, 20)
+    .setRange(0, 1)
+    .setValue(flowerScale)
+    .setGroup(apps); 
+       
+  // App Watcher group. 
+  Group appWatcher = cp5.addGroup("App Watcher")
+               .setBarHeight(20)
+               .setWidth(150)
+               .setPosition(20, 540)
+               .setColorLabel(color(255));
+  
+  cp5.addSlider("minWaitTime")
+    .setPosition(0, 0)
+    .setSize(150, 30)
+    .setRange(10000, 40000)
+    .setValue(minWaitTime)
+    .setGroup(appWatcher);
+               
+  cp5.addSlider("maxWaitTime")
+    .setPosition(0, 35)
+    .setSize(150, 30)
+    .setRange(30000, 60000)
+    .setValue(maxWaitTime)
+    .setGroup(appWatcher);
+    
+  // Sound group. 
+  Group sound = cp5.addGroup("Volume")
+            .setBarHeight(20)
+            .setWidth(150)
+            .setPosition(20,640)
+            .setColorLabel(color(255)); 
+            
+  cp5.addSlider("volume")
+    .setPosition(0, 0)
+    .setSize(150, 30)
+    .setRange(0, 5.0)
+    .setValue(volume)
+    .setGroup(sound);
+
+  cp5.loadProperties(("figmentsofattention"));
 }

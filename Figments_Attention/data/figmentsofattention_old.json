@@ -1,0 +1,77 @@
+{
+  "/wanderingW": {
+    "min": 0,
+    "max": 1,
+    "value": 0.3100000023841858
+  },
+  "/seperationPerceptionRad": {
+    "min": 0,
+    "max": 150,
+    "value": 100.49999237060547
+  },
+  "/seperationW": {
+    "min": 0,
+    "max": 10,
+    "value": 1.1999999284744263
+  },
+  "/volume": {
+    "min": 0,
+    "max": 5,
+    "value": 5
+  },
+  "/flowerScale": {
+    "min": 0,
+    "max": 1,
+    "value": 0.9199999570846558
+  },
+  "/foodW": {
+    "min": 0,
+    "max": 20,
+    "value": 1.5999999046325684
+  },
+  "/alignmentPerceptionRad": {
+    "min": 0,
+    "max": 150,
+    "value": 130.5
+  },
+  "/alignmentW": {
+    "min": 0,
+    "max": 5,
+    "value": 0.7999999523162842
+  },
+  "/cohesionPerceptionRad": {
+    "min": 0,
+    "max": 150,
+    "value": 148.5
+  },
+  "/foodPerceptionRad": {
+    "min": 0,
+    "max": 150,
+    "value": 94.5
+  },
+  "/cohesionW": {
+    "min": 0,
+    "max": 5,
+    "value": 0.7499999403953552
+  },
+  "/numFood": {
+    "min": 0,
+    "max": 500,
+    "value": 155
+  },
+  "/aheadDistance": {
+    "min": 0,
+    "max": 100,
+    "value": 33
+  },
+  "/agentScale": {
+    "min": 0,
+    "max": 3,
+    "value": 0.5399999618530273
+  },
+  "/numAgents": {
+    "min": 0,
+    "max": 200,
+    "value": 74
+  }
+}

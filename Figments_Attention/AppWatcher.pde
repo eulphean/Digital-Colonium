@@ -109,7 +109,7 @@ class AppWatcher {
       
       // Reset tie
       appWatcherTime = millis(); 
-      appWatcherWait = ceil(random(20000, 30000)); 
+      appWatcherWait = ceil(random(minWaitTime, maxWaitTime)); 
       
       // Assign eye a new position. 
       updatePosition();
