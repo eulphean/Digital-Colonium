@@ -5,7 +5,7 @@ class Agent {
   float wandertheta; 
   
   // Weights for acccumulating forces on the agent.  
-  float foodWeight; float seperationWeight; float wanderingWeight; float cohesionWeight; float alignmentWeight; 
+  float seperationWeight; float cohesionWeight; float alignmentWeight; 
   
   // Agent props
   color bodyColor;
@@ -48,11 +48,11 @@ class Agent {
     trail = new TrailPoint[maxTrailPoints];
   }
   
-  void run(ArrayList<Flower> flowers, ArrayList<Figment> agents) {
+  void run(ArrayList<Flower> flowers, ArrayList<Figment> agents, boolean shouldFlock) {
     updateGuiParameters(); 
     
     // Evaluate all the forces acting on the agents.
-    behaviors(flowers, agents);
+    behaviors(flowers, agents, shouldFlock);
     
     // Remove food from canvas if agent stepped on it. 
     consumeFood(flowers); 
@@ -78,17 +78,24 @@ class Agent {
   }
  
   void updateGuiParameters() {
-    // Forces that 
-    foodWeight = foodW; 
+    // Critical forces that determine the flocking behavior. 
+    // Modify them when changing this behavior. 
     seperationWeight = seperationW; 
     cohesionWeight = cohesionW; 
-    alignmentWeight = alignmentW; 
-    wanderingWeight = wanderingW;
+    alignmentWeight = alignmentW;
   }
   
-  void behaviors(ArrayList<Flower> f, ArrayList<Figment> agents) {
+  void behaviors(ArrayList<Flower> f, ArrayList<Figment> agents, boolean shouldFlock) {
     PVector target;
     PVector steer; 
+    
+    // Are the agents flocking? 
+    if (!shouldFlock) {
+      seperationWeight = 0; 
+      cohesionWeight = 0; 
+      alignmentWeight = 0; 
+      println("No flocking now"); 
+    } 
     
     // Seperation between agents. 
     steer = seperation(agents); 
@@ -107,14 +114,14 @@ class Agent {
     target = findFood(f);
     if (target != null) {
      steer = seek(target, true /*Arrive*/); 
-     steer.mult(foodWeight); 
+     steer.mult(foodW); 
      applyForce(steer);
     }
     
     //// Wander if nothing is found or I'm way too healthy. 
     if (target == null) {
       steer = wander(); 
-      steer.mult(wanderingWeight);
+      steer.mult(wanderingW);
       applyForce(steer);
     }
   }

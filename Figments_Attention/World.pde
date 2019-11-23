@@ -7,6 +7,7 @@ class World {
   ArrayList<Flower> flowers; // Apps
   int generation;
   int totalSystemFood; 
+  int numRemainingFood; 
 
   World(int numAgents, int numFood) {
     // App watcher
@@ -36,8 +37,10 @@ class World {
     appWatcher.run(); 
     
     // Apps
+    numRemainingFood = 0; 
     for (Flower f : flowers) {
       if (!f.isEaten) {  
+        numRemainingFood++; 
         f.run();
       }
     }
@@ -46,9 +49,11 @@ class World {
     for (int i = agents.size()-1; i >= 0; i--) {
       Figment a = agents.get(i);
       
+      boolean shouldFlock = numRemainingFood == 0? true : false; 
+      
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
-      a.run(flowers, agents);
+      a.run(flowers, agents, shouldFlock);
       a.display();
     }
     
@@ -101,7 +106,6 @@ class World {
       f.position.x = targetPos.x; f.position.y = targetPos.y; // So, others don't overlap with this. 
       f.aniPosition.x = appWatcher.position.x + appWatcher.wallWidth/2; f.aniPosition.y = appWatcher.position.y + appWatcher.wallHeight/2; // This position is lerped till the animation completes. 
       f.isEaten = false; f.isReady = false; 
-      //f.createHead();
       f.assignShader();
       int idx = (int) random(0, easings.length);
       f.fly(targetPos, easings[idx]);

@@ -119,7 +119,7 @@ void draw() {
   } else {
     cp5.show(); cursor(); 
     fill(0);
-    text("Frame Rate: " + frameRate, 20, 750);  
+    text("Frame Rate: " + frameRate, 20, 755);  
   }
 }
 
@@ -256,14 +256,14 @@ void initializeGui() {
     .setGroup(agent);
     
   cp5.addSlider("alignmentW")
-    .setPosition(0,380)
+    .setPosition(0,385)
     .setSize(150, 30)
     .setRange(0, 5.0)
     .setValue(alignmentW)
     .setGroup(agent);
 
   cp5.addSlider("wanderingW")
-    .setPosition(0,415)
+    .setPosition(0,420)
     .setSize(150, 30)
     .setRange(0, 1.0)
     .setValue(wanderingW)
@@ -273,7 +273,7 @@ void initializeGui() {
   Group apps = cp5.addGroup("Apps")
            .setBarHeight(20)
            .setWidth(150)
-           .setPosition(20,510)
+           .setPosition(20,515)
            .setColorLabel(color(255));
             
   cp5.addSlider("numFood")
@@ -294,7 +294,7 @@ void initializeGui() {
   Group appWatcher = cp5.addGroup("App Watcher")
                .setBarHeight(20)
                .setWidth(150)
-               .setPosition(20, 600)
+               .setPosition(20, 605)
                .setColorLabel(color(255));
   
   cp5.addSlider("minWaitTime")
@@ -315,7 +315,7 @@ void initializeGui() {
   Group sound = cp5.addGroup("Volume")
             .setBarHeight(20)
             .setWidth(150)
-            .setPosition(20, 700)
+            .setPosition(20, 705)
             .setColorLabel(color(255)); 
             
   cp5.addSlider("volume")
