@@ -2,17 +2,17 @@
   "/wanderingW": {
     "min": 0,
     "max": 1,
-    "value": 0.3100000023841858
+    "value": 0.5
   },
   "/seperationPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 100.49999237060547
+    "value": 91
   },
   "/seperationW": {
     "min": 0,
     "max": 10,
-    "value": 1.3333333730697632
+    "value": 3.4000000953674316
   },
   "/volume": {
     "min": 0,
@@ -22,7 +22,12 @@
   "/maxWaitTime": {
     "min": 30000,
     "max": 60000,
-    "value": 40000
+    "value": 60000
+  },
+  "/maxSpeed": {
+    "min": 1,
+    "max": 10,
+    "value": 4
   },
   "/flowerScale": {
     "min": 0,
@@ -32,32 +37,37 @@
   "/foodW": {
     "min": 0,
     "max": 20,
-    "value": 1.5999999046325684
+    "value": 4
   },
   "/alignmentPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 130.5
+    "value": 150
   },
   "/alignmentW": {
     "min": 0,
     "max": 5,
-    "value": 0.8666666746139526
+    "value": 3
   },
   "/cohesionPerceptionRad": {
     "min": 0,
-    "max": 150,
-    "value": 148.5
+    "max": 500,
+    "value": 500
   },
   "/foodPerceptionRad": {
     "min": 0,
     "max": 150,
-    "value": 94.5
+    "value": 32
   },
   "/cohesionW": {
     "min": 0,
     "max": 5,
-    "value": 1
+    "value": 1.7000000476837158
+  },
+  "/maxForce": {
+    "min": 0,
+    "max": 1,
+    "value": 0.0533333346247673
   },
   "/numFood": {
     "min": 0,
@@ -67,16 +77,16 @@
   "/agentScale": {
     "min": 0,
     "max": 3,
-    "value": 0.5399999618530273
+    "value": 0.5
   },
   "/minWaitTime": {
     "min": 10000,
     "max": 40000,
-    "value": 20000
+    "value": 40000
   },
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 74.66666412353516
+    "value": 70.66667175292969
   }
 }

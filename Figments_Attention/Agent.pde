@@ -4,14 +4,8 @@ class Agent {
   PVector velocity; PVector acceleration;
   float wandertheta; 
   
-  // Possible Genotypes.  
-  float maxSpeed; float maxForce;
-  
   // Weights for acccumulating forces on the agent.  
   float foodWeight; float seperationWeight; float wanderingWeight; float cohesionWeight; float alignmentWeight; 
-  
-  // Health units. 
-  float maxBodyHealth; float curBodyHealth; float foodUnitHealth; float minusHealth; float flockThreshHealth; 
   
   // Agent props
   color bodyColor;
@@ -38,15 +32,6 @@ class Agent {
     
     // Genotypes. 
     bodyColor = color(19, 185, 240);
-    maxSpeed = 3.0;
- 
-    // TODO: Evolve these parameters. 
-    maxForce = 0.15; 
-
-    // Health units. Initial units. 
-    maxBodyHealth = 240.0; curBodyHealth = 20; 
-    foodUnitHealth = 60; minusHealth = 0.2; 
-    flockThreshHealth = 50;   
     
     // Agent's instrument. 
     // Calculate a random midi note and get its corresponding frequency.
@@ -105,12 +90,6 @@ class Agent {
     PVector target;
     PVector steer; 
     
-    // Convert into a flock.
-    if (curBodyHealth >= flockThreshHealth) {
-     alignmentWeight = 0; 
-     cohesionWeight = 0;
-    }
-    
     // Seperation between agents. 
     steer = seperation(agents); 
     steer.mult(seperationWeight); 
@@ -127,8 +106,6 @@ class Agent {
     // Food. 
     target = findFood(f);
     if (target != null) {
-     //// ? 
-     //float newFoodWeight = map(curBodyHealth, 0, maxBodyHealth, foodWeight, 0); 
      steer = seek(target, true /*Arrive*/); 
      steer.mult(foodWeight); 
      applyForce(steer);
@@ -157,19 +134,10 @@ class Agent {
     
     // Reset accelerationelertion to 0 each cycle
     acceleration.mult(0);
-    
-    if (curBodyHealth >= 0) {
-      curBodyHealth -= minusHealth;   
-    }
   }
   
   // Did it just step on food when it was hungry? 
-  void consumeFood(ArrayList<Flower> flowers) {
-    // Feeling pretty health. Nothing to consume. 
-    if (curBodyHealth >= maxBodyHealth) {
-      return;   
-    }
-    
+  void consumeFood(ArrayList<Flower> flowers) {    
     // Are we touching any food objects that are not eaten? 
     for (int i = flowers.size()-1; i >= 0; i--) {
       Flower fl = flowers.get(i);
@@ -181,12 +149,8 @@ class Agent {
         
         // Food is successfully consumed, do something when that happens. 
         if (d < flWidth/2) {
-          curBodyHealth += foodUnitHealth;
           fl.isEaten = true; // Critical flag. 
-          
-          //maxSeperationRad = map(scale, 0.5, 1.0, 20, 45);
-          //maxFoodPerceptionRad = map(scale, 0.5, 1.0, 90, 130);
-          
+         
           // Release particles. 
           particles.init(center);
           
@@ -194,18 +158,6 @@ class Agent {
           out.playNote(0, 0.1, new ToneInstrument(frequency, amp));
         }
       }
-    }
-  }
-  
-  // At any moment there is a teeny, tiny chance a bloop will reproduce
-  Figment reproduce() {
-    // asexual reproduction
-    if (random(1) < 0.0001) {
-      // Child is exact copy of single parent
-      return new Figment(new PVector(0, 0), 0.0);
-    } 
-    else {
-      return null;
     }
   }
   
@@ -217,24 +169,26 @@ class Agent {
   }
   
   void displayDebug() {
-    noStroke();
     // Debug content
-    if (debug) {           
-      // Food perception radius.
-      fill(color(255, 0, 0, 100));
-      ellipse(position.x,position.y, foodPerceptionRad, foodPerceptionRad); 
-      
-      // Seperation perception
-      fill(color(245, 195, 32, 75));
-      ellipse(position.x,position.y, seperationPerceptionRad, seperationPerceptionRad); 
-      
-      // Alignment perception
-      fill(color(198, 57, 254, 50));
-      ellipse(position.x,position.y, alignmentPerceptionRad, alignmentPerceptionRad); 
-            
-      // Cohesion perception
-      fill(color(62, 255, 27, 25));
-      ellipse(position.x,position.y, cohesionPerceptionRad, cohesionPerceptionRad); 
+    if (debug) {  
+      pushStyle();
+        noStroke();
+        // Food perception radius.
+        fill(color(255, 0, 0, 100));
+        ellipse(position.x,position.y, foodPerceptionRad, foodPerceptionRad); 
+        
+        // Seperation perception
+        fill(color(245, 195, 32, 75));
+        ellipse(position.x,position.y, seperationPerceptionRad, seperationPerceptionRad); 
+        
+        // Alignment perception
+        fill(color(198, 57, 254, 50));
+        ellipse(position.x,position.y, alignmentPerceptionRad, alignmentPerceptionRad); 
+              
+        // Cohesion perception
+        fill(color(62, 255, 27, 25));
+        ellipse(position.x,position.y, cohesionPerceptionRad, cohesionPerceptionRad); 
+      popStyle();
     }
   }
   
@@ -375,10 +329,6 @@ class Agent {
   PVector findFood(ArrayList<Flower> flowers) {
     float minD = 5000000; // Helpful to calculate a local minima. 
     PVector target = null;
-    
-    if (curBodyHealth >= maxBodyHealth/3) {
-     return null; 
-    }
     
     // Find the closest food particle.
     for (Flower fl : flowers) {

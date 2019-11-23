@@ -36,7 +36,11 @@ ControlP5 cp5;
 // GUI Parameters
 // Agent
 int numAgents = 50; 
-float agentScale = 1.0; 
+float agentScale = 1.0;
+float maxSpeed = 5.0; 
+float maxForce = 0.1; 
+
+// Perception Radii
 int foodPerceptionRad = 40; 
 int seperationPerceptionRad = 40;  
 int alignmentPerceptionRad = 50;  
@@ -44,13 +48,12 @@ int cohesionPerceptionRad = 50;
 
 // Force weight
 float foodW = 2.0; 
+
+// When should these weights kick in? 
 float seperationW = 0.5; 
 float alignmentW = 0.5; 
 float cohesionW = 0.5; 
-float wanderingW = 0.5; 
-
-// UNUSED RIGHT NOW
-float bodyHealth = 200.0; 
+float wanderingW = 0.5;
 
 // Food
 int numFood = 50; 
@@ -116,7 +119,7 @@ void draw() {
   } else {
     cp5.show(); cursor(); 
     fill(0);
-    text("Frame Rate: " + frameRate, 20, 690);  
+    text("Frame Rate: " + frameRate, 20, 750);  
   }
 }
 
@@ -168,7 +171,6 @@ void initializeGui() {
   cp5.setFont(labelFont);
   cp5.setMoveable(true);
  
-
   // All the groups 
   Group agent = cp5.addGroup("Agents")
             .setBarHeight(20)
@@ -190,64 +192,78 @@ void initializeGui() {
     .setValue(agentScale)
     .setGroup(agent);
             
-  cp5.addSlider("foodPerceptionRad")
+  cp5.addSlider("maxSpeed")
     .setPosition(0,70)
+    .setSize(150, 30)
+    .setRange(1, 10)
+    .setValue(maxSpeed)
+    .setGroup(agent);
+    
+  cp5.addSlider("maxForce")
+    .setPosition(0,105)
+    .setSize(150, 30)
+    .setRange(0, 1.0)
+    .setValue(maxForce)
+    .setGroup(agent);
+    
+  cp5.addSlider("foodPerceptionRad")
+    .setPosition(0,140)
     .setSize(150, 30)
     .setRange(0, 150)
     .setValue(foodPerceptionRad)
     .setGroup(agent);
   
   cp5.addSlider("seperationPerceptionRad")
-    .setPosition(0,105)
+    .setPosition(0,175)
     .setSize(150, 30)
     .setRange(0, 150)
     .setValue(seperationPerceptionRad)
     .setGroup(agent);
   
   cp5.addSlider("alignmentPerceptionRad")
-    .setPosition(0,140)
+    .setPosition(0,210)
     .setSize(150, 30)
     .setRange(0, 150)
     .setValue(alignmentPerceptionRad)
     .setGroup(agent);
   
   cp5.addSlider("cohesionPerceptionRad")
-    .setPosition(0,175)
+    .setPosition(0,245)
     .setSize(150, 30)
-    .setRange(0, 150)
+    .setRange(0, 500)
     .setValue(cohesionPerceptionRad)
     .setGroup(agent);
   
   cp5.addSlider("foodW")
-    .setPosition(0,210)
+    .setPosition(0,280)
     .setSize(150, 30)
     .setRange(0, 20.0)
     .setValue(foodW)
     .setGroup(agent);
 
   cp5.addSlider("seperationW")
-    .setPosition(0,245)
+    .setPosition(0,315)
     .setSize(150, 30)
     .setRange(0, 10.0)
     .setValue(seperationW)
     .setGroup(agent);
   
   cp5.addSlider("cohesionW")
-    .setPosition(0,280)
+    .setPosition(0,350)
     .setSize(150, 30)
     .setRange(0, 5.0)
     .setValue(cohesionW)
     .setGroup(agent);
     
   cp5.addSlider("alignmentW")
-    .setPosition(0,315)
+    .setPosition(0,380)
     .setSize(150, 30)
     .setRange(0, 5.0)
     .setValue(alignmentW)
     .setGroup(agent);
 
   cp5.addSlider("wanderingW")
-    .setPosition(0,350)
+    .setPosition(0,415)
     .setSize(150, 30)
     .setRange(0, 1.0)
     .setValue(wanderingW)
@@ -257,7 +273,7 @@ void initializeGui() {
   Group apps = cp5.addGroup("Apps")
            .setBarHeight(20)
            .setWidth(150)
-           .setPosition(20,450)
+           .setPosition(20,510)
            .setColorLabel(color(255));
             
   cp5.addSlider("numFood")
@@ -278,7 +294,7 @@ void initializeGui() {
   Group appWatcher = cp5.addGroup("App Watcher")
                .setBarHeight(20)
                .setWidth(150)
-               .setPosition(20, 540)
+               .setPosition(20, 600)
                .setColorLabel(color(255));
   
   cp5.addSlider("minWaitTime")
@@ -299,7 +315,7 @@ void initializeGui() {
   Group sound = cp5.addGroup("Volume")
             .setBarHeight(20)
             .setWidth(150)
-            .setPosition(20,640)
+            .setPosition(20, 700)
             .setColorLabel(color(255)); 
             
   cp5.addSlider("volume")

@@ -47,6 +47,7 @@ class Flower {
   void run() {    
     updateShaderParams();
     
+    pushStyle();
     pushMatrix();
       if (isReady) {
         translate(position.x, position.y);
@@ -100,7 +101,8 @@ class Flower {
          }
         popMatrix();
       }
-     popMatrix(); 
+     popMatrix();
+     popStyle();
   } 
   
   boolean isThere() {
