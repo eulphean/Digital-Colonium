@@ -5,8 +5,6 @@ class Agent {
   float wandertheta; 
   
   // Possible Genotypes.  
-  float maxFoodPerceptionRad;
-  float maxSeperationRad; float maxCohesionRad; float maxAlignmentRad; 
   float maxSpeed; float maxForce;
   
   // Weights for acccumulating forces on the agent.  
@@ -16,7 +14,7 @@ class Agent {
   float maxBodyHealth; float curBodyHealth; float foodUnitHealth; float minusHealth; float flockThreshHealth; 
   
   // Agent props
-  color bodyColor; float scale; 
+  color bodyColor;
   float size; 
   
   // Particle systems. 
@@ -40,16 +38,14 @@ class Agent {
     
     // Genotypes. 
     bodyColor = color(19, 185, 240);
-    scale = 0.5;
-    maxSeperationRad = map(scale, 0.5, 1.0, 25, 65);
-    maxFoodPerceptionRad = map(scale, 0.5, 1.0, 70, 110);
     maxSpeed = 3.0;
  
     // TODO: Evolve these parameters. 
     maxForce = 0.15; 
 
     // Health units. Initial units. 
-    maxBodyHealth = 240.0; curBodyHealth = 20; foodUnitHealth = 60; minusHealth = 0.2; 
+    maxBodyHealth = 240.0; curBodyHealth = 20; 
+    foodUnitHealth = 60; minusHealth = 0.2; 
     flockThreshHealth = 50;   
     
     // Agent's instrument. 
@@ -97,18 +93,12 @@ class Agent {
   }
  
   void updateGuiParameters() {
-    // Weights Rad
+    // Forces that 
     foodWeight = foodW; 
     seperationWeight = seperationW; 
     cohesionWeight = cohesionW; 
     alignmentWeight = alignmentW; 
     wanderingWeight = wanderingW;
-    
-    // Perception Rad
-    // maxFoodPerceptionRad = foodPerceptionRad; Genotype
-    // maxSeperationRad = seperationPerceptionRad; Genotype
-    maxCohesionRad = cohesionPerceptionRad; // TODO: Have its own param. 
-    maxAlignmentRad = alignmentPerceptionRad; // TODO: Have its own param. 
   }
   
   void behaviors(ArrayList<Flower> f, ArrayList<Figment> agents) {
@@ -137,13 +127,14 @@ class Agent {
     // Food. 
     target = findFood(f);
     if (target != null) {
-     float newFoodWeight = map(curBodyHealth, 0, maxBodyHealth, foodWeight, 0); 
+     //// ? 
+     //float newFoodWeight = map(curBodyHealth, 0, maxBodyHealth, foodWeight, 0); 
      steer = seek(target, true /*Arrive*/); 
-     steer.mult(newFoodWeight); 
+     steer.mult(foodWeight); 
      applyForce(steer);
     }
     
-    //// Wander if nothing is found or I'm way too healthy or media saturated. 
+    //// Wander if nothing is found or I'm way too healthy. 
     if (target == null) {
       steer = wander(); 
       steer.mult(wanderingWeight);
@@ -193,8 +184,8 @@ class Agent {
           curBodyHealth += foodUnitHealth;
           fl.isEaten = true; // Critical flag. 
           
-          maxSeperationRad = map(scale, 0.5, 1.0, 20, 45);
-          maxFoodPerceptionRad = map(scale, 0.5, 1.0, 90, 130);
+          //maxSeperationRad = map(scale, 0.5, 1.0, 20, 45);
+          //maxFoodPerceptionRad = map(scale, 0.5, 1.0, 90, 130);
           
           // Release particles. 
           particles.init(center);
@@ -225,53 +216,25 @@ class Agent {
     if (position.y > height+size) position.y = -size;
   }
   
-  // Check for death
-  boolean dead() {
-   return false;
-  }
-  
-  void displayAgent() {
-    pushMatrix();
-      stroke(0);
-      // Draw a boid.  
-      float theta = velocity.heading() + radians(90);
-      translate(position.x,position.y);
-      rotate(theta);
-      beginShape(TRIANGLES);
-      vertex(0, 0);
-      vertex(-size, size*2);
-      vertex(size, size*2);
-      endShape();
-     
-     // Show health stats. 
-     if (healthStats) {
-        textSize(15); 
-        fill(255);
-        text("Body:" + nf(curBodyHealth, 0, 2), -10, 30); 
-     }
-    popMatrix();
-    
-    // Debug content. 
-    displayDebug();
-  }
-  
   void displayDebug() {
+    noStroke();
     // Debug content
-    if (debug) {     
-      // Position marker. 
-      fill(0, 255, 0);
-      ellipse(position.x, position.y, 3, 3);
-    }
-    
-    // Vision circle.
-    if (turnOnVision) {
+    if (debug) {           
       // Food perception radius.
-      fill(color(0, 255, 0, 50));
-      ellipse(position.x,position.y,maxFoodPerceptionRad, maxFoodPerceptionRad); 
+      fill(color(255, 0, 0, 100));
+      ellipse(position.x,position.y, foodPerceptionRad, foodPerceptionRad); 
       
-      // Seperation radius
-      fill(color(255, 0, 0, 50));
-      ellipse(position.x,position.y,maxSeperationRad,maxSeperationRad); 
+      // Seperation perception
+      fill(color(245, 195, 32, 75));
+      ellipse(position.x,position.y, seperationPerceptionRad, seperationPerceptionRad); 
+      
+      // Alignment perception
+      fill(color(198, 57, 254, 50));
+      ellipse(position.x,position.y, alignmentPerceptionRad, alignmentPerceptionRad); 
+            
+      // Cohesion perception
+      fill(color(62, 255, 27, 25));
+      ellipse(position.x,position.y, cohesionPerceptionRad, cohesionPerceptionRad); 
     }
   }
   
@@ -348,7 +311,7 @@ class Agent {
     for (Agent other : agents) {
       float d = PVector.dist(position, other.position);
       // If the distance is greater than 0 and less than desired distance. 
-      if ((d > 0) && (d < maxSeperationRad)) {
+      if ((d > 0) && (d < seperationPerceptionRad)) {
         // Calculate vector pointing away from neighbor
         PVector diff = PVector.sub(position, other.position);
         diff.normalize();
@@ -374,7 +337,7 @@ class Agent {
     int count = 0;
     for (Agent other : agents) {
       float d = PVector.dist(position,other.position);
-      if ((d > 0) && (d < maxAlignmentRad)) {
+      if ((d > 0) && (d < alignmentPerceptionRad)) {
         steer.add(other.velocity);
         count++;
       }
@@ -397,7 +360,7 @@ class Agent {
     int count = 0;
     for (Agent other : agents) {
       float d = PVector.dist(position,other.position);
-      if ((d > 0) && (d < maxCohesionRad)) {
+      if ((d > 0) && (d < cohesionPerceptionRad)) {
         sum.add(other.position); // Add position
         count++;
       }
@@ -423,7 +386,7 @@ class Agent {
          PVector center = new PVector(fl.position.x + fl.flowerWidth/2, fl.position.y + fl.flowerHeight/2);
          // Calculate the minimum distance to food
          float d = PVector.dist(position, center); 
-         if (d < maxFoodPerceptionRad) {
+         if (d < foodPerceptionRad) {
            if (d < minD) {
              minD = d;   
              target = center; 

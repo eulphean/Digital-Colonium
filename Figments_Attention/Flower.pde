@@ -48,7 +48,6 @@ class Flower {
     updateShaderParams();
     
     pushMatrix();
-      pushStyle();
       if (isReady) {
         translate(position.x, position.y);
       } else {
@@ -57,52 +56,51 @@ class Flower {
       scale(scale, scale);
       
       //// Draw the bounding box
-      //// Enable this for debugging. 
-      //color c = color(255, 255, 255, 0); 
-      //fill(c);
-      //stroke(0);
-      //rect(0, 0, flowerWidth, flowerHeight); 
-      
-      // Smooth flower face. 
-      noStroke();
-      
-      ellipseMode(CORNER);
-      // Left leaf.
-      pushMatrix(); 
-      translate(base.x, base.y); 
-        rotate(radians(200)); 
-        fill(96, 96, 96);
-        ellipse(0, 0, flowerWidth/2, flowerHeight/9);
-      popMatrix();
-      
-      // Right leaf. 
-      pushMatrix(); 
-      translate(base.x, base.y); 
-        rotate(radians(-20));
-        fill(96, 96, 96);
-        ellipse(0, -flowerHeight/9, flowerWidth/2, flowerHeight/9);
-      popMatrix();
-      
-      // Stem.
-      pushStyle();
-      stroke(32, 32, 32);
-      strokeWeight(6);
-      strokeCap(SQUARE);
-      line(centerHead.x, centerHead.y, base.x, base.y); 
-      popStyle();
-      
-      pushMatrix(); 
-       translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3);
-       if (this.isThere()) {
-        shader(shader.shade);
-        image(h, 0, 0); 
-        resetShader();
-       } else {
-        image(h, 0, 0); 
-       }
-      popMatrix();
-      popStyle();
-    popMatrix();
+      if (debug) { 
+        color c = color(255, 255, 255, 0); 
+        fill(c);
+        stroke(0);
+        rect(0, 0, flowerWidth, flowerHeight); 
+      } else {
+        // Smooth flower face. 
+        noStroke();
+        ellipseMode(CORNER);
+        // Left leaf.
+        pushMatrix(); 
+        translate(base.x, base.y); 
+          rotate(radians(200)); 
+          fill(96, 96, 96);
+          ellipse(0, 0, flowerWidth/2, flowerHeight/9);
+        popMatrix();
+        
+        // Right leaf. 
+        pushMatrix(); 
+        translate(base.x, base.y); 
+          rotate(radians(-20));
+          fill(96, 96, 96);
+          ellipse(0, -flowerHeight/9, flowerWidth/2, flowerHeight/9);
+        popMatrix();
+        
+        // Stem.
+        pushStyle();
+        stroke(32, 32, 32);
+        strokeWeight(6);
+        strokeCap(SQUARE);
+        line(centerHead.x, centerHead.y, base.x, base.y); 
+        popStyle();
+        
+        pushMatrix(); 
+         translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3);
+         if (this.isThere()) {
+          shader(shader.shade);
+          image(h, 0, 0); 
+          resetShader();
+         } else {
+          image(h, 0, 0); 
+         }
+        popMatrix();
+      }
+     popMatrix(); 
   } 
   
   boolean isThere() {

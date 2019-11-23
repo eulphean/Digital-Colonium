@@ -24,36 +24,54 @@ class Figment extends Agent {
   }
   
   void display() {
-   if (displayAgent) {
-     super.displayAgent(); 
-   }
-   
-   // Draw the trails. 
-   pushStyle(); 
-   noStroke();
-   
-   // Draw the trail
-   for (int i=0; i<maxTrailPoints; i++) {
-     if (trail[i] != null) {
-       pushMatrix(); 
-       translate(trail[i].x, trail[i].y); 
-       fill(color(34, 38, 35, trail[i].a)); 
-       ellipse(0, 0, 2.2, 2.2);
-       trail[i].a -= 255/maxTrailPoints; 
-       popMatrix();
+   float theta = velocity.heading() + radians(90);
+   if (debug) {
+     super.displayDebug(); 
+     // Draw boid's body.
+     pushMatrix(); 
+      fill(0); 
+      theta = velocity.heading() + radians(90);
+      translate(position.x, position.y); 
+      rotate(theta);
+      scale(agentScale);
+      shape(body);
+     popMatrix();
+   } else {
+     // Draw boid's fins. 
+     pushMatrix();
+      stroke(0);  
+      translate(position.x,position.y);
+      rotate(theta);
+      beginShape(TRIANGLES);
+      vertex(0, 0);
+      vertex(-size, size*2);
+      vertex(size, size*2);
+      endShape(); 
+     popMatrix();
+     
+     // Draw the trails. 
+     noStroke(); 
+     for (int i=0; i<maxTrailPoints; i++) {
+       if (trail[i] != null) {
+         pushMatrix(); 
+         translate(trail[i].x, trail[i].y); 
+         fill(color(34, 38, 35, trail[i].a)); 
+         ellipse(0, 0, 2.2, 2.2);
+         trail[i].a -= 255/maxTrailPoints; 
+         popMatrix();
+       }
      }
+     
+     // Draw boid's body.
+     fill(bodyColor); 
+     pushMatrix(); 
+      theta = velocity.heading() + radians(90);
+      translate(position.x, position.y); 
+      rotate(theta);
+      scale(agentScale);
+      shape(body);
+     popMatrix();
    }
-   
-   // Draw the body
-   fill(bodyColor); 
-   pushMatrix(); 
-    float theta = velocity.heading() + radians(90);
-    translate(position.x, position.y); 
-    rotate(theta);
-    scale(agentScale);
-    shape(body);
-   popMatrix();
-   popStyle();
   }
   
   void loadBodyParts() {

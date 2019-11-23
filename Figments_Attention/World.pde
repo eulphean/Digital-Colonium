@@ -48,15 +48,8 @@ class World {
       
       // Handle all the agent behavior. 
       // Seperation, seeking food, seeking media, avoiding media
-      //out.pauseNotes();
       a.run(flowers, agents);
       a.display();
-      //out.resumeNotes();
-      
-      // Health of the agent.
-      if (a.dead()) { // Is it dead? 
-        agents.remove(i); 
-      }
     }
     
     // Release more agents. TODO: Automate this through reproduction. 

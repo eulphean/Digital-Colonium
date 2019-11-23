@@ -28,7 +28,7 @@ Easing[] easings = {
 
 
 // Interactive boolean flags. 
-boolean hideGui, displayAgent, restartWorld, debug, healthStats, turnOnVision, releaseAgents, showAppWatcher; 
+boolean hideGui, restartWorld, releaseAgents, debug; 
 
 // Initialize the GUI
 ControlP5 cp5; 
@@ -77,7 +77,7 @@ void setup() {
   iconFactory = new IconFactory();
 
   // Initialize all interactive flags. 
-  hideGui = displayAgent = restartWorld = debug = healthStats = turnOnVision = releaseAgents = showAppWatcher = false; 
+  hideGui = restartWorld = debug = releaseAgents = false; 
   
   // Initialize GUI.  
   initializeGui();
@@ -96,7 +96,11 @@ void setup() {
 
 void draw() { 
   // Redraw background shader consequently. 
-  image(pg, 0, 0);
+  if (debug) {
+    background(255); 
+  } else {
+    image(pg, 0, 0);  
+  }
 
   if (restartWorld) {
     world = new World(numAgents, numFood);
@@ -117,37 +121,23 @@ void draw() {
 }
 
 void keyPressed() {
-  if (key == 'g') {
+  if (key == 'h') {
     hideGui = !hideGui;
   }
-
-  if (key == 'a') {
-    displayAgent = !displayAgent;
-  }
-
-  if (key == 't') {
-    turnOnVision = !turnOnVision;
+  
+  if (key == ' ') {
+    releaseAgents = !releaseAgents;
   }
 
   if (key == 'r') {
     restartWorld = !restartWorld;
   }
 
+  // Maybe need two debug modes. 
   if (key == 'd') {
     debug = !debug;
   }
 
-  if (key == 'h') {
-    healthStats = !healthStats;
-  }
-
-  if (key == ' ') {
-    releaseAgents = !releaseAgents;
-  }
-  
-  if (key == 'e') {
-    showAppWatcher = true; 
-  }
 }
 
 void setupBackgroundShader() {

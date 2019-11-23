@@ -30,6 +30,9 @@ class AppWatcher {
   float amp; float frequency; 
   EmitterInstrument instrument;
   
+  // To keep track of app watcher. 
+  boolean showAppWatcher; 
+  
   AppWatcher() {
     // SVG params. 
     numRows = 5; numCols = 17; svgSize = 20; 
@@ -66,10 +69,12 @@ class AppWatcher {
     // App wall and mask it with the shape. 
     drawAppsOffscreen();
     
+    // Sound initialize
     frequency = Frequency.ofMidiNote(60).asHz();
     amp = 0.5;
-    
     instrument = new EmitterInstrument(frequency, amp);
+    
+    showAppWatcher = false; 
     
     // Graphics. 
     ellipse = createGraphics(wallWidth, wallHeight); 

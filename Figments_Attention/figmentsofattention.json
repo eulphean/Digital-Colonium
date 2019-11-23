@@ -12,7 +12,7 @@
   "/seperationW": {
     "min": 0,
     "max": 10,
-    "value": 1.1999999284744263
+    "value": 1.3333333730697632
   },
   "/volume": {
     "min": 0,
@@ -42,7 +42,7 @@
   "/alignmentW": {
     "min": 0,
     "max": 5,
-    "value": 0.3999999761581421
+    "value": 0.8666666746139526
   },
   "/cohesionPerceptionRad": {
     "min": 0,
@@ -57,7 +57,7 @@
   "/cohesionW": {
     "min": 0,
     "max": 5,
-    "value": 0.7499999403953552
+    "value": 1
   },
   "/numFood": {
     "min": 0,
