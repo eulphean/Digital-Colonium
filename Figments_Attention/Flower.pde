@@ -5,7 +5,7 @@ class Flower {
   int rot;
   int flowerHeight; int flowerWidth; 
   float scale; 
-  PGraphics h; PGraphics b; 
+  PImage headBW, headCol, body; 
   Icon icon; 
   PVector centerHead, base;
   boolean isEaten, isReady; 
@@ -39,15 +39,20 @@ class Flower {
   
   void createHead() {
     icon = iconFactory.getRandomIcon(); 
-    h = createGraphics(flowerWidth, flowerWidth); 
+    PGraphics h = createGraphics(flowerWidth, flowerWidth); 
     h.beginDraw();
     h.fill(0); 
     h.shape(icon.ic,0, 0, flowerWidth, flowerWidth);  
     h.endDraw();
+    
+    // Store the image. 
+    headCol = h.copy();
+    headBW = h.copy();
+    headBW.filter(GRAY);
   }
   
   void createBody() {
-    b = createGraphics(flowerWidth, flowerHeight); 
+    PGraphics b = createGraphics(flowerWidth, flowerHeight); 
     b.beginDraw(); 
     b.background(0, 0); 
     b.pushStyle(); 
@@ -79,6 +84,9 @@ class Flower {
       b.popStyle();
     b.popStyle();
     b.endDraw();
+    
+    // Store the image. 
+    body = b.copy(); 
   }
   
   void run() {    
@@ -104,17 +112,17 @@ class Flower {
         // Draw Body
         pushMatrix();
          translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3); 
-         image(b, 0, 0);
+         image(body, 0, 0);
         popMatrix();
         
         pushMatrix(); 
          translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3);
          if (this.isThere()) {
           shader(shader.shade); // Begin Shader
-          image(h, 0, 0); 
+          image(headCol, 0, 0); 
           resetShader(); // End Shader
          } else {
-          image(h, 0, 0); 
+          image(headBW, 0, 0); 
          }
         popMatrix();
       }

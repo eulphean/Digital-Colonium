@@ -31,7 +31,7 @@ class Agent {
     size = 5.0; // Size for the boid.
     
     // Genotypes. 
-    bodyColor = color(66, 192, 255);
+    bodyColor = color(153, 255, 204);
     
     // Agent's instrument. 
     // Calculate a random midi note and get its corresponding frequency.
