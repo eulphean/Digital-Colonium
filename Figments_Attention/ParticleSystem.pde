@@ -4,12 +4,8 @@ class Particle {
  PVector position;
  PVector velocity;
  color particleColor; 
- PShape particle; 
- 
  
  Particle() { 
-   ellipseMode(CENTER); 
-   particle = createShape(ELLIPSE, 0, 0, 3.5, 3.5);
    position = new PVector();
    velocity = new PVector();
  }
@@ -21,9 +17,9 @@ class Particle {
    noStroke();
    pushMatrix();
      translate(position.x, position.y); 
-     particle.setFill(particleColor); 
-     particle.setStroke(particleColor);
-     shape(particle);
+     scale(2.5, 2.5);
+     stroke(particleColor); 
+     point(0, 0);
    popMatrix();
    popStyle();
  }

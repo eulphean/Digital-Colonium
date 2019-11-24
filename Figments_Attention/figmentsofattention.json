@@ -22,7 +22,7 @@
   "/maxWaitTime": {
     "min": 30000,
     "max": 60000,
-    "value": 35000
+    "value": 30000
   },
   "/maxSpeed": {
     "min": 1,
@@ -82,11 +82,11 @@
   "/minWaitTime": {
     "min": 10000,
     "max": 40000,
-    "value": 25000
+    "value": 20400
   },
   "/numAgents": {
     "min": 0,
     "max": 200,
-    "value": 70.66667175292969
+    "value": 100
   }
 }

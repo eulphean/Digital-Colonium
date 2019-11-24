@@ -41,16 +41,17 @@ class Figment extends Agent {
        popMatrix();
      } else {
        //// Draw the trails.
-       //for (int i=0; i<maxTrailPoints; i++) {
-       //  if (trail[i] != null) {
-       //    pushMatrix(); 
-       //    translate(trail[i].x, trail[i].y); 
-       //    fill(color(34, 38, 35, trail[i].a)); 
-       //    ellipse(0, 0, 2.2, 2.2);
-       //    trail[i].a -= 255/maxTrailPoints; 
-       //    popMatrix();
-       //  }
-       //}
+       for (int i=0; i<maxTrailPoints; i++) {
+         if (trail[i] != null) {
+           pushMatrix(); 
+           translate(trail[i].x, trail[i].y);
+           scale(3.5, 3.5);
+           stroke(0, trail[i].a);
+           point(0, 0);
+           trail[i].a -= 255/maxTrailPoints; 
+           popMatrix();
+         }
+       }
        
        // Draw boid's fins. 
        pushMatrix();
