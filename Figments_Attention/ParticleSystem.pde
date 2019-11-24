@@ -67,7 +67,7 @@ class ParticleSystem {
     // Initialize the system. 
     alpha = 255; frame = 0;  
     //color c = color(random(255), random(255), random(255));
-    color c = color(255, 102, 102); 
+    color c = color(255, 51, 51); 
     for (int i = 0; i < numParticles; i++) {
      particles.get(i).init(position, c); 
     }

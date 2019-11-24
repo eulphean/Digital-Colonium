@@ -46,7 +46,7 @@ class Figment extends Agent {
            pushMatrix(); 
            translate(trail[i].x, trail[i].y);
            scale(3.5, 3.5);
-           stroke(0, 153, 0, trail[i].a);
+           stroke(0, 51, 0, trail[i].a);
            point(0, 0);
            trail[i].a -= 255/maxTrailPoints; 
            popMatrix();
