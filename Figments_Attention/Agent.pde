@@ -94,7 +94,6 @@ class Agent {
       seperationWeight = 0; 
       cohesionWeight = 0; 
       alignmentWeight = 0; 
-      println("No flocking now"); 
     } 
     
     // Seperation between agents. 

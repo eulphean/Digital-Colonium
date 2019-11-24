@@ -5,7 +5,8 @@ class Flower {
   int rot;
   int flowerHeight; int flowerWidth; 
   float scale; 
-  PGraphics h; Icon icon; 
+  PGraphics h; PGraphics b; 
+  Icon icon; 
   PVector centerHead, base;
   boolean isEaten, isReady; 
   Shade shader; int idxShader;
@@ -25,7 +26,8 @@ class Flower {
     base = new PVector(centerHead.x, flowerHeight);
     
     // Icon (PGraphics)
-    createHead(); 
+    createHead();
+    createBody(); 
     
     // Shader 
     assignShader();
@@ -44,6 +46,41 @@ class Flower {
     h.endDraw();
   }
   
+  void createBody() {
+    b = createGraphics(flowerWidth, flowerHeight); 
+    b.beginDraw(); 
+    b.background(0, 0); 
+    b.pushStyle(); 
+      //// Smooth flower face. 
+      b.noStroke();
+      b.ellipseMode(CORNER);
+      // Left leaf.
+      b.pushMatrix(); 
+      b.translate(base.x, base.y); 
+        b.rotate(radians(200)); 
+        b.fill(96, 96, 96);
+        b.ellipse(0, 0, flowerWidth/2, flowerHeight/9);
+      b.popMatrix();
+      
+      // Right leaf. 
+      b.pushMatrix(); 
+      b.translate(base.x, base.y); 
+        b.rotate(radians(-20));
+        b.fill(96, 96, 96);
+        b.ellipse(0, -flowerHeight/9, flowerWidth/2, flowerHeight/9);
+      b.popMatrix();
+      
+      // Stem.
+      b.pushStyle();
+        b.stroke(32, 32, 32);
+        b.strokeWeight(6);
+        b.strokeCap(SQUARE);
+        b.line(centerHead.x, centerHead.y, base.x, base.y); 
+      b.popStyle();
+    b.popStyle();
+    b.endDraw();
+  }
+  
   void run() {    
     updateShaderParams();
     
@@ -55,6 +92,7 @@ class Flower {
         translate(aniPosition.x, aniPosition.y); 
       }
       scale(scale, scale);
+      // When actually drawing
       
       //// Draw the bounding box
       if (debug) { 
@@ -63,39 +101,18 @@ class Flower {
         stroke(0);
         rect(0, 0, flowerWidth, flowerHeight); 
       } else {
-        // Smooth flower face. 
-        noStroke();
-        ellipseMode(CORNER);
-        // Left leaf.
-        pushMatrix(); 
-        translate(base.x, base.y); 
-          rotate(radians(200)); 
-          fill(96, 96, 96);
-          ellipse(0, 0, flowerWidth/2, flowerHeight/9);
+        // Draw Body
+        pushMatrix();
+         translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3); 
+         image(b, 0, 0);
         popMatrix();
-        
-        // Right leaf. 
-        pushMatrix(); 
-        translate(base.x, base.y); 
-          rotate(radians(-20));
-          fill(96, 96, 96);
-          ellipse(0, -flowerHeight/9, flowerWidth/2, flowerHeight/9);
-        popMatrix();
-        
-        // Stem.
-        pushStyle();
-        stroke(32, 32, 32);
-        strokeWeight(6);
-        strokeCap(SQUARE);
-        line(centerHead.x, centerHead.y, base.x, base.y); 
-        popStyle();
         
         pushMatrix(); 
          translate(centerHead.x - flowerWidth/2, centerHead.y - flowerHeight/3);
          if (this.isThere()) {
-          shader(shader.shade);
+          shader(shader.shade); // Begin Shader
           image(h, 0, 0); 
-          resetShader();
+          resetShader(); // End Shader
          } else {
           image(h, 0, 0); 
          }
