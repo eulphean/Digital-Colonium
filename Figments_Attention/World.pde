@@ -106,7 +106,7 @@ class World {
       f.position.x = targetPos.x; f.position.y = targetPos.y; // So, others don't overlap with this. 
       f.aniPosition.x = appWatcher.position.x + appWatcher.wallWidth/2; f.aniPosition.y = appWatcher.position.y + appWatcher.wallHeight/2; // This position is lerped till the animation completes. 
       f.isEaten = false; f.isReady = false; 
-      f.assignShader();
+      f.assignShader(); // Before flying, why don't we draw the thing in a pGraphics. 
       int idx = (int) random(0, easings.length);
       f.fly(targetPos, easings[idx]);
       foodsToGenerate--; 
