@@ -110,12 +110,12 @@ class Flower {
   }
   
   void fly (PVector target, Easing easing) {
-   xPosAni = new Ani(aniPosition, 8.0f, "x", target.x); 
+   xPosAni = new Ani(aniPosition, 10.0f, "x", target.x); 
    xPosAni.setEasing(easing); 
    xPosAni.setCallbackObject(this); 
    xPosAni.setCallback("onEnd:xDoneAnimating");
    
-   yPosAni = new Ani(aniPosition, 8.0f, "y", target.y); 
+   yPosAni = new Ani(aniPosition, 10.0f, "y", target.y); 
    yPosAni.setEasing(easing); 
    yPosAni.setCallbackObject(this); 
    yPosAni.setCallback("onEnd:yDoneAnimating");

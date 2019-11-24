@@ -23,7 +23,7 @@ class AppWatcher {
   long waitTime; long timeToWait;
   
   // Food stuff. 
-  boolean createFood; long timeToCreateFood; 
+  boolean createFood;
   
   // Time
   long appWatcherTime; long appWatcherWait;
@@ -42,11 +42,11 @@ class AppWatcher {
     idxShader = 7; 
     shader = shaderFactory.getShaderAtIdx(idxShader); 
     
-    // Animation 
+    // Eye Animation Parameters. 
     aniCounter = 0; // Defines the change of state. 
     aniPeriod = 500; // 500 frames long animation.
     isAnimating = true; isWaitingInitialized = false;
-    timeToWait = 3000; 
+    timeToWait = 5000; 
     
     // Food. 
     createFood = false; 
@@ -112,7 +112,7 @@ class AppWatcher {
     if (aniCounter%aniPeriod == 0) {
       showAppWatcher = false; 
       
-      // Reset tie
+      // Reset time
       appWatcherTime = millis(); 
       appWatcherWait = ceil(random(minWaitTime, maxWaitTime)); 
       
@@ -127,7 +127,6 @@ class AppWatcher {
         createFood = true;
         waitTime = millis();
         isWaitingInitialized = true;
-        timeToCreateFood = ceil(random(1, timeToWait-1000));
       } else if (millis() - waitTime > timeToWait) {
         isAnimating = true; 
         isWaitingInitialized = false;
