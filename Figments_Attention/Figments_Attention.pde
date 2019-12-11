@@ -6,6 +6,7 @@ import de.looksgood.ani.easing.*;
 
 // Minim sound engine. 
 Minim minim; AudioOutput out;
+AudioRecorder recorder; 
 
 // Sketch applet pointer. 
 PApplet sketchPointer = this; 
@@ -92,6 +93,8 @@ void setup() {
   // Initialize sound engine. 
   minim = new Minim(this);
   out = minim.getLineOut(Minim.STEREO, 2048);
+  //recorder = minim.createRecorder(out, "figments_final.wav");
+  //recorder.beginRecord(); 
   
   // Initialize background shader. 
   setupBackgroundShader(); 
@@ -121,6 +124,8 @@ void draw() {
     fill(0);
     text("Frame Rate: " + frameRate, 20, 755);  
   }
+  
+  // saveFrame("frames/foa_####.tga");
 }
 
 void keyPressed() {
@@ -157,6 +162,8 @@ void setupBackgroundShader() {
 void prepareExitHandler () {
   Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
     public void run () {
+      //recorder.endRecord(); 
+      //recorder.save();
       cp5.saveProperties(("figmentsofattention"));
     }
   }

@@ -72,7 +72,7 @@
   "/minWaitTime": {
     "min": 15000,
     "max": 40000,
-    "value": 15000
+    "value": 25000
   },
   "/numAgents": {
     "min": 0,
